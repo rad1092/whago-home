@@ -1,16 +1,126 @@
-import Image from "next/image";
-import Link from "next/link";
-import AsciiPlayground from "./components/ascii-playground";
+const externalLabel = <span className="sr-only">(새 탭에서 열림)</span>;
+
+const products = [
+  {
+    id: "daymark",
+    index: "01",
+    name: "Daymark",
+    eyebrow: "오늘의 실행 계획",
+    description:
+      "할 일을 빠르게 모으고, 오늘 끝낼 세 가지와 시간 블록을 정합니다. 기록과 백업은 이 브라우저에 남습니다.",
+    launchUrl: "/daymark/",
+    sourceUrl: "https://github.com/rad1092/daymark",
+    action: "플래너 열기",
+    className: "product-daymark",
+    preview: (
+      <div className="daymark-preview" aria-hidden="true">
+        <div className="preview-bar">
+          <span>화요일 · 7월 28일</span>
+          <b>3 / 3</b>
+        </div>
+        <p>오늘의 핵심</p>
+        <ol>
+          <li>
+            <span>01</span>
+            <strong>주간 계획 확정</strong>
+            <small>09:30–10:10</small>
+          </li>
+          <li>
+            <span>02</span>
+            <strong>배포 전 점검</strong>
+            <small>13:00–14:20</small>
+          </li>
+          <li>
+            <span>03</span>
+            <strong>고객 메모 정리</strong>
+            <small>16:30–17:00</small>
+          </li>
+        </ol>
+      </div>
+    ),
+  },
+  {
+    id: "repolens",
+    index: "02",
+    name: "RepoLens",
+    eyebrow: "저장소 유지관리",
+    description:
+      "로컬 또는 GitHub 저장소를 읽기 전용으로 검사합니다. 상태 점수와 바로 처리할 조치를 터미널·JSON·HTML로 남깁니다.",
+    launchUrl: "/repolens/",
+    sourceUrl: "https://github.com/rad1092/repolens",
+    action: "리포트 보기",
+    className: "product-repolens",
+    preview: (
+      <div className="repolens-preview" aria-hidden="true">
+        <div className="terminal-line">
+          <span>$</span> repolens .
+        </div>
+        <div className="score-row">
+          <strong>86</strong>
+          <div>
+            <span>Repository health</span>
+            <b>Grade B</b>
+          </div>
+        </div>
+        <ul>
+          <li>
+            <span className="check">✓</span> CI workflow
+            <small>detected</small>
+          </li>
+          <li>
+            <span className="check">✓</span> Lockfile
+            <small>tracked</small>
+          </li>
+          <li>
+            <span className="warn">!</span> Dependency review
+            <small>2 actions</small>
+          </li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    id: "siteboard",
+    index: "03",
+    name: "Siteboard",
+    eyebrow: "홈페이지 관리",
+    description:
+      "페이지 구성, 문구, 링크, 색상과 검색 정보를 한 화면에서 편집합니다. 결과는 JSON 또는 독립 실행 HTML로 내보냅니다.",
+    launchUrl: "/siteboard/",
+    sourceUrl: "https://github.com/rad1092/siteboard",
+    action: "편집기 열기",
+    className: "product-siteboard",
+    preview: (
+      <div className="siteboard-preview" aria-hidden="true">
+        <aside>
+          <b>SECTIONS</b>
+          <span className="active">01 Hero</span>
+          <span>02 Services</span>
+          <span>03 Contact</span>
+          <button type="button" tabIndex={-1}>
+            + Add section
+          </button>
+        </aside>
+        <div className="site-canvas">
+          <div className="canvas-nav">
+            <i />
+            <i />
+            <i />
+          </div>
+          <p>Operations, without the clutter.</p>
+          <div className="canvas-button">Get started</div>
+          <div className="canvas-grid">
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
+      </div>
+    ),
+  },
+] as const;
 
 export const dynamic = "force-static";
-
-const newTabLabel = <span className="sr-only">(새 탭에서 열림)</span>;
-
-const asciiPreview = `┌───────────┐
-│   ASCII   │
-├─────┬─────┤
-│ edit│ pre │
-└─────┴─────┘`;
 
 export default function Home() {
   return (
@@ -19,226 +129,150 @@ export default function Home() {
         본문으로 바로가기
       </a>
 
-      <header className="topbar" id="top">
-        <a className="topbar-name" href="#top">
-          김홍대
+      <header className="site-header" id="top">
+        <a className="wordmark" href="#top" aria-label="WHAGO 홈">
+          WHAGO<span aria-hidden="true">•</span>
         </a>
         <nav aria-label="주요 메뉴">
-          <a href="#projects">작업</a>
-          <a href="#about">소개</a>
+          <a href="#tools">도구</a>
+          <a href="#system">운영 방식</a>
           <a
             href="https://github.com/rad1092"
             target="_blank"
             rel="noreferrer"
           >
-            GitHub <span aria-hidden="true">↗</span>
-            {newTabLabel}
-          </a>
-          <a href="mailto:rad174951@gmail.com">
-            Email <span aria-hidden="true">↗</span>
+            GitHub ↗{externalLabel}
           </a>
         </nav>
       </header>
 
       <main id="main">
-        <section className="intro" aria-labelledby="intro-title">
-          <div className="intro-copy">
-            <p>김홍대 / 소프트웨어 개발자</p>
-            <h1 id="intro-title">WHAGO</h1>
-            <p>윈도우 앱, GitHub CLI, 브라우저 편집기를 만들었습니다.</p>
-          </div>
-
-          <div
-            className="project-collage"
-            id="projects"
-            aria-label="프로젝트 미리보기"
-          >
-            <a className="preview-card preview-firstcall" href="#firstcall">
-              <span>
-                FirstCall <small>Windows</small>
-              </span>
-              <Image
-                src="/firstcall-crop.png"
-                alt="FirstCall에서 cURL 요청을 파싱해 후보 요청으로 만든 화면"
-                width={900}
-                height={430}
-                priority
-                sizes="(max-width: 760px) 100vw, 48vw"
-              />
-            </a>
-
-            <a className="preview-card preview-ascii" href="#ascii-editor">
-              <span>
-                ASCII Diagram Editor <small>Web</small>
-              </span>
-              <div aria-hidden="true">
-                <pre>{asciiPreview}</pre>
-                <b>&lt;pre&gt;</b>
-              </div>
-            </a>
-
-            <a className="preview-card preview-risk" href="#dep-risk">
-              <span>
-                gh-dep-risk <small>GitHub CLI</small>
-              </span>
-              <Image
-                src="/dep-risk-still.png"
-                alt="gh-dep-risk가 pull request 의존성 변경을 분석한 실제 출력"
-                width={968}
-                height={612}
-                priority
-                sizes="(max-width: 760px) 100vw, 34vw"
-              />
-            </a>
-          </div>
-        </section>
-
-        <section
-          className="project-scene firstcall-scene"
-          id="firstcall"
-          aria-labelledby="firstcall-title"
-        >
-          <div className="scene-copy">
-            <p>Windows · Rust · v0.2.1</p>
-            <h2 id="firstcall-title">FirstCall</h2>
-            <p>
-              API 요청을 로컬에서 검증하고 레시피와 실행 가능한 MCP 도구
-              패키지로 내보냅니다.
-            </p>
-            <div className="scene-links">
-              <Link href="/work/firstcall">
-                자세히 보기 <span aria-hidden="true">→</span>
-              </Link>
-              <a
-                href="https://github.com/rad1092/firstcall-local-api-workbench/releases/tag/v0.2.1"
-                target="_blank"
-                rel="noreferrer"
-              >
-                v0.2.1 <span aria-hidden="true">↗</span>
-                {newTabLabel}
-              </a>
-            </div>
-          </div>
-
-          <figure className="scene-media firstcall-media">
-            <Image
-              src="/firstcall-crop.png"
-              alt="FirstCall에서 cURL 요청을 파싱해 후보 요청으로 만든 화면"
-              width={900}
-              height={430}
-              sizes="(max-width: 800px) 100vw, 62vw"
-            />
-            <figcaption>
-              실제 v0.2.1 Windows GUI / cURL 파싱과 후보 요청 검토
-              <a href="/firstcall-gui.gif" target="_blank" rel="noreferrer">
-                전체 데모 재생 <span aria-hidden="true">↗</span>
-                {newTabLabel}
-              </a>
-            </figcaption>
-          </figure>
-        </section>
-
-        <section
-          className="project-scene ascii-scene"
-          id="ascii-editor"
-          aria-labelledby="ascii-title"
-        >
-          <div className="scene-copy">
-            <p>Browser · TypeScript · Prototype</p>
-            <h2 id="ascii-title">
-              ASCII Diagram
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="hero-copy">
+            <p className="kicker">WHAGO OPERATIONS TOOLKIT</p>
+            <h1 id="hero-title">
+              계획하고,
               <br />
-              Editor
-            </h2>
-            <p>
-              200×80 문자 그리드에서 다이어그램을 편집하고 결과를 실제
-              &lt;pre&gt; 요소로 출력합니다.
+              점검하고,
+              <br />
+              바로 고칩니다.
+            </h1>
+            <p className="hero-description">
+              일정을 정리하고 저장소 상태를 확인하고 홈페이지 내용을
+              관리하는 세 가지 도구입니다.
             </p>
-            <div className="scene-links">
-              <a
-                href="https://github.com/rad1092/ascii-diagram-editor"
-                target="_blank"
-                rel="noreferrer"
-              >
-                소스 보기 <span aria-hidden="true">↗</span>
-                {newTabLabel}
-              </a>
-            </div>
+            <a className="primary-action" href="#tools">
+              도구 살펴보기 <span aria-hidden="true">↓</span>
+            </a>
           </div>
 
-          <AsciiPlayground />
-        </section>
-
-        <section
-          className="project-scene risk-scene"
-          id="dep-risk"
-          aria-labelledby="risk-title"
-        >
-          <div className="scene-copy">
-            <p>GitHub CLI · Go · v0.2.1</p>
-            <h2 id="risk-title">gh-dep-risk</h2>
-            <p>PR의 의존성 변경을 터미널에서 요약합니다.</p>
-            <div className="scene-links">
-              <a
-                href="https://github.com/rad1092/gh-dependency-risk"
-                target="_blank"
-                rel="noreferrer"
-              >
-                소스 보기 <span aria-hidden="true">↗</span>
-                {newTabLabel}
-              </a>
+          <div className="system-map" aria-label="WHAGO 도구 구성">
+            <div className="system-map-head">
+              <span>현재 제공 중</span>
+              <strong>
+                <i aria-hidden="true" /> 3 tools
+              </strong>
             </div>
-          </div>
-
-          <figure className="scene-media risk-media">
-            <Image
-              src="/dep-risk-still.png"
-              alt="gh-dep-risk가 pull request 10번의 의존성 변경을 분석한 출력"
-              width={968}
-              height={612}
-              sizes="(max-width: 800px) 100vw, 62vw"
-            />
-            <figcaption>
-              실제 smoke fixture 실행 / Bun lockfile fallback 분석
-              <a
-                href="/gh-dep-risk-demo.gif"
-                target="_blank"
-                rel="noreferrer"
-              >
-                전체 데모 재생 <span aria-hidden="true">↗</span>
-                {newTabLabel}
+            {products.map((product) => (
+              <a key={product.id} href={`#${product.id}`}>
+                <span>{product.index}</span>
+                <strong>{product.name}</strong>
+                <small>{product.eyebrow}</small>
+                <b aria-hidden="true">↘</b>
               </a>
-            </figcaption>
-          </figure>
+            ))}
+          </div>
         </section>
 
-        <section className="about-section" id="about" aria-labelledby="about-title">
+        <section className="tool-index" id="tools" aria-labelledby="tools-title">
+          <header className="section-heading">
+            <p>TOOLS / 01–03</p>
+            <h2 id="tools-title">필요할 때 바로 여는 도구</h2>
+            <p>
+              Daymark와 Siteboard는 브라우저에 저장하고, RepoLens는 저장소를
+              읽기 전용으로 검사합니다.
+            </p>
+          </header>
+
+          <div className="product-list">
+            {products.map((product) => (
+              <article
+                className={`product ${product.className}`}
+                id={product.id}
+                key={product.id}
+              >
+                <header className="product-copy">
+                  <div>
+                    <span>{product.index}</span>
+                    <p>{product.eyebrow}</p>
+                  </div>
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  <div className="product-actions">
+                    <a href={product.launchUrl}>
+                      {product.action} <span aria-hidden="true">→</span>
+                    </a>
+                    <a
+                      href={product.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      소스 ↗{externalLabel}
+                    </a>
+                  </div>
+                </header>
+                <div className="product-preview">{product.preview}</div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="operating-system" id="system" aria-labelledby="system-title">
+          <header className="section-heading">
+            <p>SYSTEM / HOW IT FITS</p>
+            <h2 id="system-title">세 도구, 하나의 흐름</h2>
+          </header>
+          <ol>
+            <li>
+              <span>01</span>
+              <strong>Daymark에서 오늘 할 일을 정합니다.</strong>
+              <p>수집한 할 일 중 세 가지를 고르고 실제 시간에 배치합니다.</p>
+            </li>
+            <li>
+              <span>02</span>
+              <strong>RepoLens로 코드 상태를 확인합니다.</strong>
+              <p>읽기 전용 검사 결과를 보고 우선순위가 높은 항목부터 처리합니다.</p>
+            </li>
+            <li>
+              <span>03</span>
+              <strong>Siteboard에서 내용을 관리합니다.</strong>
+              <p>문구와 구성을 수정하고 검증한 뒤 배포 가능한 파일로 내보냅니다.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section className="repo-section" aria-labelledby="repo-title">
           <div>
-            <p>소개</p>
-            <h2 id="about-title">김홍대</h2>
+            <p>OPEN SOURCE</p>
+            <h2 id="repo-title">코드와 변경 내역을 공개합니다.</h2>
           </div>
-          <div className="about-text">
-            <p>
-              자재 납품과 영업관리 현장에서 일정·재고·납기를 조율했습니다.
-            </p>
-            <p>현재 FirstCall과 개발 도구를 만들고 있습니다.</p>
-          </div>
-        </section>
-
-        <section className="contact-section" aria-labelledby="contact-title">
-          <p id="contact-title">연락</p>
-          <a href="mailto:rad174951@gmail.com">
-            rad174951
-            <wbr />
-            @gmail.com <span aria-hidden="true">↗</span>
+          <a
+            href="https://github.com/rad1092"
+            target="_blank"
+            rel="noreferrer"
+          >
+            github.com/rad1092 <span aria-hidden="true">↗</span>
+            {externalLabel}
           </a>
         </section>
       </main>
 
       <footer className="site-footer">
-        <strong>WHAGO</strong>
+        <a className="wordmark" href="#top">
+          WHAGO<span aria-hidden="true">•</span>
+        </a>
+        <p>Productivity · Maintenance · Publishing</p>
         <span>© 2026</span>
-        <a href="#top">맨 위로 ↑</a>
       </footer>
     </>
   );
