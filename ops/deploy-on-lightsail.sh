@@ -13,6 +13,9 @@ home_release="$home_root/releases/$release_id"
 tools_release="$tools_root/releases/$release_id"
 backup_dir="$home_root/backups/$release_id"
 nginx_config="/etc/nginx/sites-available/localfit"
+service_unit="/etc/systemd/system/whago-home.service"
+service_unit_backup="$backup_dir/whago-home.service"
+work_root=""
 
 if [[ ! "$release_id" =~ ^[A-Za-z0-9._-]+$ ]]; then
   echo "Release id may contain only letters, numbers, dots, underscores, and hyphens." >&2
@@ -38,40 +41,182 @@ sudo install -d -o ubuntu -g ubuntu \
 
 previous_home="$(readlink -f "$home_root/current" 2>/dev/null || true)"
 previous_tools="$(readlink -f "$tools_root/current" 2>/dev/null || true)"
-switched="false"
+home_switched="false"
+tools_switched="false"
 nginx_replaced="false"
+service_unit_existed="false"
+service_unit_replaced="false"
+previous_service_active="false"
+previous_service_enabled="false"
+
+cleanup_work_root() {
+  if [[ -z "$work_root" || ! -e "$work_root" ]]; then
+    return 0
+  fi
+
+  case "$work_root" in
+    "/tmp/whago-build-$release_id."*) find "$work_root" -depth -delete ;;
+    *)
+      echo "Refusing to clean an unexpected work directory: $work_root" >&2
+      return 1
+      ;;
+  esac
+}
+
+restore_current_link() {
+  local root="$1"
+  local previous="$2"
+  local rollback_link="$root/current.rollback"
+
+  if [[ -n "$previous" ]]; then
+    sudo ln -sfnT "$previous" "$rollback_link"
+    sudo mv -Tf "$rollback_link" "$root/current"
+    return
+  fi
+
+  if [[ -L "$root/current" ]]; then
+    sudo unlink "$root/current"
+  elif [[ -e "$root/current" ]]; then
+    echo "Refusing to remove a non-symlink current path: $root/current" >&2
+    return 1
+  fi
+}
+
+remove_transition_links() {
+  local transition_link
+
+  for transition_link in \
+    "$home_root/current.next" \
+    "$home_root/current.rollback" \
+    "$tools_root/current.next" \
+    "$tools_root/current.rollback"; do
+    if [[ -L "$transition_link" ]]; then
+      sudo unlink "$transition_link"
+    elif [[ -e "$transition_link" ]]; then
+      echo "Refusing to remove a non-symlink transition path: $transition_link" >&2
+      return 1
+    fi
+  done
+}
 
 rollback() {
-  exit_code=$?
-  trap - ERR
+  local exit_code="${1:-1}"
+  local rollback_failed="false"
+
+  trap - ERR INT TERM
   set +e
 
-  if [[ "$switched" == "true" ]]; then
-    if [[ -n "$previous_home" ]]; then
-      sudo ln -sfn "$previous_home" "$home_root/current.next"
-      sudo mv -Tf "$home_root/current.next" "$home_root/current"
-      sudo systemctl restart whago-home.service
+  if [[ "$tools_switched" == "true" ]]; then
+    if ! restore_current_link "$tools_root" "$previous_tools"; then
+      rollback_failed="true"
+    fi
+  fi
+
+  if [[ "$home_switched" == "true" ]]; then
+    if ! restore_current_link "$home_root" "$previous_home"; then
+      rollback_failed="true"
+    fi
+  fi
+
+  if [[
+    "$previous_service_active" != "true" &&
+      (
+        "$service_unit_existed" == "true" ||
+          "$service_unit_replaced" == "true"
+      )
+  ]]; then
+    if ! sudo systemctl stop whago-home.service; then
+      rollback_failed="true"
+    fi
+  fi
+
+  if [[
+    "$previous_service_enabled" != "true" &&
+      (
+        "$service_unit_existed" == "true" ||
+          "$service_unit_replaced" == "true"
+      )
+  ]]; then
+    if ! sudo systemctl disable whago-home.service; then
+      rollback_failed="true"
+    fi
+  fi
+
+  if [[ "$service_unit_replaced" == "true" ]]; then
+    if [[ "$service_unit_existed" == "true" ]]; then
+      if ! sudo install -m 0644 "$service_unit_backup" "$service_unit"; then
+        rollback_failed="true"
+      fi
     else
-      sudo systemctl stop whago-home.service
+      if [[ -f "$service_unit" || -L "$service_unit" ]]; then
+        if ! sudo unlink "$service_unit"; then
+          rollback_failed="true"
+        fi
+      elif [[ -e "$service_unit" ]]; then
+        echo "Refusing to remove a non-symlink service unit: $service_unit" >&2
+        rollback_failed="true"
+      fi
     fi
 
-    if [[ -n "$previous_tools" ]]; then
-      sudo ln -sfn "$previous_tools" "$tools_root/current.next"
-      sudo mv -Tf "$tools_root/current.next" "$tools_root/current"
+    if ! sudo systemctl daemon-reload; then
+      rollback_failed="true"
+    fi
+  fi
+
+  if [[ "$home_switched" == "true" || "$service_unit_replaced" == "true" ]]; then
+    if [[ "$previous_service_enabled" == "true" ]] &&
+      ! sudo systemctl enable whago-home.service; then
+      rollback_failed="true"
+    fi
+
+    if [[ "$previous_service_active" == "true" ]] &&
+      ! sudo systemctl restart whago-home.service; then
+      rollback_failed="true"
     fi
   fi
 
   if [[ "$nginx_replaced" == "true" && -f "$backup_dir/nginx.conf" ]]; then
-    sudo install -m 0644 "$backup_dir/nginx.conf" "$nginx_config"
-    sudo nginx -t
-    sudo systemctl reload nginx.service
+    if ! sudo install -m 0644 "$backup_dir/nginx.conf" "$nginx_config" ||
+      ! sudo nginx -t ||
+      ! sudo systemctl reload nginx.service; then
+      rollback_failed="true"
+    fi
   fi
 
-  echo "Deployment failed; the previous release was restored." >&2
+  if ! remove_transition_links; then
+    rollback_failed="true"
+  fi
+
+  if ! cleanup_work_root; then
+    rollback_failed="true"
+  fi
+
+  if [[ "$rollback_failed" == "true" ]]; then
+    echo "Deployment failed and rollback needs manual inspection." >&2
+  else
+    echo "Deployment failed; the previous state was restored." >&2
+  fi
+
+  echo "The failed release was retained for inspection: $release_id" >&2
   exit "$exit_code"
 }
 
-trap rollback ERR
+trap 'rollback $?' ERR
+trap 'rollback 130' INT
+trap 'rollback 143' TERM
+
+if sudo test -f "$service_unit"; then
+  sudo cp "$service_unit" "$service_unit_backup"
+  service_unit_existed="true"
+fi
+
+if sudo systemctl is-active --quiet whago-home.service; then
+  previous_service_active="true"
+fi
+
+if sudo systemctl is-enabled --quiet whago-home.service; then
+  previous_service_enabled="true"
+fi
 
 git clone --depth 1 https://github.com/rad1092/whago-home.git "$home_release"
 git -C "$home_release" fetch --depth 1 origin "$home_ref"
@@ -110,12 +255,12 @@ npm --prefix "$work_root/repolens" ci
 npm --prefix "$work_root/repolens" run check
 install -d "$tools_release/repolens"
 node "$work_root/repolens/dist/src/cli.js" \
-  "$work_root/repolens" \
+  "$home_release" \
   --format html \
   --output "$tools_release/repolens/index.html" \
   --offline
 node "$work_root/repolens/dist/src/cli.js" \
-  "$work_root/repolens" \
+  "$home_release" \
   --format json \
   --output "$tools_release/repolens/report.json" \
   --offline
@@ -133,37 +278,45 @@ printf '%s\n' \
   "siteboard=$siteboard_sha" \
   > "$tools_release/RELEASE"
 
-sudo ln -sfn "$home_release" "$home_root/current.next"
+sudo ln -sfnT "$home_release" "$home_root/current.next"
+sudo ln -sfnT "$tools_release" "$tools_root/current.next"
+home_switched="true"
 sudo mv -Tf "$home_root/current.next" "$home_root/current"
-sudo ln -sfn "$tools_release" "$tools_root/current.next"
+tools_switched="true"
 sudo mv -Tf "$tools_root/current.next" "$tools_root/current"
-switched="true"
 
+service_unit_replaced="true"
 sudo install -m 0644 \
   "$home_release/ops/whago-home.service" \
-  /etc/systemd/system/whago-home.service
+  "$service_unit"
 sudo systemctl daemon-reload
 sudo systemctl enable whago-home.service
 sudo systemctl restart whago-home.service
 
 for _ in {1..20}; do
   if curl --fail --silent --show-error \
+    --connect-timeout 2 \
+    --max-time 5 \
     http://127.0.0.1:3100/healthz >/dev/null; then
     break
   fi
   sleep 1
 done
 curl --fail --silent --show-error \
+  --connect-timeout 2 \
+  --max-time 5 \
   http://127.0.0.1:3100/healthz >/dev/null
 
 sudo cp "$nginx_config" "$backup_dir/nginx.conf"
-sudo install -m 0644 "$home_release/ops/nginx-whago.conf" "$nginx_config"
 nginx_replaced="true"
+sudo install -m 0644 "$home_release/ops/nginx-whago.conf" "$nginx_config"
 sudo nginx -t
 sudo systemctl reload nginx.service
 
 for path in / /healthz /daymark/ /repolens/ /siteboard/; do
   curl --fail --silent --show-error \
+    --connect-timeout 5 \
+    --max-time 20 \
     --resolve "whago.net:443:127.0.0.1" \
     "https://whago.net$path" >/dev/null
 done
@@ -171,6 +324,9 @@ done
 for path in / /daymark/ /repolens/ /siteboard/; do
   headers="$(
     curl --head --silent --show-error \
+      --fail \
+      --connect-timeout 5 \
+      --max-time 20 \
       --resolve "whago.net:443:127.0.0.1" \
       "https://whago.net$path"
   )"
@@ -178,10 +334,18 @@ for path in / /daymark/ /repolens/ /siteboard/; do
   grep -qi "^content-security-policy: frame-ancestors 'none'" <<<"$headers"
 done
 
+# The new release is committed after all mandatory health and security checks
+# pass. Everything below is best-effort cleanup and must not roll back a live,
+# verified release.
+trap - ERR INT TERM
+
 sudo systemctl stop \
   localfit-frontend.service \
   localfit-backend.service \
   2>/dev/null || true
 
-trap - ERR
+if ! cleanup_work_root; then
+  echo "Warning: the temporary build directory could not be removed." >&2
+fi
+
 echo "WHAGO release $release_id is live."

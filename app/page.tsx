@@ -56,10 +56,10 @@ const products = [
           <span>$</span> repolens .
         </div>
         <div className="score-row">
-          <strong>86</strong>
+          <strong>100</strong>
           <div>
             <span>Repository health</span>
-            <b>Grade B</b>
+            <b>Grade A</b>
           </div>
         </div>
         <ul>
@@ -72,8 +72,8 @@ const products = [
             <small>tracked</small>
           </li>
           <li>
-            <span className="warn">!</span> Dependency review
-            <small>2 actions</small>
+            <span className="check">✓</span> Tracked secrets
+            <small>none found</small>
           </li>
         </ul>
       </div>

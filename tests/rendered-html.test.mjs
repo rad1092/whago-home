@@ -51,7 +51,7 @@ test("server-renders the WHAGO tool suite", async () => {
   assert.match(html, /github\.com\/rad1092\/repolens/);
   assert.match(html, /github\.com\/rad1092\/siteboard/);
   assert.match(html, /repolens \./);
-  assert.match(html, /Grade B/);
+  assert.match(html, /Grade A/);
   assert.match(html, /detected/);
   assert.doesNotMatch(html, /repolens audit|GOOD|CI workflow[\s\S]*passing/);
   assert.match(html, /property="og:image" content="https:\/\/whago\.net\/og\.png"/);
@@ -84,12 +84,53 @@ test("keeps the suite accessible and free of starter artifacts", async () => {
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.match(nginxConfig, /X-Frame-Options "DENY" always/);
   assert.match(nginxConfig, /Content-Security-Policy "frame-ancestors 'none'" always/);
+  assert.match(nginxConfig, /add_header Cache-Control \$whago_no_store always/);
   assert.match(nginxConfig, /proxy_pass http:\/\/127\.0\.0\.1:3100\/healthz/);
+  assert.match(nginxConfig, /default_type application\/manifest\+json/);
+  assert.match(
+    nginxConfig,
+    /location ~ \^\/\(daymark\|siteboard\)\/index\\\.html\$/,
+  );
+  assert.match(
+    nginxConfig,
+    /no-store, no-cache, must-revalidate, max-age=0/,
+  );
   assert.doesNotMatch(nginxConfig, /try_files \$uri \$uri\/ \/(daymark|siteboard)\/index\.html/);
-  assert.match(deployScript, /sudo ln -sfn "\$home_release"/);
+  assert.match(deployScript, /sudo ln -sfnT "\$home_release"/);
   assert.match(deployScript, /sudo mv -Tf "\$home_root\/current\.next"/);
-  assert.match(deployScript, /sudo ln -sfn "\$tools_release"/);
+  assert.match(deployScript, /sudo ln -sfnT "\$tools_release"/);
   assert.match(deployScript, /sudo mv -Tf "\$tools_root\/current\.next"/);
+  assert.match(
+    deployScript,
+    /"\/tmp\/whago-build-\$release_id\."\*\) find "\$work_root" -depth -delete/,
+  );
+  assert.match(deployScript, /trap 'rollback \$\?' ERR/);
+  assert.match(deployScript, /trap 'rollback 130' INT/);
+  assert.match(deployScript, /trap 'rollback 143' TERM/);
+  assert.match(deployScript, /service_unit_backup="\$backup_dir\/whago-home\.service"/);
+  assert.match(deployScript, /sudo cp "\$service_unit" "\$service_unit_backup"/);
+  assert.match(deployScript, /restore_current_link "\$home_root" "\$previous_home"/);
+  assert.match(deployScript, /restore_current_link "\$tools_root" "\$previous_tools"/);
+  assert.doesNotMatch(deployScript, /cleanup_failed_releases/);
+
+  const homeMove = deployScript.indexOf(
+    'sudo mv -Tf "$home_root/current.next" "$home_root/current"',
+  );
+  const homeSwitchFlag = deployScript.lastIndexOf(
+    'home_switched="true"',
+    homeMove,
+  );
+  const toolsMove = deployScript.indexOf(
+    'sudo mv -Tf "$tools_root/current.next" "$tools_root/current"',
+    homeMove,
+  );
+  const toolsSwitchFlag = deployScript.lastIndexOf(
+    'tools_switched="true"',
+    toolsMove,
+  );
+  assert.ok(homeMove >= 0);
+  assert.ok(homeSwitchFlag >= 0 && homeSwitchFlag < homeMove);
+  assert.ok(toolsSwitchFlag > homeMove && toolsSwitchFlag < toolsMove);
 
   const previewFiles = await readdir(previewRoot).catch((error) => {
     if (error?.code === "ENOENT") return [];
