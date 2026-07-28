@@ -18,7 +18,7 @@ infrastructure identifiers with inert placeholders.
 
 ## Scope
 
-Reports about WHAGO Home, its deployment configuration, and the integration
-of Daymark, RepoLens, or Siteboard are in scope here. Product-specific defects
-that do not affect this integration should be reported privately in the
-corresponding product repository.
+Reports about the homepage code, static export, Nginx configuration, and CI
+workflow are in scope here. Daymark, RepoLens, and Siteboard each use an
+independent repository and security policy; report product findings in the
+corresponding repository.

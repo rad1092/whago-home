@@ -13,9 +13,9 @@ export default function NotFound() {
   return (
     <main className="not-found">
       <p>404 / NOT FOUND</p>
-      <h1>이 주소에는 도구가 없습니다.</h1>
+      <h1>요청한 주소를 확인해 주세요.</h1>
       <Link href="/">
-        WHAGO 홈으로 <span aria-hidden="true">←</span>
+        김홍대 홈페이지로 <span aria-hidden="true">←</span>
       </Link>
     </main>
   );

@@ -1,0 +1,187 @@
+:root {
+  color-scheme: light;
+  --paper: #f2f0e9;
+  --surface: #fbfaf5;
+  --ink: #171714;
+  --muted: #66635c;
+  --line: #bbb8ad;
+  --accent: #db462f;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 20rem;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+main {
+  width: min(100% - 2rem, 58rem);
+  margin: 0 auto;
+  padding: clamp(3rem, 10vw, 7rem) 0;
+}
+
+.mark {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border-radius: 0.7rem;
+  background: var(--ink);
+  color: white;
+  font-weight: 900;
+}
+
+.eyebrow {
+  margin: 3rem 0 1.2rem;
+  color: var(--accent);
+  font: 800 0.7rem/1.2 ui-monospace, monospace;
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  max-width: 13ch;
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 6.7rem);
+  letter-spacing: -0.07em;
+  line-height: 0.98;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+.lead {
+  max-width: 42rem;
+  margin: 2rem 0 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  line-height: 1.75;
+  word-break: keep-all;
+}
+
+.panel {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  border: 1px solid var(--ink);
+  background: var(--surface);
+}
+
+.panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.3rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+#backup-count {
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: white;
+  font: 800 0.65rem/1 ui-monospace, monospace;
+}
+
+#backup-list {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.3rem;
+}
+
+.backup-button,
+.destination {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: white;
+  font: 800 0.8rem/1.4 inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.backup-button {
+  width: 100%;
+}
+
+.backup-button:hover,
+.destination:hover {
+  background: var(--accent);
+}
+
+.empty {
+  margin: 0;
+  padding: 1rem;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.steps {
+  display: grid;
+  gap: 0;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+  list-style: none;
+}
+
+.steps li {
+  display: grid;
+  min-height: 4.5rem;
+  align-items: center;
+  grid-template-columns: 3rem 1fr;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.steps span {
+  color: var(--accent);
+  font: 800 0.7rem/1 ui-monospace, monospace;
+}
+
+.destination {
+  margin-top: 2rem;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #0068d9;
+  outline-offset: 4px;
+}
+
+@media (max-width: 38rem) {
+  main {
+    width: min(100% - 2rem, 58rem);
+    padding-top: 2rem;
+  }
+
+  .eyebrow {
+    margin-top: 2.5rem;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 15vw, 4.6rem);
+  }
+}

@@ -26,7 +26,7 @@ async function render(pathname = "/") {
   );
 }
 
-test("server-renders the WHAGO tool suite", async () => {
+test("renders an independent homepage with verified work and separate tools", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -39,106 +39,124 @@ test("server-renders the WHAGO tool suite", async () => {
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="ko"/i);
-  assert.match(html, /<title>WHAGO — 운영 도구<\/title>/i);
-  assert.match(html, /계획하고,/);
-  assert.match(html, /Daymark/);
-  assert.match(html, /RepoLens/);
-  assert.match(html, /Siteboard/);
-  assert.match(html, /href="\/daymark\/"/);
-  assert.match(html, /href="\/repolens\/"/);
-  assert.match(html, /href="\/siteboard\/"/);
+  assert.match(html, /<title>김홍대 — 소프트웨어 개발<\/title>/i);
+  assert.match(html, /반복 업무를/);
+  assert.match(html, /FirstCall/);
+  assert.match(html, /gh-dep-risk/);
+  assert.match(html, /LocalFit Lab/);
+  assert.match(
+    html,
+    /github\.com\/rad1092\/firstcall-local-api-workbench\/releases\/latest/,
+  );
+  assert.match(
+    html,
+    /github\.com\/rad1092\/gh-dependency-risk\/releases\/latest/,
+  );
+  assert.match(html, /github\.com\/rad1092\/localfit-lab/);
+
+  assert.match(html, /href="https:\/\/rad1092\.github\.io\/daymark\/"/);
+  assert.match(html, /href="https:\/\/rad1092\.github\.io\/repolens\/"/);
+  assert.match(html, /href="https:\/\/rad1092\.github\.io\/siteboard\/"/);
   assert.match(html, /github\.com\/rad1092\/daymark/);
   assert.match(html, /github\.com\/rad1092\/repolens/);
   assert.match(html, /github\.com\/rad1092\/siteboard/);
-  assert.match(html, /repolens \./);
-  assert.match(html, /Grade A/);
-  assert.match(html, /detected/);
-  assert.doesNotMatch(html, /repolens audit|GOOD|CI workflow[\s\S]*passing/);
+
   assert.match(html, /property="og:image" content="https:\/\/whago\.net\/og\.png"/);
   assert.match(html, /rel="icon" href="https:\/\/whago\.net\/favicon\.svg"/);
-  assert.doesNotMatch(html, /김홍대\s*\/\s*소프트웨어 개발자/);
-  assert.doesNotMatch(html, /FirstCall|ASCII Diagram Editor|gh-dep-risk/);
-  assert.doesNotMatch(html, /포트폴리오|작업 페이지/);
+  assert.doesNotMatch(
+    html,
+    /WHAGO OPERATIONS TOOLKIT|세 도구,\s*하나의 흐름|현재 제공 중|3 tools|Grade A/,
+  );
+  assert.doesNotMatch(html, /아닙니다|아니라|단순한|그저|데모/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
 });
 
-test("keeps the suite accessible and free of starter artifacts", async () => {
-  const [page, layout, css, packageJson, nginxConfig, deployScript] =
-    await Promise.all([
+test("keeps copy, accessibility, and deployment boundaries explicit", async () => {
+  const [
+    page,
+    layout,
+    css,
+    packageJson,
+    nextConfig,
+    nginxConfig,
+    deployScript,
+    readme,
+    dataMove,
+    daymarkMove,
+    siteboardMove,
+  ] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../ops/nginx-whago.conf", import.meta.url), "utf8"),
     readFile(new URL("../ops/deploy-on-lightsail.sh", import.meta.url), "utf8"),
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(new URL("../public/data-move.js", import.meta.url), "utf8"),
+    readFile(new URL("../public/daymark/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../public/siteboard/index.html", import.meta.url), "utf8"),
   ]);
 
   assert.doesNotMatch(page, /"use client"/);
   assert.match(page, /className="skip-link"/);
   assert.match(page, /id="main"/);
   assert.match(page, /aria-labelledby="hero-title"/);
+  assert.doesNotMatch(
+    page,
+    /아닙니다|아니라|단순한|그저|데모|세 도구,\s*하나의 흐름/,
+  );
+
   assert.match(layout, /metadataBase:\s*new URL\("https:\/\/whago\.net"\)/);
   assert.match(layout, /export const viewport:\s*Viewport/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)/);
-  assert.match(packageJson, /"build:server":\s*"next build"/);
-  assert.doesNotMatch(packageJson, /react-loading-skeleton/);
+  assert.match(packageJson, /"build:static":\s*"WHAGO_STATIC_EXPORT=1 next build"/);
+  assert.match(nextConfig, /output:\s*"export"/);
+  assert.match(nextConfig, /process\.env\.WHAGO_STATIC_EXPORT/);
+
+  assert.match(nginxConfig, /root \/srv\/whago-home\/current\/out;/);
   assert.match(nginxConfig, /X-Frame-Options "DENY" always/);
   assert.match(nginxConfig, /Content-Security-Policy "frame-ancestors 'none'" always/);
-  assert.match(nginxConfig, /add_header Cache-Control \$whago_no_store always/);
-  assert.match(nginxConfig, /proxy_pass http:\/\/127\.0\.0\.1:3100\/healthz/);
-  assert.match(nginxConfig, /default_type application\/manifest\+json/);
-  assert.match(
-    nginxConfig,
-    /location ~ \^\/\(daymark\|siteboard\)\/index\\\.html\$/,
-  );
-  assert.match(
-    nginxConfig,
-    /no-store, no-cache, must-revalidate, max-age=0/,
-  );
-  assert.doesNotMatch(nginxConfig, /try_files \$uri \$uri\/ \/(daymark|siteboard)\/index\.html/);
+  assert.match(nginxConfig, /try_files \/daymark\/index\.html =404/);
+  assert.match(nginxConfig, /try_files \/siteboard\/index\.html =404/);
+  assert.match(nginxConfig, /server_name www\.whago\.net;[\s\S]*location = \/daymark\//);
+  assert.match(nginxConfig, /server_name www\.whago\.net;[\s\S]*location = \/siteboard\//);
+  assert.match(nginxConfig, /server_name www\.whago\.net;[\s\S]*location = \/data-move\.js/);
+  assert.match(nginxConfig, /return 301 https:\/\/www\.whago\.net\/daymark\//);
+  assert.match(nginxConfig, /return 301 https:\/\/www\.whago\.net\/siteboard\//);
+  assert.match(nginxConfig, /return 308 https:\/\/rad1092\.github\.io\$request_uri/);
+  assert.match(nginxConfig, /ssl_reject_handshake on/);
+  assert.match(nginxConfig, /return 301 https:\/\/whago\.net\$request_uri/);
+  assert.doesNotMatch(nginxConfig, /proxy_pass|whago-tools|127\.0\.0\.1:3100/);
+
+  assert.match(deployScript, /npm --prefix "\$source_dir" run build:static/);
+  assert.match(deployScript, /mktemp -d \/tmp\/whago-home-build/);
+  assert.match(deployScript, /expected_release_json/);
+  assert.match(deployScript, /systemctl disable --now "\$service_name"/);
   assert.match(deployScript, /sudo ln -sfnT "\$home_release"/);
   assert.match(deployScript, /sudo mv -Tf "\$home_root\/current\.next"/);
-  assert.match(deployScript, /sudo ln -sfnT "\$tools_release"/);
-  assert.match(deployScript, /sudo mv -Tf "\$tools_root\/current\.next"/);
-  assert.match(
-    deployScript,
-    /"\/tmp\/whago-build-\$release_id\."\*\) find "\$work_root" -depth -delete/,
-  );
   assert.match(deployScript, /trap 'rollback \$\?' ERR/);
-  assert.match(deployScript, /trap 'rollback 130' INT/);
-  assert.match(deployScript, /trap 'rollback 143' TERM/);
-  assert.match(deployScript, /service_unit_backup="\$backup_dir\/whago-home\.service"/);
-  assert.match(deployScript, /sudo cp "\$service_unit" "\$service_unit_backup"/);
-  assert.match(deployScript, /restore_current_link "\$home_root" "\$previous_home"/);
-  assert.match(deployScript, /restore_current_link "\$tools_root" "\$previous_tools"/);
-  assert.match(
+  assert.match(deployScript, /restore_current_link "\$previous_home"/);
+  assert.match(deployScript, /systemctl stop "\$service_name"/);
+  assert.match(deployScript, /systemctl disable "\$service_name"/);
+  assert.doesNotMatch(
     deployScript,
-    /ln -s "\$home_release" "\$work_root\/whago-home"/,
+    /git clone .*\/(daymark|repolens|siteboard)\.git|tools_root|tools_release/,
   );
-  assert.match(
-    deployScript,
-    /"\$work_root\/whago-home" \\\n {2}--format html/,
-  );
-  assert.doesNotMatch(deployScript, /cleanup_failed_releases/);
 
-  const homeMove = deployScript.indexOf(
-    'sudo mv -Tf "$home_root/current.next" "$home_root/current"',
-  );
-  const homeSwitchFlag = deployScript.lastIndexOf(
-    'home_switched="true"',
-    homeMove,
-  );
-  const toolsMove = deployScript.indexOf(
-    'sudo mv -Tf "$tools_root/current.next" "$tools_root/current"',
-    homeMove,
-  );
-  const toolsSwitchFlag = deployScript.lastIndexOf(
-    'tools_switched="true"',
-    toolsMove,
-  );
-  assert.ok(homeMove >= 0);
-  assert.ok(homeSwitchFlag >= 0 && homeSwitchFlag < homeMove);
-  assert.ok(toolsSwitchFlag > homeMove && toolsSwitchFlag < toolsMove);
+  assert.match(readme, /각 도구는 독립 저장소와 GitHub Pages 주소/);
+  assert.doesNotMatch(readme, /개인 포트폴리오가 아니라|제품 허브/);
+
+  assert.match(dataMove, /daymark:data:v2/);
+  assert.match(dataMove, /daymark:data:v1/);
+  assert.match(dataMove, /daymark:data:backup"/);
+  assert.match(dataMove, /siteboard\.document\.v2/);
+  assert.match(dataMove, /siteboard\.document\.recovery\.raw/);
+  assert.match(dataMove, /siteboard\.document\.v1/);
+  assert.match(dataMove, /window\.localStorage\.getItem/);
+  assert.doesNotMatch(dataMove, /\bfetch\s*\(/);
+  assert.match(daymarkMove, /새 Daymark 열기/);
+  assert.match(siteboardMove, /새 Siteboard 열기/);
 
   const previewFiles = await readdir(previewRoot).catch((error) => {
     if (error?.code === "ENOENT") return [];
@@ -149,24 +167,20 @@ test("keeps the suite accessible and free of starter artifacts", async () => {
   await Promise.all([
     access(new URL("../public/og.png", import.meta.url)),
     access(new URL("../public/favicon.svg", import.meta.url)),
+    access(new URL("../public/daymark/index.html", import.meta.url)),
+    access(new URL("../public/siteboard/index.html", import.meta.url)),
+    access(new URL("../public/data-move.js", import.meta.url)),
   ]);
   await assert.rejects(access(new URL("public/_sites-preview", templateRoot)));
 });
 
-test("serves health, search metadata, tool routes in sitemap, and a noindex 404", async () => {
-  const [
-    healthResponse,
-    robotsResponse,
-    sitemapResponse,
-    missingResponse,
-    removedCaseResponse,
-  ] =
+test("serves health and search metadata without folding tool pages into the site", async () => {
+  const [healthResponse, robotsResponse, sitemapResponse, missingResponse] =
     await Promise.all([
       render("/healthz"),
       render("/robots.txt"),
       render("/sitemap.xml"),
       render("/missing-page"),
-      render("/work/firstcall"),
     ]);
 
   assert.equal(healthResponse.status, 200);
@@ -182,15 +196,13 @@ test("serves health, search metadata, tool routes in sitemap, and a noindex 404"
   assert.equal(sitemapResponse.status, 200);
   const sitemap = await sitemapResponse.text();
   assert.match(sitemap, /<loc>https:\/\/whago\.net<\/loc>/);
-  assert.match(sitemap, /<loc>https:\/\/whago\.net\/daymark\/<\/loc>/);
-  assert.match(sitemap, /<loc>https:\/\/whago\.net\/repolens\/<\/loc>/);
-  assert.match(sitemap, /<loc>https:\/\/whago\.net\/siteboard\/<\/loc>/);
+  assert.doesNotMatch(sitemap, /\/daymark\/|\/repolens\/|\/siteboard\//);
 
   assert.equal(missingResponse.status, 404);
+  const missingHtml = await missingResponse.text();
   assert.match(
-    await missingResponse.text(),
+    missingHtml,
     /<meta(?=[^>]*\bcontent="noindex")(?=[^>]*\bname="robots")[^>]*>/,
   );
-
-  assert.equal(removedCaseResponse.status, 404);
+  assert.match(missingHtml, /요청한 주소를 확인해 주세요/);
 });
