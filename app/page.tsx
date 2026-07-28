@@ -1,25 +1,37 @@
+import Image from "next/image";
+import Link from "next/link";
+
 export const dynamic = "force-static";
 
-const principles = [
+const workflow = [
   {
     number: "01",
-    title: "작게 시작합니다",
-    description:
-      "핵심 흐름이 실제로 작동하는 최소 단위부터 만들고, 필요가 확인된 다음에 확장합니다.",
+    title: "요청 파싱",
+    description: "API 요청 소스를 구조화합니다.",
   },
   {
     number: "02",
-    title: "판단을 남깁니다",
-    description:
-      "결과뿐 아니라 무엇을 버렸는지, 왜 이 방향을 선택했는지 기록합니다.",
+    title: "로컬 검증",
+    description: "환경값을 주입해 요청과 응답을 확인합니다.",
   },
   {
     number: "03",
-    title: "운영까지 봅니다",
-    description:
-      "배포와 비용, 보안과 유지보수까지 제품을 이루는 중요한 경험으로 다룹니다.",
+    title: "패키지 내보내기",
+    description: "레시피와 MCP 도구 패키지를 생성합니다.",
+  },
+  {
+    number: "04",
+    title: "검사·가져오기",
+    description: "패키지 구조와 해시를 검사한 뒤 가져옵니다.",
+  },
+  {
+    number: "05",
+    title: "로컬 재검증",
+    description: "가져온 레시피를 다시 확인해야 재내보낼 수 있습니다.",
   },
 ] as const;
+
+const newTabLabel = <span className="sr-only">(새 탭에서 열림)</span>;
 
 export default function Home() {
   return (
@@ -28,237 +40,247 @@ export default function Home() {
         본문으로 바로가기
       </a>
 
-      <header className="site-header">
+      <header className="masthead" id="top">
         <a className="wordmark" href="#top" aria-label="WHAGO 홈">
           WHAGO
         </a>
-        <p className="edition">
-          <span className="status-dot" aria-hidden="true" />
-          V1 · 2026.07
-        </p>
-      </header>
-
-      <main id="main">
-        <section className="hero" id="top" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <p className="eyebrow">WHAGO · HongDae Kim</p>
-            <h1 id="hero-title">
-              사람의 다음 한 걸음을 돕는 소프트웨어를 만듭니다.
-            </h1>
-            <p className="hero-description">
-              현장에서 사람과 일정, 문제를 조율하던 경험을 바탕으로 실제
-              다음 행동으로 이어지는 제품과 도구를 설계하고 구현합니다.
-            </p>
-            <nav className="hero-actions" aria-label="주요 링크">
-              <a className="primary-action" href="#work">
-                대표 작업 보기
-                <span aria-hidden="true">↘</span>
-              </a>
-              <a
-                className="text-action"
-                href="https://github.com/rad1092"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub
-                <span aria-hidden="true">↗</span>
-                <span className="sr-only">(새 탭에서 열림)</span>
-              </a>
-            </nav>
-          </div>
-
-          <aside className="hero-panel" aria-label="WHAGO 현재 상태">
-            <div className="hero-panel-top">
-              <span>WHG / 00</span>
-              <span>2026.07</span>
-            </div>
-            <div className="hero-monogram" aria-hidden="true">
-              W
-            </div>
-            <dl className="status-list">
-              <div>
-                <dt>Now</dt>
-                <dd>사이트 재구축</dd>
-              </div>
-              <div>
-                <dt>Focus</dt>
-                <dd>제품 · 도구 · 시스템</dd>
-              </div>
-              <div>
-                <dt>Mode</dt>
-                <dd>독립 제작</dd>
-              </div>
-            </dl>
-          </aside>
-        </section>
-
-        <section className="work-section" id="work" aria-labelledby="work-title">
-          <div className="section-index" aria-hidden="true">
-            01
-          </div>
-          <div className="section-heading">
-            <p className="eyebrow">Selected work · Shipped</p>
-            <h2 id="work-title">FirstCall</h2>
-            <p className="project-subtitle">
-              Local-first API workbench
-            </p>
-          </div>
-          <div className="work-content">
-            <p className="section-lead">
-              API 요청을 로컬에서 검증하고 비밀값을 환경변수 참조로 분리해,
-              다시 검증할 수 있는 레시피와 실행 가능한 MCP 도구 패키지로
-              내보냅니다.
-            </p>
-
-            <div className="project-facts" aria-label="FirstCall 프로젝트 요약">
-              <div>
-                <span>Scope</span>
-                <strong>개인 프로젝트 · Rust</strong>
-              </div>
-              <div>
-                <span>Surface</span>
-                <strong>Desktop GUI · CLI</strong>
-              </div>
-              <div>
-                <span>Output</span>
-                <strong>Recipe package · MCP server</strong>
-              </div>
-            </div>
-
-            <div className="project-flow" aria-label="FirstCall의 주요 흐름">
-              <span>파싱</span>
-              <i aria-hidden="true">→</i>
-              <span>검증</span>
-              <i aria-hidden="true">→</i>
-              <span>패키징</span>
-              <i aria-hidden="true">→</i>
-              <span>검사·가져오기</span>
-              <i aria-hidden="true">→</i>
-              <span>재검증</span>
-            </div>
-
-            <div className="project-actions">
-              <a
-                className="project-link"
-                href="https://github.com/rad1092/firstcall-local-api-workbench#readme"
-                target="_blank"
-                rel="noreferrer"
-              >
-                README 보기
-                <span aria-hidden="true">↗</span>
-                <span className="sr-only">(새 탭에서 열림)</span>
-              </a>
-              <a
-                className="project-link"
-                href="https://github.com/rad1092/firstcall-local-api-workbench/releases"
-                target="_blank"
-                rel="noreferrer"
-              >
-                릴리스 보기
-                <span aria-hidden="true">↗</span>
-                <span className="sr-only">(새 탭에서 열림)</span>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <section className="now-section" id="now" aria-labelledby="now-title">
-          <div className="section-index" aria-hidden="true">
-            02
-          </div>
-          <div className="section-heading">
-            <p className="eyebrow">Now · 진행 중</p>
-            <h2 id="now-title">WHAGO를 처음부터 다시 만들고 있습니다.</h2>
-          </div>
-          <div className="now-content">
-            <p className="section-lead">
-              이전 사이트와 내용을 걷어내고, 개인 포트폴리오에서 제품
-              스튜디오까지 오래 쓸 수 있는 구조를 새로 설계합니다.
-            </p>
-            <div className="build-log" aria-label="현재 구축 단계">
-              <div className="build-log-item is-complete">
-                <span className="build-state">정리</span>
-                <strong>필요 없는 구조를 덜어냅니다.</strong>
-                <span>완료</span>
-              </div>
-              <div className="build-log-item is-active">
-                <span className="build-state">구축</span>
-                <strong>브랜드·콘텐츠·정적 배포 구조를 다시 세웁니다.</strong>
-                <span>진행 중</span>
-              </div>
-              <div className="build-log-item">
-                <span className="build-state">공개</span>
-                <strong>실제 작업과 판단을 차례로 엽니다.</strong>
-                <span>다음</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="principles-section"
-          id="principles"
-          aria-labelledby="principles-title"
-        >
-          <div className="section-index" aria-hidden="true">
-            03
-          </div>
-          <div className="section-heading">
-            <p className="eyebrow">Principles</p>
-            <h2 id="principles-title">만드는 방식에도 기준이 있습니다.</h2>
-          </div>
-          <div className="principle-grid">
-            {principles.map((principle) => (
-              <article className="principle" key={principle.number}>
-                <span>{principle.number}</span>
-                <h3>{principle.title}</h3>
-                <p>{principle.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="about-section" aria-labelledby="about-title">
-          <div className="section-index" aria-hidden="true">
-            04
-          </div>
-          <div className="section-heading">
-            <p className="eyebrow">About</p>
-            <h2 id="about-title">현장의 감각을 제품의 구조로 옮깁니다.</h2>
-          </div>
-          <div className="about-copy">
-            <p>
-              자재 납품과 영업관리 현장에서 일정, 재고, 납기를 조율하고
-              거래처를 직접 응대했습니다. 지금은 그 경험을 바탕으로 사람이
-              다음 행동을 더 쉽게 선택하게 만드는 도구를 만듭니다.
-            </p>
-            <p>
-              Python에서 시작해 Rust, Go, TypeScript까지 문제에 맞는 도구를
-              선택합니다. 제품과 사람이 늘어나더라도 쓸모와 명료함을 먼저
-              두는 기준은 유지합니다.
-            </p>
-          </div>
-        </section>
-      </main>
-
-      <footer className="site-footer">
-        <div>
-          <strong>WHAGO</strong>
-          <p>쓸모 있는 제품과 도구를 명료하게 만듭니다.</p>
-        </div>
-        <div className="footer-meta">
-          <a href="mailto:rad174951@gmail.com">Email</a>
+        <p className="masthead-count">김홍대 · 작업 03</p>
+        <nav className="masthead-links" aria-label="외부 링크">
           <a
             href="https://github.com/rad1092"
             target="_blank"
             rel="noreferrer"
           >
-            GitHub ↗
-            <span className="sr-only">(새 탭에서 열림)</span>
+            GitHub <span aria-hidden="true">↗</span>
+            {newTabLabel}
           </a>
-          <span>© 2026</span>
-          <a href="#top">맨 위로 ↑</a>
-        </div>
+          <a href="mailto:rad174951@gmail.com">
+            Email <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+      </header>
+
+      <main id="main">
+        <section className="feature" aria-labelledby="firstcall-title">
+          <div className="feature-copy">
+            <p className="project-kicker">
+              <span className="signal" aria-hidden="true" />
+              WORK 01 · RELEASED · RUST
+            </p>
+            <h1 id="firstcall-title">FirstCall</h1>
+            <p className="feature-deck">
+              API 요청 소스를 로컬에서 파싱·검증하고, 비밀값을 환경변수
+              참조로 분리한 뒤 레시피와 실행 가능한 MCP 도구 패키지로
+              내보냅니다.
+            </p>
+            <div className="feature-actions">
+              <Link className="button button-solid" href="/work/firstcall">
+                상세 보기 <span aria-hidden="true">→</span>
+              </Link>
+              <a
+                className="button button-line"
+                href="https://github.com/rad1092/firstcall-local-api-workbench/releases/tag/v0.2.1"
+                target="_blank"
+                rel="noreferrer"
+              >
+                v0.2.1 릴리스 <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+            </div>
+          </div>
+
+          <figure className="feature-figure">
+            <div className="figure-label">
+              <span>ACTUAL UI</span>
+              <span>FIRSTCALL v0.2.1</span>
+            </div>
+            <div className="screen-frame">
+              <Image
+                src="/firstcall-gui-still.png"
+                alt="FirstCall 데스크톱 GUI에서 샘플 cURL 요청을 파싱하고 레시피로 저장하는 화면"
+                width={1100}
+                height={760}
+                priority
+                sizes="(max-width: 900px) 100vw, 58vw"
+              />
+            </div>
+            <figcaption>
+              <span>GUI / 샘플 cURL 파싱과 레시피 저장</span>
+              <span>FirstCall v0.2.1 Windows 릴리스에서 캡처</span>
+              <a href="/firstcall-gui.gif" target="_blank" rel="noreferrer">
+                GUI 데모 재생 <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+            </figcaption>
+          </figure>
+        </section>
+
+        <section className="workflow" aria-labelledby="workflow-title">
+          <header className="section-label">
+            <p>FIRSTCALL / WORKFLOW</p>
+            <h2 id="workflow-title">요청에서 패키지까지</h2>
+          </header>
+          <ol className="workflow-list">
+            {workflow.map((step) => (
+              <li key={step.number}>
+                <span>{step.number}</span>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="project-index" aria-labelledby="project-index-title">
+          <header className="index-header">
+            <p>SELECTED WORK / 2026</p>
+            <h2 id="project-index-title">작업</h2>
+            <span>03</span>
+          </header>
+
+          <article className="project-row">
+            <div className="project-number">01</div>
+            <div className="project-copy">
+              <p className="project-kicker">RELEASED · RUST</p>
+              <h3>
+                <Link href="/work/firstcall">FirstCall</Link>
+              </h3>
+              <p>
+                API 요청을 검증하고 레시피와 MCP 도구 패키지로 내보내는
+                로컬 우선 데스크톱 GUI·CLI입니다.
+              </p>
+              <Link className="inline-link" href="/work/firstcall">
+                프로젝트 상세 <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+            <div className="project-evidence package-evidence">
+              <p>PACKAGE OUTPUT</p>
+              <ul>
+                <li>recipe.yaml</li>
+                <li>verified.lock.json</li>
+                <li>policy.json</li>
+                <li>package.manifest.json</li>
+                <li>mcp-server/</li>
+              </ul>
+            </div>
+          </article>
+
+          <article className="project-row">
+            <div className="project-number">02</div>
+            <div className="project-copy">
+              <p className="project-kicker">PUBLIC SOURCE · TYPESCRIPT</p>
+              <h3>
+                <a
+                  href="https://github.com/rad1092/ascii-diagram-editor"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  ASCII Diagram Editor
+                  <span className="sr-only">(새 탭에서 열림)</span>
+                </a>
+              </h3>
+              <p>
+                고정 200×80 문자 그리드에서 ASCII 다이어그램을 편집하고,
+                결과를 실제 &lt;pre&gt; 요소로 출력하는 브라우저 도구입니다.
+              </p>
+              <a
+                className="inline-link"
+                href="https://github.com/rad1092/ascii-diagram-editor"
+                target="_blank"
+                rel="noreferrer"
+              >
+                소스 보기 <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+            </div>
+            <figure className="project-evidence ascii-evidence">
+              <pre aria-label="ASCII 다이어그램 출력 예시">{`┌──────────────┐
+│ 200 × 80 GRID│
+└──────┬───────┘
+       │
+┌──────▼───────┐
+│  <pre> OUTPUT │
+└──────────────┘`}</pre>
+              <figcaption>편집 결과 예시 / 실제 &lt;pre&gt; 출력</figcaption>
+            </figure>
+          </article>
+
+          <article className="project-row">
+            <div className="project-number">03</div>
+            <div className="project-copy">
+              <p className="project-kicker">RELEASED · GO</p>
+              <h3>
+                <a
+                  href="https://github.com/rad1092/gh-dependency-risk"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  gh-dep-risk
+                  <span className="sr-only">(새 탭에서 열림)</span>
+                </a>
+              </h3>
+              <p>
+                PR의 의존성 변경을 요약하는 GitHub CLI 확장입니다. Dependency
+                Review API를 우선 사용하고, 사용할 수 없으면 정적 로컬
+                분석으로 대체합니다.
+              </p>
+              <a
+                className="inline-link"
+                href="https://github.com/rad1092/gh-dependency-risk"
+                target="_blank"
+                rel="noreferrer"
+              >
+                소스 보기 <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+            </div>
+            <div className="project-evidence route-evidence">
+              <p>ANALYSIS ROUTE</p>
+              <div>
+                <span>01</span>
+                <strong>Dependency Review API</strong>
+                <small>PRIMARY</small>
+              </div>
+              <div>
+                <span>02</span>
+                <strong>Static local analysis</strong>
+                <small>FALLBACK</small>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section className="about" aria-labelledby="about-title">
+          <p className="section-code">ABOUT / KIM HONGDAE</p>
+          <div>
+            <h2 id="about-title">김홍대</h2>
+          </div>
+          <div className="about-copy">
+            <p>
+              자재 납품과 영업관리 현장에서 일정·재고·납기를 조율했습니다.
+            </p>
+            <p>현재 FirstCall과 개발 도구를 만들고 있습니다.</p>
+            <div className="about-links">
+              <a href="mailto:rad174951@gmail.com">
+                Email <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                href="https://github.com/rad1092"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="site-footer">
+        <strong>WHAGO</strong>
+        <span>© 2026</span>
+        <a href="#top">맨 위로 ↑</a>
       </footer>
     </>
   );

@@ -4,11 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://whago.net"),
   title: {
-    default: "WHAGO — HongDae Kim",
+    default: "WHAGO — 김홍대의 웹과 도구",
     template: "%s · WHAGO",
   },
   description:
-    "사람의 다음 한 걸음을 돕는 제품과 도구를 설계하고 직접 구현합니다.",
+    "FirstCall, ASCII Diagram Editor, gh-dep-risk를 만든 김홍대의 작업 페이지.",
   creator: "HongDae Kim",
   icons: {
     icon: "/favicon.svg",
@@ -21,30 +21,30 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: "/",
     siteName: "WHAGO",
-    title: "WHAGO — HongDae Kim",
+    title: "WHAGO — 김홍대의 웹과 도구",
     description:
-      "사람의 다음 한 걸음을 돕는 소프트웨어를 만듭니다.",
+      "FirstCall, ASCII Diagram Editor, gh-dep-risk를 만든 김홍대의 작업 페이지.",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "WHAGO — 사람의 다음 한 걸음을 돕는 소프트웨어를 만듭니다.",
+        alt: "WHAGO — 김홍대의 웹과 도구",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "WHAGO — HongDae Kim",
+    title: "WHAGO — 김홍대의 웹과 도구",
     description:
-      "사람의 다음 한 걸음을 돕는 소프트웨어를 만듭니다.",
+      "FirstCall, ASCII Diagram Editor, gh-dep-risk를 만든 김홍대의 작업 페이지.",
     images: ["/og.png"],
   },
 };
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#f5f3ee",
+  themeColor: "#efeee8",
   width: "device-width",
   initialScale: 1,
 };
