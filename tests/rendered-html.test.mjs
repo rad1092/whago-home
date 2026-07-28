@@ -63,12 +63,14 @@ test("server-renders the WHAGO tool suite", async () => {
 });
 
 test("keeps the suite accessible and free of starter artifacts", async () => {
-  const [page, layout, css, packageJson, nginxConfig] = await Promise.all([
+  const [page, layout, css, packageJson, nginxConfig, deployScript] =
+    await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../ops/nginx-whago.conf", import.meta.url), "utf8"),
+    readFile(new URL("../ops/deploy-on-lightsail.sh", import.meta.url), "utf8"),
   ]);
 
   assert.doesNotMatch(page, /"use client"/);
@@ -84,6 +86,10 @@ test("keeps the suite accessible and free of starter artifacts", async () => {
   assert.match(nginxConfig, /Content-Security-Policy "frame-ancestors 'none'" always/);
   assert.match(nginxConfig, /proxy_pass http:\/\/127\.0\.0\.1:3100\/healthz/);
   assert.doesNotMatch(nginxConfig, /try_files \$uri \$uri\/ \/(daymark|siteboard)\/index\.html/);
+  assert.match(deployScript, /sudo ln -sfn "\$home_release"/);
+  assert.match(deployScript, /sudo mv -Tf "\$home_root\/current\.next"/);
+  assert.match(deployScript, /sudo ln -sfn "\$tools_release"/);
+  assert.match(deployScript, /sudo mv -Tf "\$tools_root\/current\.next"/);
 
   const previewFiles = await readdir(previewRoot).catch((error) => {
     if (error?.code === "ENOENT") return [];

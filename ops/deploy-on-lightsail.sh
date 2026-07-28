@@ -48,16 +48,16 @@ rollback() {
 
   if [[ "$switched" == "true" ]]; then
     if [[ -n "$previous_home" ]]; then
-      ln -sfn "$previous_home" "$home_root/current.next"
-      mv -Tf "$home_root/current.next" "$home_root/current"
+      sudo ln -sfn "$previous_home" "$home_root/current.next"
+      sudo mv -Tf "$home_root/current.next" "$home_root/current"
       sudo systemctl restart whago-home.service
     else
       sudo systemctl stop whago-home.service
     fi
 
     if [[ -n "$previous_tools" ]]; then
-      ln -sfn "$previous_tools" "$tools_root/current.next"
-      mv -Tf "$tools_root/current.next" "$tools_root/current"
+      sudo ln -sfn "$previous_tools" "$tools_root/current.next"
+      sudo mv -Tf "$tools_root/current.next" "$tools_root/current"
     fi
   fi
 
@@ -133,10 +133,10 @@ printf '%s\n' \
   "siteboard=$siteboard_sha" \
   > "$tools_release/RELEASE"
 
-ln -sfn "$home_release" "$home_root/current.next"
-mv -Tf "$home_root/current.next" "$home_root/current"
-ln -sfn "$tools_release" "$tools_root/current.next"
-mv -Tf "$tools_root/current.next" "$tools_root/current"
+sudo ln -sfn "$home_release" "$home_root/current.next"
+sudo mv -Tf "$home_root/current.next" "$home_root/current"
+sudo ln -sfn "$tools_release" "$tools_root/current.next"
+sudo mv -Tf "$tools_root/current.next" "$tools_root/current"
 switched="true"
 
 sudo install -m 0644 \
