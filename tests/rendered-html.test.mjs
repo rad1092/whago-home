@@ -39,12 +39,15 @@ test("server-renders the WHAGO portfolio", async () => {
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="ko"/i);
-  assert.match(html, /<title>WHAGO — 김홍대의 웹과 도구<\/title>/i);
+  assert.match(html, /<title>WHAGO — 김홍대<\/title>/i);
+  assert.match(html, /윈도우 앱, GitHub CLI, 브라우저 편집기를 만들었습니다\./);
   assert.match(html, /FirstCall/);
-  assert.match(html, /요청에서 패키지까지/);
   assert.match(html, /ASCII Diagram Editor/);
   assert.match(html, /gh-dep-risk/);
-  assert.match(html, /firstcall-gui-still/);
+  assert.match(html, /firstcall-crop/);
+  assert.match(html, /dep-risk-still/);
+  assert.match(html, /실제 &lt;pre&gt; 출력/);
+  assert.match(html, /<textarea/);
   assert.match(html, /rad1092\/firstcall-local-api-workbench/);
   assert.match(html, /mailto:rad174951@gmail\.com/);
   assert.match(html, /property="og:image" content="https:\/\/whago\.net\/og\.png"/);
@@ -55,9 +58,10 @@ test("server-renders the WHAGO portfolio", async () => {
   assert.doesNotMatch(html, /react-loading-skeleton|codex-preview/);
 });
 
-test("keeps the portfolio static, accessible, and free of starter artifacts", async () => {
-  const [page, casePage, layout, css, packageJson] = await Promise.all([
+test("keeps the portfolio accessible and free of starter artifacts", async () => {
+  const [page, playground, casePage, layout, css, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/components/ascii-playground.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/work/firstcall/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -65,6 +69,9 @@ test("keeps the portfolio static, accessible, and free of starter artifacts", as
   ]);
 
   assert.doesNotMatch(page, /"use client"/);
+  assert.match(playground, /"use client"/);
+  assert.match(playground, /<textarea/);
+  assert.match(playground, /disabled=\{diagram === initialDiagram\}/);
   assert.doesNotMatch(casePage, /"use client"/);
   assert.match(page, /className="skip-link"/);
   assert.match(page, /id="main"/);
@@ -85,6 +92,10 @@ test("keeps the portfolio static, accessible, and free of starter artifacts", as
     access(new URL("../public/favicon.svg", import.meta.url)),
     access(new URL("../public/firstcall-gui-still.png", import.meta.url)),
     access(new URL("../public/firstcall-gui.gif", import.meta.url)),
+    access(new URL("../public/firstcall-crop.png", import.meta.url)),
+    access(new URL("../public/dep-risk-still.png", import.meta.url)),
+    access(new URL("../public/gh-dep-risk-demo.gif", import.meta.url)),
+    access(new URL("../public/fonts/instrument-serif.woff2", import.meta.url)),
   ]);
   await assert.rejects(access(new URL("public/_sites-preview", templateRoot)));
 });
@@ -100,7 +111,7 @@ test("serves the FirstCall case study, search metadata, and a noindex 404", asyn
   assert.equal(caseResponse.status, 200);
   const caseHtml = await caseResponse.text();
   assert.match(caseHtml, /<title>FirstCall · WHAGO<\/title>/i);
-  assert.match(caseHtml, /PACKAGE OUTPUT/);
+  assert.match(caseHtml, /내보내는 것/);
   assert.match(caseHtml, /v0\.2\.1 릴리스 당시 검증/);
   assert.match(caseHtml, /Windows · Linux · macOS CI 통과/);
 

@@ -29,22 +29,10 @@ const packageFiles = [
 ] as const;
 
 const safeguards = [
-  {
-    number: "01",
-    text: "비밀값은 환경변수로 참조합니다. SQLite, 패키지 파일, CLI 보고서, 로그와 데모 자산에는 비밀값을 기록하지 않습니다.",
-  },
-  {
-    number: "02",
-    text: "가져온 스크립트, 테스트, 훅, 캡처와 환경 파일은 자동으로 실행하지 않습니다.",
-  },
-  {
-    number: "03",
-    text: "변경 HTTP 요청은 --allow-mutating을 명시해야 합니다.",
-  },
-  {
-    number: "04",
-    text: "가져온 패키지는 로컬 재검증 전까지 다시 내보낼 수 없습니다.",
-  },
+  "비밀값은 환경변수로 참조하며 패키지 파일과 로그에 기록하지 않습니다.",
+  "가져온 스크립트, 테스트, 훅과 환경 파일을 자동으로 실행하지 않습니다.",
+  "변경 HTTP 요청은 --allow-mutating을 명시해야 합니다.",
+  "가져온 패키지는 로컬 재검증 전까지 다시 내보낼 수 없습니다.",
 ] as const;
 
 const releaseChecks = [
@@ -67,15 +55,12 @@ export default function FirstCallPage() {
         본문으로 바로가기
       </a>
 
-      <header className="masthead" id="top">
-        <Link className="wordmark" href="/" aria-label="WHAGO 홈">
-          WHAGO
+      <header className="topbar" id="top">
+        <Link className="topbar-name" href="/">
+          김홍대
         </Link>
-        <p className="masthead-count">WORK 01 / FIRSTCALL</p>
-        <nav className="masthead-links" aria-label="페이지 이동">
-          <Link href="/">
-            작업 <span aria-hidden="true">↙</span>
-          </Link>
+        <nav aria-label="페이지 이동">
+          <Link href="/">작업</Link>
           <a
             href="https://github.com/rad1092/firstcall-local-api-workbench"
             target="_blank"
@@ -87,177 +72,141 @@ export default function FirstCallPage() {
         </nav>
       </header>
 
-      <main id="main" className="case-main">
-        <header className="case-intro">
-          <p className="project-kicker">
-            <span className="signal" aria-hidden="true" />
-            WORK 01 · FIRSTCALL · v0.2.1
-          </p>
-          <h1>FirstCall</h1>
-          <p>
-            API 요청 소스를 로컬에서 파싱·검증하고, 비밀값을 환경변수
-            참조로 분리한 뒤 레시피와 실행 가능한 MCP 도구 패키지로
-            내보내는 Rust 데스크톱 워크벤치입니다.
-          </p>
-          <ul className="case-tags" aria-label="FirstCall 구성">
-            <li>DESKTOP GUI</li>
-            <li>CLI</li>
-            <li>RUST</li>
-          </ul>
-          <div className="feature-actions">
-            <a
-              className="button button-solid"
-              href="https://github.com/rad1092/firstcall-local-api-workbench#readme"
-              target="_blank"
-              rel="noreferrer"
-            >
-              README 읽기 <span aria-hidden="true">↗</span>
-              {newTabLabel}
-            </a>
-            <a
-              className="button button-line"
-              href="https://github.com/rad1092/firstcall-local-api-workbench/releases/tag/v0.2.1"
-              target="_blank"
-              rel="noreferrer"
-            >
-              릴리스 보기 <span aria-hidden="true">↗</span>
-              {newTabLabel}
-            </a>
+      <main id="main" className="case-page">
+        <section className="case-hero" aria-labelledby="case-title">
+          <div>
+            <p>Rust desktop workbench / v0.2.1</p>
+            <h1 id="case-title">FirstCall</h1>
+            <p>
+              API 요청 소스를 로컬에서 파싱·검증하고, 비밀값을 환경변수
+              참조로 분리한 뒤 레시피와 실행 가능한 MCP 도구 패키지로
+              내보냅니다.
+            </p>
+            <div className="case-actions">
+              <a
+                href="https://github.com/rad1092/firstcall-local-api-workbench#readme"
+                target="_blank"
+                rel="noreferrer"
+              >
+                README <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+              <a
+                href="https://github.com/rad1092/firstcall-local-api-workbench/releases/tag/v0.2.1"
+                target="_blank"
+                rel="noreferrer"
+              >
+                v0.2.1 릴리스 <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+            </div>
           </div>
-        </header>
-
-        <figure className="case-figure">
-          <div className="figure-label">
-            <span>DESKTOP GUI</span>
-            <span>WINDOWS / v0.2.1</span>
-          </div>
-          <div className="screen-frame">
+          <figure>
             <Image
-              src="/firstcall-gui-still.png"
-              alt="FirstCall 데스크톱 GUI에서 샘플 cURL 요청을 파싱하고 레시피로 저장하는 화면"
-              width={1100}
-              height={760}
+              src="/firstcall-crop.png"
+              alt="FirstCall에서 cURL 요청을 파싱해 후보 요청으로 만든 화면"
+              width={900}
+              height={430}
               priority
-              sizes="(max-width: 900px) 100vw, 88vw"
+              sizes="(max-width: 800px) 100vw, 58vw"
             />
-          </div>
-          <figcaption>
-            <span>샘플 cURL 파싱과 레시피 저장</span>
-            <span>FirstCall v0.2.1 Windows 릴리스에서 캡처</span>
-            <a href="/firstcall-gui.gif" target="_blank" rel="noreferrer">
-              GUI 데모 재생 <span aria-hidden="true">↗</span>
-              {newTabLabel}
-            </a>
-          </figcaption>
-        </figure>
+            <figcaption>
+              v0.2.1 Windows GUI
+              <a href="/firstcall-gui.gif" target="_blank" rel="noreferrer">
+                전체 데모 재생 <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+            </figcaption>
+          </figure>
+        </section>
 
-        <section className="case-section surfaces" aria-labelledby="surfaces-title">
+        <section className="case-block case-surfaces" aria-labelledby="surface-title">
           <header>
-            <p className="section-code">01 / SURFACES</p>
-            <h2 id="surfaces-title">두 가지 실행면</h2>
+            <p>두 실행 방식</p>
+            <h2 id="surface-title">화면과 명령줄</h2>
           </header>
-          <div className="surface-grid">
+          <div>
             <article>
-              <p>DESKTOP GUI</p>
-              <h3>화면에서 검토하고 실행</h3>
+              <span>Desktop GUI</span>
+              <h3>가져오고 검토한 뒤 실행합니다.</h3>
               <p>
-                요청 소스 가져오기, 파서 결과 검토, 환경값 입력, 로컬 실행,
-                레시피 저장을 화면에서 처리합니다.
+                요청 소스, 파서 결과, 환경값, 로컬 실행과 레시피 저장을
+                화면에서 처리합니다.
               </p>
             </article>
             <article>
-              <p>AUTOMATION CLI</p>
-              <h3>스크립트에서 검증하고 출력</h3>
+              <span>Automation CLI</span>
+              <h3>검증과 패키징을 자동화합니다.</h3>
               <p>
-                검증, 패키지 생성, 검사, 가져오기와 보고서 출력을
-                에이전트·CI·스크립트에서 실행합니다.
+                검사, 가져오기와 보고서 출력을 에이전트·CI·스크립트에서
+                실행합니다.
               </p>
             </article>
           </div>
         </section>
 
-        <section className="case-section package" aria-labelledby="package-title">
+        <section className="case-block case-output" aria-labelledby="output-title">
           <header>
-            <p className="section-code">02 / PACKAGE OUTPUT</p>
-            <h2 id="package-title">패키지 구성</h2>
+            <p>패키지</p>
+            <h2 id="output-title">내보내는 것</h2>
           </header>
-          <div className="package-layout">
-            <ul aria-label="FirstCall 패키지 파일">
-              {packageFiles.map((file, index) => (
+          <div>
+            <ul>
+              {packageFiles.map((file) => (
                 <li key={file}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
                   <code>{file}</code>
                 </li>
               ))}
             </ul>
             <p>
-              각 패키지에는 TypeScript MCP 서버가 포함됩니다. 설치와 빌드,
-              도구 목록 조회와 호출을 별도로 검증합니다.
+              각 패키지에는 TypeScript MCP 서버가 포함됩니다. 설치·빌드와
+              도구 목록 조회·호출을 별도로 검증합니다.
             </p>
           </div>
         </section>
 
-        <section className="case-section safety" aria-labelledby="safety-title">
+        <section className="case-block case-safety" aria-labelledby="safety-title">
           <header>
-            <p className="section-code">03 / SAFETY BOUNDARIES</p>
-            <h2 id="safety-title">실행 경계</h2>
+            <p>Safety boundaries</p>
+            <h2 id="safety-title">자동으로 하지 않는 것</h2>
           </header>
           <ol>
-            {safeguards.map((item) => (
-              <li key={item.number}>
-                <span>{item.number}</span>
-                <p>{item.text}</p>
+            {safeguards.map((item, index) => (
+              <li key={item}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <p>{item}</p>
               </li>
             ))}
           </ol>
         </section>
 
-        <section className="release-check" aria-labelledby="release-title">
-          <header>
-            <p>RELEASE CHECK</p>
-            <h2 id="release-title">v0.2.1 릴리스 당시 검증</h2>
-            <span>2026.06.10</span>
-          </header>
-          <ul>
-            {releaseChecks.map((check, index) => (
-              <li key={check}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <p>{check}</p>
-                <i aria-hidden="true">PASS</i>
-              </li>
-            ))}
-          </ul>
-          <p className="release-note">
-            위 항목은 v0.2.1 릴리스 시점의 검증 결과입니다.
-          </p>
+        <section className="release-section">
+          <details>
+            <summary>
+              <span>v0.2.1 릴리스 당시 검증</span>
+              <span>8개 항목 보기</span>
+            </summary>
+            <ul>
+              {releaseChecks.map((check) => (
+                <li key={check}>{check}</li>
+              ))}
+            </ul>
+            <p>위 항목은 2026년 6월 10일 릴리스 시점의 결과입니다.</p>
+          </details>
         </section>
 
-        <nav className="case-end" aria-label="FirstCall 관련 링크">
-          <a
-            href="https://github.com/rad1092/firstcall-local-api-workbench/releases/tag/v0.2.1"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span>01</span>
-            v0.2.1 릴리스 보기
-            <i aria-hidden="true">↗</i>
-            {newTabLabel}
-          </a>
+        <nav className="case-navigation" aria-label="FirstCall 관련 링크">
+          <Link href="/">
+            <span aria-hidden="true">←</span> WHAGO로 돌아가기
+          </Link>
           <a
             href="https://github.com/rad1092/firstcall-local-api-workbench"
             target="_blank"
             rel="noreferrer"
           >
-            <span>02</span>
-            GitHub에서 소스 보기
-            <i aria-hidden="true">↗</i>
+            소스 보기 <span aria-hidden="true">↗</span>
             {newTabLabel}
           </a>
-          <Link href="/">
-            <span>03</span>
-            작업 인덱스로 돌아가기
-            <i aria-hidden="true">←</i>
-          </Link>
         </nav>
       </main>
 

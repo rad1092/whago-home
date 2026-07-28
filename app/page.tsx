@@ -1,37 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+import AsciiPlayground from "./components/ascii-playground";
 
 export const dynamic = "force-static";
 
-const workflow = [
-  {
-    number: "01",
-    title: "요청 파싱",
-    description: "API 요청 소스를 구조화합니다.",
-  },
-  {
-    number: "02",
-    title: "로컬 검증",
-    description: "환경값을 주입해 요청과 응답을 확인합니다.",
-  },
-  {
-    number: "03",
-    title: "패키지 내보내기",
-    description: "레시피와 MCP 도구 패키지를 생성합니다.",
-  },
-  {
-    number: "04",
-    title: "검사·가져오기",
-    description: "패키지 구조와 해시를 검사한 뒤 가져옵니다.",
-  },
-  {
-    number: "05",
-    title: "로컬 재검증",
-    description: "가져온 레시피를 다시 확인해야 재내보낼 수 있습니다.",
-  },
-] as const;
-
 const newTabLabel = <span className="sr-only">(새 탭에서 열림)</span>;
+
+const asciiPreview = `┌───────────┐
+│   ASCII   │
+├─────┬─────┤
+│ edit│ pre │
+└─────┴─────┘`;
 
 export default function Home() {
   return (
@@ -40,12 +19,13 @@ export default function Home() {
         본문으로 바로가기
       </a>
 
-      <header className="masthead" id="top">
-        <a className="wordmark" href="#top" aria-label="WHAGO 홈">
-          WHAGO
+      <header className="topbar" id="top">
+        <a className="topbar-name" href="#top">
+          김홍대
         </a>
-        <p className="masthead-count">김홍대 · 작업 03</p>
-        <nav className="masthead-links" aria-label="외부 링크">
+        <nav aria-label="주요 메뉴">
+          <a href="#projects">작업</a>
+          <a href="#about">소개</a>
           <a
             href="https://github.com/rad1092"
             target="_blank"
@@ -61,130 +41,121 @@ export default function Home() {
       </header>
 
       <main id="main">
-        <section className="feature" aria-labelledby="firstcall-title">
-          <div className="feature-copy">
-            <p className="project-kicker">
-              <span className="signal" aria-hidden="true" />
-              WORK 01 · RELEASED · RUST
+        <section className="intro" aria-labelledby="intro-title">
+          <div className="intro-copy">
+            <p>김홍대 / 소프트웨어 개발자</p>
+            <h1 id="intro-title">WHAGO</h1>
+            <p>윈도우 앱, GitHub CLI, 브라우저 편집기를 만들었습니다.</p>
+          </div>
+
+          <div
+            className="project-collage"
+            id="projects"
+            aria-label="프로젝트 미리보기"
+          >
+            <a className="preview-card preview-firstcall" href="#firstcall">
+              <span>
+                FirstCall <small>Windows</small>
+              </span>
+              <Image
+                src="/firstcall-crop.png"
+                alt="FirstCall에서 cURL 요청을 파싱해 후보 요청으로 만든 화면"
+                width={900}
+                height={430}
+                priority
+                sizes="(max-width: 760px) 100vw, 48vw"
+              />
+            </a>
+
+            <a className="preview-card preview-ascii" href="#ascii-editor">
+              <span>
+                ASCII Diagram Editor <small>Web</small>
+              </span>
+              <div aria-hidden="true">
+                <pre>{asciiPreview}</pre>
+                <b>&lt;pre&gt;</b>
+              </div>
+            </a>
+
+            <a className="preview-card preview-risk" href="#dep-risk">
+              <span>
+                gh-dep-risk <small>GitHub CLI</small>
+              </span>
+              <Image
+                src="/dep-risk-still.png"
+                alt="gh-dep-risk가 pull request 의존성 변경을 분석한 실제 출력"
+                width={968}
+                height={612}
+                priority
+                sizes="(max-width: 760px) 100vw, 34vw"
+              />
+            </a>
+          </div>
+        </section>
+
+        <section
+          className="project-scene firstcall-scene"
+          id="firstcall"
+          aria-labelledby="firstcall-title"
+        >
+          <div className="scene-copy">
+            <p>Windows · Rust · v0.2.1</p>
+            <h2 id="firstcall-title">FirstCall</h2>
+            <p>
+              API 요청을 로컬에서 검증하고 레시피와 실행 가능한 MCP 도구
+              패키지로 내보냅니다.
             </p>
-            <h1 id="firstcall-title">FirstCall</h1>
-            <p className="feature-deck">
-              API 요청 소스를 로컬에서 파싱·검증하고, 비밀값을 환경변수
-              참조로 분리한 뒤 레시피와 실행 가능한 MCP 도구 패키지로
-              내보냅니다.
-            </p>
-            <div className="feature-actions">
-              <Link className="button button-solid" href="/work/firstcall">
-                상세 보기 <span aria-hidden="true">→</span>
+            <div className="scene-links">
+              <Link href="/work/firstcall">
+                자세히 보기 <span aria-hidden="true">→</span>
               </Link>
               <a
-                className="button button-line"
                 href="https://github.com/rad1092/firstcall-local-api-workbench/releases/tag/v0.2.1"
                 target="_blank"
                 rel="noreferrer"
               >
-                v0.2.1 릴리스 <span aria-hidden="true">↗</span>
+                v0.2.1 <span aria-hidden="true">↗</span>
                 {newTabLabel}
               </a>
             </div>
           </div>
 
-          <figure className="feature-figure">
-            <div className="figure-label">
-              <span>ACTUAL UI</span>
-              <span>FIRSTCALL v0.2.1</span>
-            </div>
-            <div className="screen-frame">
-              <Image
-                src="/firstcall-gui-still.png"
-                alt="FirstCall 데스크톱 GUI에서 샘플 cURL 요청을 파싱하고 레시피로 저장하는 화면"
-                width={1100}
-                height={760}
-                priority
-                sizes="(max-width: 900px) 100vw, 58vw"
-              />
-            </div>
+          <figure className="scene-media firstcall-media">
+            <Image
+              src="/firstcall-crop.png"
+              alt="FirstCall에서 cURL 요청을 파싱해 후보 요청으로 만든 화면"
+              width={900}
+              height={430}
+              sizes="(max-width: 800px) 100vw, 62vw"
+            />
             <figcaption>
-              <span>GUI / 샘플 cURL 파싱과 레시피 저장</span>
-              <span>FirstCall v0.2.1 Windows 릴리스에서 캡처</span>
+              실제 v0.2.1 Windows GUI / cURL 파싱과 후보 요청 검토
               <a href="/firstcall-gui.gif" target="_blank" rel="noreferrer">
-                GUI 데모 재생 <span aria-hidden="true">↗</span>
+                전체 데모 재생 <span aria-hidden="true">↗</span>
                 {newTabLabel}
               </a>
             </figcaption>
           </figure>
         </section>
 
-        <section className="workflow" aria-labelledby="workflow-title">
-          <header className="section-label">
-            <p>FIRSTCALL / WORKFLOW</p>
-            <h2 id="workflow-title">요청에서 패키지까지</h2>
-          </header>
-          <ol className="workflow-list">
-            {workflow.map((step) => (
-              <li key={step.number}>
-                <span>{step.number}</span>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="project-index" aria-labelledby="project-index-title">
-          <header className="index-header">
-            <p>SELECTED WORK / 2026</p>
-            <h2 id="project-index-title">작업</h2>
-            <span>03</span>
-          </header>
-
-          <article className="project-row">
-            <div className="project-number">01</div>
-            <div className="project-copy">
-              <p className="project-kicker">RELEASED · RUST</p>
-              <h3>
-                <Link href="/work/firstcall">FirstCall</Link>
-              </h3>
-              <p>
-                API 요청을 검증하고 레시피와 MCP 도구 패키지로 내보내는
-                로컬 우선 데스크톱 GUI·CLI입니다.
-              </p>
-              <Link className="inline-link" href="/work/firstcall">
-                프로젝트 상세 <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-            <div className="project-evidence package-evidence">
-              <p>PACKAGE OUTPUT</p>
-              <ul>
-                <li>recipe.yaml</li>
-                <li>verified.lock.json</li>
-                <li>policy.json</li>
-                <li>package.manifest.json</li>
-                <li>mcp-server/</li>
-              </ul>
-            </div>
-          </article>
-
-          <article className="project-row">
-            <div className="project-number">02</div>
-            <div className="project-copy">
-              <p className="project-kicker">PUBLIC SOURCE · TYPESCRIPT</p>
-              <h3>
-                <a
-                  href="https://github.com/rad1092/ascii-diagram-editor"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  ASCII Diagram Editor
-                  <span className="sr-only">(새 탭에서 열림)</span>
-                </a>
-              </h3>
-              <p>
-                고정 200×80 문자 그리드에서 ASCII 다이어그램을 편집하고,
-                결과를 실제 &lt;pre&gt; 요소로 출력하는 브라우저 도구입니다.
-              </p>
+        <section
+          className="project-scene ascii-scene"
+          id="ascii-editor"
+          aria-labelledby="ascii-title"
+        >
+          <div className="scene-copy">
+            <p>Browser · TypeScript · Prototype</p>
+            <h2 id="ascii-title">
+              ASCII Diagram
+              <br />
+              Editor
+            </h2>
+            <p>
+              200×80 문자 그리드에서 다이어그램을 편집하고 결과를 실제
+              &lt;pre&gt; 요소로 출력합니다.
+            </p>
+            <div className="scene-links">
               <a
-                className="inline-link"
                 href="https://github.com/rad1092/ascii-diagram-editor"
                 target="_blank"
                 rel="noreferrer"
@@ -193,39 +164,22 @@ export default function Home() {
                 {newTabLabel}
               </a>
             </div>
-            <figure className="project-evidence ascii-evidence">
-              <pre aria-label="ASCII 다이어그램 출력 예시">{`┌──────────────┐
-│ 200 × 80 GRID│
-└──────┬───────┘
-       │
-┌──────▼───────┐
-│  <pre> OUTPUT │
-└──────────────┘`}</pre>
-              <figcaption>편집 결과 예시 / 실제 &lt;pre&gt; 출력</figcaption>
-            </figure>
-          </article>
+          </div>
 
-          <article className="project-row">
-            <div className="project-number">03</div>
-            <div className="project-copy">
-              <p className="project-kicker">RELEASED · GO</p>
-              <h3>
-                <a
-                  href="https://github.com/rad1092/gh-dependency-risk"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  gh-dep-risk
-                  <span className="sr-only">(새 탭에서 열림)</span>
-                </a>
-              </h3>
-              <p>
-                PR의 의존성 변경을 요약하는 GitHub CLI 확장입니다. Dependency
-                Review API를 우선 사용하고, 사용할 수 없으면 정적 로컬
-                분석으로 대체합니다.
-              </p>
+          <AsciiPlayground />
+        </section>
+
+        <section
+          className="project-scene risk-scene"
+          id="dep-risk"
+          aria-labelledby="risk-title"
+        >
+          <div className="scene-copy">
+            <p>GitHub CLI · Go · v0.2.1</p>
+            <h2 id="risk-title">gh-dep-risk</h2>
+            <p>PR의 의존성 변경을 터미널에서 요약합니다.</p>
+            <div className="scene-links">
               <a
-                className="inline-link"
                 href="https://github.com/rad1092/gh-dependency-risk"
                 target="_blank"
                 rel="noreferrer"
@@ -234,46 +188,50 @@ export default function Home() {
                 {newTabLabel}
               </a>
             </div>
-            <div className="project-evidence route-evidence">
-              <p>ANALYSIS ROUTE</p>
-              <div>
-                <span>01</span>
-                <strong>Dependency Review API</strong>
-                <small>PRIMARY</small>
-              </div>
-              <div>
-                <span>02</span>
-                <strong>Static local analysis</strong>
-                <small>FALLBACK</small>
-              </div>
-            </div>
-          </article>
+          </div>
+
+          <figure className="scene-media risk-media">
+            <Image
+              src="/dep-risk-still.png"
+              alt="gh-dep-risk가 pull request 10번의 의존성 변경을 분석한 출력"
+              width={968}
+              height={612}
+              sizes="(max-width: 800px) 100vw, 62vw"
+            />
+            <figcaption>
+              실제 smoke fixture 실행 / Bun lockfile fallback 분석
+              <a
+                href="/gh-dep-risk-demo.gif"
+                target="_blank"
+                rel="noreferrer"
+              >
+                전체 데모 재생 <span aria-hidden="true">↗</span>
+                {newTabLabel}
+              </a>
+            </figcaption>
+          </figure>
         </section>
 
-        <section className="about" aria-labelledby="about-title">
-          <p className="section-code">ABOUT / KIM HONGDAE</p>
+        <section className="about-section" id="about" aria-labelledby="about-title">
           <div>
+            <p>소개</p>
             <h2 id="about-title">김홍대</h2>
           </div>
-          <div className="about-copy">
+          <div className="about-text">
             <p>
               자재 납품과 영업관리 현장에서 일정·재고·납기를 조율했습니다.
             </p>
             <p>현재 FirstCall과 개발 도구를 만들고 있습니다.</p>
-            <div className="about-links">
-              <a href="mailto:rad174951@gmail.com">
-                Email <span aria-hidden="true">↗</span>
-              </a>
-              <a
-                href="https://github.com/rad1092"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub <span aria-hidden="true">↗</span>
-                {newTabLabel}
-              </a>
-            </div>
           </div>
+        </section>
+
+        <section className="contact-section" aria-labelledby="contact-title">
+          <p id="contact-title">연락</p>
+          <a href="mailto:rad174951@gmail.com">
+            rad174951
+            <wbr />
+            @gmail.com <span aria-hidden="true">↗</span>
+          </a>
         </section>
       </main>
 
