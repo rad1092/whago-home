@@ -111,6 +111,14 @@ test("keeps the suite accessible and free of starter artifacts", async () => {
   assert.match(deployScript, /sudo cp "\$service_unit" "\$service_unit_backup"/);
   assert.match(deployScript, /restore_current_link "\$home_root" "\$previous_home"/);
   assert.match(deployScript, /restore_current_link "\$tools_root" "\$previous_tools"/);
+  assert.match(
+    deployScript,
+    /ln -s "\$home_release" "\$work_root\/whago-home"/,
+  );
+  assert.match(
+    deployScript,
+    /"\$work_root\/whago-home" \\\n {2}--format html/,
+  );
   assert.doesNotMatch(deployScript, /cleanup_failed_releases/);
 
   const homeMove = deployScript.indexOf(

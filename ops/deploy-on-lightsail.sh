@@ -254,13 +254,14 @@ git -C "$work_root/repolens" checkout --detach FETCH_HEAD
 npm --prefix "$work_root/repolens" ci
 npm --prefix "$work_root/repolens" run check
 install -d "$tools_release/repolens"
+ln -s "$home_release" "$work_root/whago-home"
 node "$work_root/repolens/dist/src/cli.js" \
-  "$home_release" \
+  "$work_root/whago-home" \
   --format html \
   --output "$tools_release/repolens/index.html" \
   --offline
 node "$work_root/repolens/dist/src/cli.js" \
-  "$home_release" \
+  "$work_root/whago-home" \
   --format json \
   --output "$tools_release/repolens/report.json" \
   --offline
