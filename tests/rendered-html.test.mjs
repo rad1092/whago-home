@@ -181,6 +181,10 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(productDeployScript, /\[\[ "\$EUID" -eq 0 \]\]/);
   assert.match(productDeployScript, /\/tmp\/whago-deploy\.lock/);
   assert.match(productDeployScript, /--bootstrap/);
+  assert.match(
+    productDeployScript,
+    /if sudo test -L "\$current_link"; then[\s\S]*previous_release=.*readlink -f "\$current_link"[\s\S]*elif sudo test -e "\$current_link"; then/,
+  );
   assert.doesNotMatch(productDeployScript, /whago-home\.git|nginx-whago\.conf/);
   assert.match(bootstrapScript, /--cert-name "\$certificate_name"/);
   assert.match(bootstrapScript, /--expand/);

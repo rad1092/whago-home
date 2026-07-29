@@ -108,12 +108,13 @@ fi
 
 sudo install -d -o "$deploy_user" -g "$deploy_group" "$releases_root"
 
-if sudo test -e "$current_link" && ! sudo test -L "$current_link"; then
+if sudo test -L "$current_link"; then
+  previous_release="$(sudo readlink -f "$current_link" 2>/dev/null || true)"
+elif sudo test -e "$current_link"; then
   echo "Refusing to replace a non-symlink current path: $current_link" >&2
   exit 2
 fi
 
-previous_release="$(sudo readlink -f "$current_link" 2>/dev/null || true)"
 if [[ -n "$previous_release" &&
   "$previous_release" != "$releases_root/"* ]]; then
   echo "Current release points outside the product release directory." >&2
