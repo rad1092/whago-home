@@ -3,6 +3,12 @@ set -Eeuo pipefail
 
 release_id="${1:-$(date -u +%Y%m%dT%H%M%SZ)}"
 home_ref="${WHAGO_HOME_REF:-main}"
+verify_public="${WHAGO_VERIFY_PUBLIC_DNS:-0}"
+
+if [[ "$EUID" -eq 0 ]]; then
+  echo "Run this script as an unprivileged deployment user, not root." >&2
+  exit 2
+fi
 
 home_root="/srv/whago-home"
 home_release="$home_root/releases/$release_id"
@@ -16,13 +22,28 @@ if [[ ! "$release_id" =~ ^[A-Za-z0-9._-]+$ ]]; then
   exit 2
 fi
 
-if [[ -e "$home_release" ]]; then
+if [[ ! "$home_ref" =~ ^[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$ ]] ||
+  [[ "$home_ref" == *..* ]] ||
+  [[ "$home_ref" == *//* ]]; then
+  echo "WHAGO_HOME_REF contains unsupported characters or path components." >&2
+  exit 2
+fi
+if [[ "$verify_public" != "0" && "$verify_public" != "1" ]]; then
+  echo "WHAGO_VERIFY_PUBLIC_DNS must be 0 or 1." >&2
+  exit 2
+fi
+
+if sudo test -e "$home_release" || sudo test -L "$home_release"; then
   echo "Release already exists: $release_id" >&2
   exit 2
 fi
 
 if ! sudo test -f "$nginx_config"; then
   echo "Existing Nginx configuration is required for a safe rollback: $nginx_config" >&2
+  exit 2
+fi
+if ! sudo nginx -t; then
+  echo "The currently installed Nginx configuration is not a safe rollback target." >&2
   exit 2
 fi
 
@@ -32,12 +53,24 @@ if ! flock -n 9; then
   exit 3
 fi
 
-sudo install -d -o ubuntu -g ubuntu \
+deploy_user="$(id -un)"
+deploy_group="$(id -gn)"
+sudo install -d -o "$deploy_user" -g "$deploy_group" \
   "$home_root/releases" \
   "$home_root/backups" \
   "$backup_dir"
 
-previous_home="$(readlink -f "$home_root/current" 2>/dev/null || true)"
+if sudo test -e "$home_root/current" &&
+  ! sudo test -L "$home_root/current"; then
+  echo "Refusing to replace a non-symlink home current path." >&2
+  exit 2
+fi
+previous_home="$(sudo readlink -f "$home_root/current" 2>/dev/null || true)"
+if [[ -n "$previous_home" &&
+  "$previous_home" != "$home_root/releases/"* ]]; then
+  echo "Home current points outside the home release directory." >&2
+  exit 2
+fi
 home_switched="false"
 nginx_replaced="false"
 service_was_active="false"
@@ -165,6 +198,8 @@ trap 'rollback $?' ERR
 trap 'rollback 130' INT
 trap 'rollback 143' TERM
 
+remove_transition_links
+
 build_dir="$(mktemp -d /tmp/whago-home-build.XXXXXX)"
 source_dir="$build_dir/source"
 
@@ -216,6 +251,8 @@ printf '%s\n' \
   "whago-home=$home_sha" \
   "artifact=$artifact_hash" \
   > "$home_release/RELEASE"
+sudo chown -R root:root "$home_release"
+sudo chmod -R u=rwX,go=rX "$home_release"
 
 sudo cp "$nginx_config" "$backup_dir/nginx.conf"
 
@@ -270,8 +307,10 @@ page_html="$(
     --resolve "whago.net:443:127.0.0.1" \
     https://whago.net/
 )"
-grep -q "반복 업무를" <<<"$page_html"
-grep -q "FirstCall" <<<"$page_html"
+grep -q "WHAGO" <<<"$page_html"
+grep -q "Daymark" <<<"$page_html"
+grep -q "RepoLens" <<<"$page_html"
+grep -q "Siteboard" <<<"$page_html"
 
 daymark_move_html="$(
   curl --fail --silent --show-error \
@@ -326,7 +365,7 @@ home_headers="$(
     https://whago.net/
 )"
 grep -qi '^x-frame-options: DENY' <<<"$home_headers"
-grep -qi "^content-security-policy: frame-ancestors 'none'" <<<"$home_headers"
+grep -qi "^content-security-policy: .*frame-ancestors 'none'" <<<"$home_headers"
 
 www_home_headers="$(
   curl --head --silent --show-error \
@@ -366,22 +405,56 @@ redirect_headers="$(
     https://whago.net/repolens/
 )"
 grep -qi '^HTTP/.* 308' <<<"$redirect_headers"
-grep -qi '^location: https://rad1092.github.io/repolens/' <<<"$redirect_headers"
+grep -qi '^location: https://repolens.whago.net/' <<<"$redirect_headers"
 
-public_release="$(
+for product in daymark repolens siteboard; do
+  product_html="$(
+    curl --fail --silent --show-error \
+      --connect-timeout 5 \
+      --max-time 20 \
+      --resolve "$product.whago.net:443:127.0.0.1" \
+      "https://$product.whago.net/"
+  )"
+  grep -qi "$product" <<<"$product_html"
+
   curl --fail --silent --show-error \
-    --connect-timeout 10 \
-    --max-time 30 \
-    "https://whago.net/release.json?release=$release_id"
-)"
-if [[ "$public_release" != "$expected_release_json" ]]; then
-  echo "Public release metadata does not match the origin." >&2
-  false
-fi
+    --connect-timeout 5 \
+    --max-time 20 \
+    --resolve "$product.whago.net:443:127.0.0.1" \
+    "https://$product.whago.net/healthz" >/dev/null
+done
 
 # Everything below follows a verified release and stays outside rollback.
 trap - ERR INT TERM
 remove_transition_links
 cleanup_build_dir
 
-echo "WHAGO static release $release_id is live."
+echo "WHAGO static release $release_id is live at the local origin."
+
+if [[ "$verify_public" == "1" ]]; then
+  if ! public_release="$(
+    curl --fail --silent --show-error \
+      --connect-timeout 10 \
+      --max-time 30 \
+      "https://whago.net/release.json?release=$release_id"
+  )"; then
+    echo "Public DNS verification failed; the origin-verified release remains active." >&2
+    exit 4
+  fi
+  if [[ "$public_release" != "$expected_release_json" ]]; then
+    echo "Public home metadata differs; the origin-verified release remains active." >&2
+    exit 4
+  fi
+  for product in daymark repolens siteboard; do
+    if ! curl --fail --silent --show-error \
+      --connect-timeout 10 \
+      --max-time 30 \
+      "https://$product.whago.net/healthz" >/dev/null; then
+      echo "Public $product health verification failed; deployed releases remain active." >&2
+      exit 4
+    fi
+  done
+  echo "WHAGO and product health endpoints are verified through public DNS."
+else
+  echo "Public DNS verification was skipped; set WHAGO_VERIFY_PUBLIC_DNS=1 when needed."
+fi

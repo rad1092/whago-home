@@ -2,7 +2,7 @@
 
 const products = {
   Daymark: {
-    destination: "https://rad1092.github.io/daymark/",
+    destination: "https://daymark.whago.net/",
     files: [
       ["daymark:data:v2", "daymark-backup-v2.json", "현재 백업"],
       ["daymark:data:backup:v2", "daymark-backup-v2-previous.json", "직전 정상 백업"],
@@ -16,7 +16,7 @@ const products = {
     ],
   },
   Siteboard: {
-    destination: "https://rad1092.github.io/siteboard/",
+    destination: "https://siteboard.whago.net/",
     files: [
       ["siteboard.document.v2", "siteboard-work-v2.json", "현재 작업 파일"],
       [

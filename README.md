@@ -1,24 +1,18 @@
-# 김홍대 홈페이지
+# WHAGO
 
-김홍대의 공개 홈페이지입니다. 실제로 배포한 소프트웨어 작업, 개발 방식,
-독립 공개 도구와 GitHub 릴리스를 한곳에 정리합니다.
+[whago.net](https://whago.net)은 WHAGO가 공개하는 소프트웨어 제품과
+릴리스를 정리한 홈페이지입니다.
 
-## 주요 작업
+## 제품
 
-- [FirstCall](https://github.com/rad1092/firstcall-local-api-workbench) —
-  API 요청을 검증된 에이전트 도구 패키지로 만드는 로컬 워크벤치
-- [gh-dep-risk](https://github.com/rad1092/gh-dependency-risk) — Pull
-  request의 의존성 변경을 검토자용 요약으로 만드는 GitHub CLI 확장
-- [LocalFit Lab](https://github.com/rad1092/localfit-lab) — 서울 상권과
-  업종 조건을 비교해 근거 리포트와 현장 확인 항목으로 잇는 웹 서비스
+- [Daymark](https://daymark.whago.net/) — 오늘의 약속 세 개와 최근 기록을
+  관리하는 웹 앱
+- [RepoLens](https://repolens.whago.net/) — 저장소 점검, 기준선 비교,
+  GitHub Action 자동화를 제공하는 CLI
+- [Siteboard](https://siteboard.whago.net/) — 정적 홈페이지 편집,
+  Cloudflare 배포, 배포 확인과 롤백을 다루는 로컬 스튜디오
 
-## 공개 도구
-
-각 도구는 독립 저장소와 GitHub Pages 주소에서 배포합니다.
-
-- [Daymark](https://rad1092.github.io/daymark/)
-- [RepoLens](https://rad1092.github.io/repolens/)
-- [Siteboard](https://rad1092.github.io/siteboard/)
+각 제품의 코드, 문서, 릴리스는 별도 저장소에서 관리합니다.
 
 ## 로컬 실행
 
@@ -37,18 +31,34 @@ npm run lint
 npm run build:static
 ```
 
-- `npm test`는 Sites용 Worker 렌더링과 공개 문구·링크·보안 헤더를
+- `npm test`는 Sites용 Worker 렌더링, 제품 링크, 보안 헤더와 배포 경계를
   확인합니다.
-- `npm run build:static`은 Lightsail의 Nginx가 바로 제공할 정적 파일을
+- `npm run build:static`은 Lightsail의 Nginx가 제공할 정적 파일을
   `out/`에 만듭니다.
 
 ## 배포 경계
 
-- `whago.net`: 이 저장소의 정적 홈페이지
-- `rad1092.github.io/daymark/`: Daymark
-- `rad1092.github.io/repolens/`: RepoLens 문서
-- `rad1092.github.io/siteboard/`: Siteboard
+- `whago.net`: 이 저장소의 제품 홈페이지
+- `daymark.whago.net`: `rad1092/daymark`
+- `repolens.whago.net`: `rad1092/repolens`
+- `siteboard.whago.net`: `rad1092/siteboard`
 
-홈페이지 배포는 다른 제품 저장소를 clone하거나 build하지 않습니다.
-기존 `whago.net/daymark/`와 `whago.net/siteboard/`는 브라우저에 남은
-자료를 파일로 받은 뒤 새 주소로 이동할 수 있는 이전 화면만 제공합니다.
+홈페이지와 세 제품은 각각 별도 릴리스 경로로 배포합니다. 기존
+`whago.net/daymark/`와 `whago.net/siteboard/`에는 브라우저 저장 자료를
+내려받아 새 주소로 옮기는 이전 화면을 유지합니다.
+
+첫 설치에서는 세 제품을 먼저 빌드해 release 경로에 적재한 뒤 인증서와
+Nginx를 전환합니다. 배포 스크립트는 root가 아닌 일반 배포 계정으로
+실행합니다.
+
+```bash
+./ops/deploy-product-on-lightsail.sh daymark <git-ref> --bootstrap
+./ops/deploy-product-on-lightsail.sh repolens <git-ref> --bootstrap
+./ops/deploy-product-on-lightsail.sh siteboard <git-ref> --bootstrap
+./ops/bootstrap-products-on-lightsail.sh
+./ops/deploy-on-lightsail.sh <release-id>
+```
+
+이후 제품별 업데이트는 해당 제품 스크립트만 실행합니다. 공개 DNS까지
+확인할 때는 제품 스크립트에 `--verify-public`을 붙이고, 홈페이지는
+`WHAGO_VERIFY_PUBLIC_DNS=1`로 실행합니다.

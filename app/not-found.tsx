@@ -15,7 +15,7 @@ export default function NotFound() {
       <p>404 / NOT FOUND</p>
       <h1>요청한 주소를 확인해 주세요.</h1>
       <Link href="/">
-        김홍대 홈페이지로 <span aria-hidden="true">←</span>
+        WHAGO 홈으로 <span aria-hidden="true">←</span>
       </Link>
     </main>
   );
