@@ -55,12 +55,33 @@ test("renders the WHAGO product homepage with three independent products", async
   assert.match(html, /github\.com\/rad1092\/siteboard/);
   assert.match(
     html,
-    /repolens compare \. --baseline accepted\.json --fail-on new-warning/,
+    /href="https:\/\/github\.com\/rad1092\/daymark\/releases\/tag\/v2\.2\.0"/,
   );
-  assert.match(html, /내용[\s\S]*구성[\s\S]*스타일[\s\S]*배포/);
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/rad1092\/repolens\/releases\/tag\/v0\.3\.0"/,
+  );
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/rad1092\/siteboard\/releases\/tag\/v4\.0\.0"/,
+  );
+  assert.match(html, />v2\.2\.0</);
+  assert.match(html, />v0\.3\.0</);
+  assert.match(html, />v4\.0\.0</);
+  assert.match(html, /최대 세 개/);
+  assert.doesNotMatch(html, /--base origin\/main|375px에서 배포 상태/);
+  assert.match(html, /release-daymark-v2\.2\.0\.jpg/);
+  assert.match(html, /release-repolens-v0\.3\.0\.jpg/);
+  assert.match(html, /release-siteboard-v4\.0\.0\.jpg/);
+  assert.match(html, /RELEASE CAPTURE/);
+  assert.match(html, /최근 릴리스/);
+  assert.match(html, /릴리스 노트/);
   assert.doesNotMatch(html, /배포 #18|확인 완료|방금 전/);
 
-  assert.match(html, /property="og:image" content="https:\/\/whago\.net\/og\.png"/);
+  assert.match(
+    html,
+    /property="og:image" content="https:\/\/whago\.net\/og-release-desk\.png"/,
+  );
   assert.match(html, /rel="icon" href="https:\/\/whago\.net\/favicon\.svg"/);
   assert.doesNotMatch(
     html,
@@ -123,6 +144,10 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(layout, /metadataBase:\s*new URL\("https:\/\/whago\.net"\)/);
   assert.match(layout, /export const viewport:\s*Viewport/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)/);
+  assert.match(css, /\.release-capture/);
+  assert.doesNotMatch(css, /\.daymark-preview|\.repolens-preview|\.siteboard-preview/);
+  assert.doesNotMatch(css, /tailwindcss|@theme/);
+  assert.doesNotMatch(packageJson, /@tailwindcss|tailwindcss/);
   assert.match(packageJson, /"build:static":\s*"WHAGO_STATIC_EXPORT=1 next build"/);
   assert.match(nextConfig, /output:\s*"export"/);
   assert.match(nextConfig, /process\.env\.WHAGO_STATIC_EXPORT/);
@@ -221,13 +246,25 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.deepEqual(previewFiles, []);
 
   await Promise.all([
-    access(new URL("../public/og.png", import.meta.url)),
+    access(new URL("../public/og-release-desk.png", import.meta.url)),
+    access(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),
+    access(new URL("../public/release-repolens-v0.3.0.jpg", import.meta.url)),
+    access(new URL("../public/release-siteboard-v4.0.0.jpg", import.meta.url)),
     access(new URL("../public/favicon.svg", import.meta.url)),
     access(new URL("../public/daymark/index.html", import.meta.url)),
     access(new URL("../public/siteboard/index.html", import.meta.url)),
     access(new URL("../public/data-move.js", import.meta.url)),
   ]);
+  const releaseCaptures = await Promise.all([
+    readFile(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),
+    readFile(new URL("../public/release-repolens-v0.3.0.jpg", import.meta.url)),
+    readFile(new URL("../public/release-siteboard-v4.0.0.jpg", import.meta.url)),
+  ]);
+  for (const capture of releaseCaptures) {
+    assert.deepEqual([...capture.subarray(0, 3)], [0xff, 0xd8, 0xff]);
+  }
   await assert.rejects(access(new URL("public/_sites-preview", templateRoot)));
+  await assert.rejects(access(new URL("../postcss.config.mjs", import.meta.url)));
 });
 
 test("serves health and search metadata without folding tool pages into the site", async () => {
