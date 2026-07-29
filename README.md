@@ -5,8 +5,8 @@
 
 ## 제품
 
-- [Daymark](https://daymark.whago.net/) — 오늘의 약속 세 개와 최근 기록을
-  관리하는 웹 앱
+- [Daymark](https://daymark.whago.net/) — 오늘의 약속을 최대 세 개 고르고
+  최근 기록을 관리하는 웹 앱
 - [RepoLens](https://repolens.whago.net/) — 저장소 점검, 기준선 비교,
   GitHub Action 자동화를 제공하는 CLI
 - [Siteboard](https://siteboard.whago.net/) — 정적 홈페이지 편집,

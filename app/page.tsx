@@ -4,146 +4,103 @@ const products = [
   {
     id: "daymark",
     number: "01",
-    kind: "DAILY PLANNER",
+    kind: "LOCAL DAILY PLANNER",
     name: "Daymark",
-    headline: "오늘 할 일을 정하고, 남은 일은 다시 결정합니다.",
+    headline: "오늘의 약속을 최대 세 개 고르고, 시작할 때 정한 수로 하루를 운영합니다.",
     description:
-      "수집한 일 가운데 오늘 끝낼 약속을 세 개까지 고릅니다. 완료·내일·나중·막힘을 직접 결정하고 하루를 닫습니다.",
+      "지금 할 일 하나와 이어질 약속에 집중합니다. 남은 일은 날짜와 다음 행동을 적어 다시 만날 시점을 정합니다.",
     url: "https://daymark.whago.net/",
     source: "https://github.com/rad1092/daymark",
-    action: "Daymark 열기",
-    className: "product-daymark",
-    facts: ["오늘의 약속 3개", "최근 7일 기록", "로컬 저장과 백업"],
+    action: "웹 앱 열기",
+    version: "2.2.0",
+    latest: {
+      date: "2026.07.29",
+      title: "완결된 하루",
+      summary:
+        "최대 세 가지 약속을 실행하고, 남은 일에는 다시 볼 날짜와 시작 지점을 남깁니다.",
+      changes: [
+        "시작할 때 고른 약속 수 고정",
+        "미완료 항목의 날짜와 다음 행동",
+        "되돌리기와 로컬 복구 스냅샷",
+      ],
+    },
+    facts: [
+      ["RUNS IN", "Browser / PWA"],
+      ["STORES", "Local device"],
+      ["EXPORTS", "JSON backup"],
+    ],
+    captureAlt:
+      "Daymark에서 오늘 할 일 세 개의 순서를 정하고 시작하는 실제 화면",
   },
   {
     id: "repolens",
     number: "02",
-    kind: "REPOSITORY MAINTENANCE",
+    kind: "REPOSITORY REGRESSION GATE",
     name: "RepoLens",
-    headline: "저장소에서 새로 생긴 유지보수 문제를 가려냅니다.",
+    headline: "기존 부채는 기준선에 두고, PR에서 새로 생긴 회귀를 막습니다.",
     description:
-      "로컬 경로와 GitHub 저장소를 읽어 근거가 있는 점검 결과를 만듭니다. 검토한 기준선을 저장하고 다음 변경부터 회귀만 차단합니다.",
+      "Node·GitHub 저장소의 운영 설정을 읽기 전용으로 검사합니다. 새 회귀에는 파일과 줄, 수정 방법을 남기고 CI 결과와 SARIF를 함께 만듭니다.",
     url: "https://repolens.whago.net/",
     source: "https://github.com/rad1092/repolens",
     action: "설치와 사용법",
-    className: "product-repolens",
-    facts: ["CLI와 GitHub Action", "JSON·HTML·Markdown", "기준선 비교"],
+    version: "0.3.0",
+    latest: {
+      date: "2026.07.29",
+      title: "PR 회귀 게이트",
+      summary:
+        "기준선에 수용한 부채와 이번 변경에서 새로 생긴 회귀를 분리합니다.",
+      changes: [
+        "새 회귀만 파일과 줄 위치에 표시",
+        "수용 사유와 만료일을 가진 기준선",
+        "GitHub Job Summary와 SARIF 출력",
+      ],
+    },
+    facts: [
+      ["RUNS IN", "CLI / GitHub Actions"],
+      ["READS", "Node + GitHub repos"],
+      ["EXPORTS", "SARIF / JSON / HTML"],
+    ],
+    captureAlt:
+      "RepoLens가 저장소의 새 유지보수 회귀와 파일 위치를 표시한 실제 HTML 보고서",
   },
   {
     id: "siteboard",
     number: "03",
-    kind: "WEBSITE OPERATIONS",
+    kind: "STATIC SITE STUDIO",
     name: "Siteboard",
-    headline: "홈페이지를 만들고, 배포한 버전까지 관리합니다.",
+    headline: "한 장짜리 사업 홈페이지를 만들고 배포한 파일까지 확인합니다.",
     description:
-      "내용과 화면을 편집해 정적 홈페이지를 만들고 Cloudflare에 배포합니다. 실제 주소를 확인하고 이전 배포로 되돌릴 수 있습니다.",
+      "로컬 작업 파일에 내용과 배포 대상을 함께 보관합니다. Cloudflare에 올린 뒤 실제 주소의 리비전을 확인하고 이전 정상 버전으로 되돌립니다.",
     url: "https://siteboard.whago.net/",
     source: "https://github.com/rad1092/siteboard",
-    action: "Siteboard 열기",
-    className: "product-siteboard",
-    facts: ["편집과 반응형 미리보기", "Cloudflare 배포", "배포 확인과 롤백"],
+    action: "제품과 설치",
+    version: "4.0.0",
+    latest: {
+      date: "2026.07.29",
+      title: "검증 가능한 배포",
+      summary:
+        "대상 프로젝트와 작업 파일을 함께 보관하고 배포한 리비전을 실제 주소에서 확인합니다.",
+      changes: [
+        "Cloudflare 프로젝트 명시 연결",
+        "리비전 마커 기반 배포 확인",
+        "초안 스냅샷과 운영 버전 롤백 분리",
+      ],
+    },
+    facts: [
+      ["RUNS IN", "Local Studio"],
+      ["BUILDS", "Static HTML"],
+      ["DEPLOYS", "Cloudflare Pages"],
+    ],
+    captureAlt:
+      "Siteboard에서 사업 홈페이지 내용과 미리보기를 함께 편집하는 실제 화면",
   },
 ] as const;
 
 export const dynamic = "force-static";
 
-function DaymarkPreview() {
-  return (
-    <div className="daymark-window" aria-hidden="true">
-      <div className="window-bar">
-        <span>7월 29일</span>
-        <b>오늘 2 / 3</b>
-      </div>
-      <ol>
-        <li className="done">
-          <span>01</span>
-          <strong>출시 문구 검토</strong>
-          <i>완료</i>
-        </li>
-        <li className="active">
-          <span>02</span>
-          <strong>모바일 화면 확인</strong>
-          <i>진행 중</i>
-        </li>
-        <li>
-          <span>03</span>
-          <strong>배포 기록 정리</strong>
-          <i>다음</i>
-        </li>
-      </ol>
-      <p>하루 정리에서 남은 일을 직접 결정합니다.</p>
-    </div>
-  );
+function releaseUrl(source: string, version: string) {
+  return `${source}/releases/tag/v${version}`;
 }
-
-function RepoLensPreview() {
-  return (
-    <div className="repolens-window" aria-hidden="true">
-      <div className="terminal-top">
-        <span />
-        <span />
-        <span />
-        <b>repolens compare</b>
-      </div>
-      <div className="terminal-content">
-        <p>
-          <i>$</i> repolens compare . --baseline accepted.json --fail-on new-warning
-        </p>
-        <div className="scan-result">
-          <span>NEW</span>
-          <strong>2 warnings</strong>
-        </div>
-        <ul>
-          <li>
-            <b>action-pinning</b>
-            <span>.github/workflows/release.yml</span>
-          </li>
-          <li>
-            <b>dependency-updates</b>
-            <span>.github/dependabot.yml</span>
-          </li>
-        </ul>
-        <small>Policy new-warning · exit 1</small>
-      </div>
-    </div>
-  );
-}
-
-function SiteboardPreview() {
-  return (
-    <div className="siteboard-window" aria-hidden="true">
-      <aside>
-        <b>SITEBOARD</b>
-        <span className="selected">내용</span>
-        <span>구성</span>
-        <span>스타일</span>
-        <span>배포</span>
-      </aside>
-      <div className="siteboard-canvas">
-        <div className="canvas-head">
-          <span>mori studio</span>
-          <i>컴퓨터</i>
-        </div>
-        <div className="canvas-copy">
-          <small>BRAND &amp; WEB</small>
-          <strong>작은 브랜드의<br />첫 홈페이지</strong>
-          <span>프로젝트 보기</span>
-        </div>
-        <div className="deploy-strip">
-          <span>운영 중</span>
-          <b>리비전 84f0c28b</b>
-          <i>7월 29일</i>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const previews = {
-  daymark: <DaymarkPreview />,
-  repolens: <RepoLensPreview />,
-  siteboard: <SiteboardPreview />,
-} as const;
 
 export default function Home() {
   return (
@@ -154,11 +111,11 @@ export default function Home() {
 
       <header className="site-header" id="top">
         <a className="wordmark" href="#top" aria-label="WHAGO 홈">
-          WHAGO<span aria-hidden="true">/</span>
+          WHAGO<span>/03</span>
         </a>
         <nav aria-label="주요 메뉴">
+          <a href="#releases">릴리스</a>
           <a href="#products">제품</a>
-          <a href="#principles">운영 기준</a>
           <a
             href="https://github.com/rad1092"
             target="_blank"
@@ -171,157 +128,202 @@ export default function Home() {
 
       <main id="main">
         <section className="hero" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <p className="eyebrow">SOFTWARE PRODUCTS</p>
-            <h1 id="hero-title">WHAGO</h1>
-            <p className="hero-description">
-              Daymark <span aria-hidden="true">/</span> RepoLens{" "}
-              <span aria-hidden="true">/</span> Siteboard
-            </p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#products">
-                제품 보기 <span aria-hidden="true">↓</span>
-              </a>
-              <a
-                className="button button-quiet"
-                href="https://github.com/rad1092"
-                target="_blank"
-                rel="noreferrer"
-              >
-                코드와 릴리스 ↗{externalLabel}
-              </a>
-            </div>
+          <div className="hero-index">
+            <span>INDEPENDENT SOFTWARE</span>
+            <span>SEOUL / KR</span>
+            <span>EST. 2026</span>
           </div>
-
-          <aside className="product-switchboard" aria-label="WHAGO 제품">
-            <div className="switchboard-heading">
-              <span>PRODUCTS</span>
-              <b>03</b>
-            </div>
+          <div className="hero-title-block">
+            <p>PRODUCT HOUSE / 01—03</p>
+            <h1 id="hero-title">WHAGO</h1>
+          </div>
+          <div className="hero-statement">
+            <p>
+              Daymark, RepoLens, Siteboard를 만들고 각 제품의 코드와 릴리스를
+              운영합니다.
+            </p>
+            <a href="#releases">
+              최근 릴리스 <span aria-hidden="true">↓</span>
+            </a>
+          </div>
+          <div className="hero-marquee" aria-label="WHAGO 제품">
             {products.map((product) => (
               <a href={`#${product.id}`} key={product.id}>
                 <span>{product.number}</span>
                 <strong>{product.name}</strong>
                 <small>{product.kind}</small>
-                <b aria-hidden="true">↘</b>
               </a>
-            ))}
-          </aside>
-        </section>
-
-        <section className="products" id="products" aria-labelledby="products-title">
-          <header className="section-heading">
-            <p className="eyebrow">PRODUCTS / 01—03</p>
-            <h2 id="products-title">세 가지 제품</h2>
-            <p>
-              Daymark는 웹 앱, RepoLens는 CLI와 GitHub Action,
-              Siteboard는 로컬 스튜디오로 제공합니다.
-            </p>
-          </header>
-
-          <div className="product-list">
-            {products.map((product) => (
-              <article
-                className={`product ${product.className}`}
-                id={product.id}
-                key={product.id}
-              >
-                <div className="product-copy">
-                  <p className="product-label">
-                    <span>{product.number}</span>
-                    {product.kind}
-                  </p>
-                  <h3>{product.name}</h3>
-                  <h4>{product.headline}</h4>
-                  <p className="product-description">{product.description}</p>
-                  <ul>
-                    {product.facts.map((fact) => (
-                      <li key={fact}>{fact}</li>
-                    ))}
-                  </ul>
-                  <div className="product-actions">
-                    <a
-                      className="product-launch"
-                      href={product.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {product.action} ↗{externalLabel}
-                    </a>
-                    <a
-                      href={product.source}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      소스 보기 ↗{externalLabel}
-                    </a>
-                  </div>
-                </div>
-                <div className="product-preview">{previews[product.id]}</div>
-              </article>
             ))}
           </div>
         </section>
 
         <section
-          className="principles"
-          id="principles"
-          aria-labelledby="principles-title"
+          className="release-desk"
+          id="releases"
+          aria-labelledby="releases-title"
         >
-          <header>
-            <p className="eyebrow">OPERATING PRINCIPLES</p>
-            <h2 id="principles-title">제품을 운영하는 기준</h2>
+          <header className="release-heading">
+            <div>
+              <p className="eyebrow">RELEASE DESK / LATEST</p>
+              <h2 id="releases-title">최근 릴리스</h2>
+            </div>
+            <p>
+              버전, 변경 내용, 소스를 한곳에서 확인할 수 있습니다.
+            </p>
           </header>
-          <div className="principle-grid">
+
+          <div className="release-list">
+            {products.map((product) => (
+              <article
+                className={`release-row release-${product.id}`}
+                key={product.id}
+              >
+                <div className="release-meta">
+                  <time dateTime="2026-07-29">{product.latest.date}</time>
+                  <span>{`v${product.version}`}</span>
+                </div>
+                <div className="release-copy">
+                  <p>{product.name}</p>
+                  <h3>{product.latest.title}</h3>
+                  <p>{product.latest.summary}</p>
+                </div>
+                <details>
+                  <summary>변경 3개</summary>
+                  <ul>
+                    {product.latest.changes.map((change) => (
+                      <li key={change}>{change}</li>
+                    ))}
+                  </ul>
+                </details>
+                <a
+                  href={releaseUrl(product.source, product.version)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  릴리스 노트 ↗{externalLabel}
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="products" id="products" aria-labelledby="products-title">
+          <header className="products-heading">
+            <p className="eyebrow">PRODUCTS / CURRENT</p>
+            <h2 id="products-title">각자의 주소에서 작동하는 세 제품</h2>
+          </header>
+
+          <div className="product-list">
+            {products.map((product) => (
+              <article className={`product product-${product.id}`} id={product.id} key={product.id}>
+                <header className="product-header">
+                  <div>
+                    <span>{product.number}</span>
+                    <p>{product.kind}</p>
+                  </div>
+                  <strong>{`v${product.version}`}</strong>
+                </header>
+
+                <div className="product-body">
+                  <div className="product-copy">
+                    <h3>{product.name}</h3>
+                    <h4>{product.headline}</h4>
+                    <p>{product.description}</p>
+                    <dl>
+                      {product.facts.map(([term, value]) => (
+                        <div key={term}>
+                          <dt>{term}</dt>
+                          <dd>{value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <div className="product-actions">
+                      <a
+                        className="product-primary"
+                        href={product.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {product.action} ↗{externalLabel}
+                      </a>
+                      <a href={product.source} target="_blank" rel="noreferrer">
+                        소스
+                        <span aria-hidden="true"> ↗</span>
+                        {externalLabel}
+                      </a>
+                      <a
+                        href={releaseUrl(product.source, product.version)}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        릴리스
+                        <span aria-hidden="true"> ↗</span>
+                        {externalLabel}
+                      </a>
+                    </div>
+                  </div>
+                  <div className="product-preview">
+                    <figure className="release-capture">
+                      <img
+                        src={`/release-${product.id}-v${product.version}.jpg`}
+                        alt={product.captureAlt}
+                        width={885}
+                        height={649}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <figcaption>
+                        <span>RELEASE CAPTURE</span>
+                        <strong>v{product.version}</strong>
+                      </figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="operating-notes" aria-labelledby="notes-title">
+          <header>
+            <p className="eyebrow">PRODUCT NOTES</p>
+            <h2 id="notes-title">배포 전 확인할 정보</h2>
+          </header>
+          <div>
             <article>
-              <span>01</span>
-              <h3>데이터 이동</h3>
+              <span>01 / DATA</span>
+              <h3>저장 위치</h3>
               <p>
-                Daymark와 Siteboard는 백업 파일을 만들고 다시 불러올 수
-                있습니다.
+                Daymark는 브라우저, Siteboard는 로컬 작업 파일에 저장합니다.
+                RepoLens는 저장소를 읽기 전용으로 검사합니다.
               </p>
             </article>
             <article>
-              <span>02</span>
-              <h3>검증된 릴리스</h3>
+              <span>02 / RELEASE</span>
+              <h3>변경 기록</h3>
               <p>
-                테스트와 빌드를 통과한 버전을 저장소 릴리스와 배포 기록으로
+                제품별 버전과 설치 파일, 변경 내역은 각 GitHub Release에
                 남깁니다.
               </p>
             </article>
             <article>
-              <span>03</span>
-              <h3>안전한 업데이트</h3>
+              <span>03 / SUPPORT</span>
+              <h3>문제 접수</h3>
               <p>
-                제품별 릴리스를 따로 배포해 필요한 변경만 빠르게
-                반영합니다.
+                재현 절차와 사용 환경을 제품 저장소의 Issues에 남길 수
+                있습니다.
               </p>
             </article>
           </div>
-        </section>
-
-        <section className="open-source" aria-labelledby="source-title">
-          <div>
-            <p className="eyebrow">SOURCE &amp; RELEASES</p>
-            <h2 id="source-title">코드와 변경 내역을 공개합니다.</h2>
-          </div>
-          <a
-            className="button button-light"
-            href="https://github.com/rad1092"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub에서 보기 ↗{externalLabel}
-          </a>
         </section>
       </main>
 
       <footer className="site-footer">
         <a className="wordmark" href="#top">
-          WHAGO<span aria-hidden="true">/</span>
+          WHAGO<span>/03</span>
         </a>
-        <p>Daymark / RepoLens / Siteboard</p>
-        <p>© 2026 WHAGO</p>
+        <p>DAYMARK / REPOLENS / SITEBOARD</p>
+        <p>© 2026 WHAGO · SEOUL</p>
       </footer>
     </>
   );
