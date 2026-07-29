@@ -193,6 +193,8 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(bootstrapScript, /siteboard\.whago\.net/);
   assert.match(bootstrapScript, /\/tmp\/whago-deploy\.lock/);
   assert.match(bootstrapScript, /\[\[ "\$EUID" -eq 0 \]\]/);
+  assert.match(bootstrapScript, /product_vhost_ready="false"/);
+  assert.match(bootstrapScript, /sleep 0\.25/);
 
   assert.match(readme, /https:\/\/daymark\.whago\.net\//);
   assert.match(readme, /https:\/\/repolens\.whago\.net\//);

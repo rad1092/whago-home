@@ -22,6 +22,7 @@ for command_name in \
   grep \
   openssl \
   sed \
+  sleep \
   sudo \
   systemctl \
   tr; do
@@ -240,6 +241,26 @@ config_changed="true"
 sudo install -m 0644 "$source_nginx_config" "$nginx_config"
 sudo nginx -t
 sudo systemctl reload nginx.service
+
+# A graceful Nginx reload can briefly leave an old worker accepting new TLS
+# connections. Wait until the new product SNI vhost is serving before running
+# the strict origin checks below.
+product_vhost_ready="false"
+for _ in {1..20}; do
+  if curl --fail --silent --show-error \
+    --connect-timeout 2 \
+    --max-time 5 \
+    --resolve "daymark.whago.net:443:127.0.0.1" \
+    "https://daymark.whago.net/healthz" >/dev/null 2>&1; then
+    product_vhost_ready="true"
+    break
+  fi
+  sleep 0.25
+done
+if [[ "$product_vhost_ready" != "true" ]]; then
+  echo "The reloaded Nginx product vhosts did not become ready." >&2
+  false
+fi
 
 for product in daymark repolens siteboard; do
   origin_host="$product.whago.net"
