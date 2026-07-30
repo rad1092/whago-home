@@ -223,6 +223,10 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     nginxConfig,
     /try_files \$uri\.html \$uri\/index\.html \$uri =404;/,
   );
+  assert.match(
+    nginxConfig,
+    /location ~ \^\(\.\+\)\/\$ \{[\s\S]*return 308 \$scheme:\/\/\$host\$1\$is_args\$args;/,
+  );
   assert.match(nginxConfig, /X-Frame-Options "DENY" always/);
   assert.match(
     nginxConfig,
