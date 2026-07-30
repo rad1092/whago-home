@@ -1,18 +1,29 @@
 # WHAGO
 
-[whago.net](https://whago.net)은 WHAGO가 공개하는 소프트웨어 제품과
-릴리스를 정리한 홈페이지입니다.
+[whago.net](https://whago.net)은 WHAGO의 소프트웨어 카탈로그, 릴리스,
+지원 경로와 운영 원칙을 나누어 제공하는 홈페이지입니다. 제품 수가
+늘어나도 한 페이지를 계속 늘이지 않도록 다음 경로를 독립적으로
+관리합니다.
 
-## 제품
+- `/software`: 전체 제품 카탈로그
+- `/software/[slug]`: 실행 형태, 데이터 위치, 기능과 현재 릴리스
+- `/releases`: 제품별 버전과 변경 기록
+- `/support`: 문서, Issues, 소스와 전체 릴리스
+- `/house`: WHAGO의 제품 운영 원칙
 
-- [Daymark](https://daymark.whago.net/) — 오늘의 약속을 최대 세 개 고르고
-  최근 기록을 관리하는 웹 앱
+제품 정보는 `app/_data/products.ts` 한곳에서 관리합니다. 새 제품은
+저장소와 릴리스 경로를 준비한 뒤 이 카탈로그에 추가합니다.
+
+## 현재 제품
+
+- [Daymark](https://daymark.whago.net/) — 웹 데모를 운영하며 macOS,
+  Windows, iOS, Android 설치판을 개발합니다.
 - [RepoLens](https://repolens.whago.net/) — 저장소 점검, 기준선 비교,
-  GitHub Action 자동화를 제공하는 CLI
-- [Siteboard](https://siteboard.whago.net/) — 정적 홈페이지 편집,
-  Cloudflare 배포, 배포 확인과 롤백을 다루는 로컬 스튜디오
+  GitHub Action 자동화를 제공하는 CLI입니다.
+- [Siteboard](https://siteboard.whago.net/) — 현재 로컬 Studio를
+  제공하며 macOS와 Windows 설치판을 개발합니다.
 
-각 제품의 코드, 문서, 릴리스는 별도 저장소에서 관리합니다.
+코드, 이슈, 버전과 설치 산출물은 제품별 저장소에서 관리합니다.
 
 ## 로컬 실행
 
@@ -31,8 +42,8 @@ npm run lint
 npm run build:static
 ```
 
-- `npm test`는 Sites용 Worker 렌더링, 제품 링크, 보안 헤더와 배포 경계를
-  확인합니다.
+- `npm test`는 Sites용 Worker에서 홈, 카탈로그, 제품 상세, 릴리스,
+  지원과 하우스 페이지를 렌더링하고 보안 헤더와 배포 경계를 확인합니다.
 - `npm run build:static`은 Lightsail의 Nginx가 제공할 정적 파일을
   `out/`에 만듭니다.
 

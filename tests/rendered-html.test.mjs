@@ -26,7 +26,7 @@ async function render(pathname = "/") {
   );
 }
 
-test("renders the WHAGO product homepage with three independent products", async () => {
+test("renders a scalable WHAGO software house with separate product pages", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -39,59 +39,80 @@ test("renders the WHAGO product homepage with three independent products", async
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="ko"/i);
-  assert.match(
-    html,
-    /<title>WHAGO — Daymark · RepoLens · Siteboard<\/title>/i,
-  );
+  assert.match(html, /<title>WHAGO — Independent software house<\/title>/i);
   assert.match(html, />WHAGO</);
+  assert.match(html, /소프트웨어를 만들고 배포합니다/);
   assert.match(html, /Daymark/);
   assert.match(html, /RepoLens/);
   assert.match(html, /Siteboard/);
-  assert.match(html, /href="https:\/\/daymark\.whago\.net\/"/);
-  assert.match(html, /href="https:\/\/repolens\.whago\.net\/"/);
-  assert.match(html, /href="https:\/\/siteboard\.whago\.net\/"/);
-  assert.match(html, /github\.com\/rad1092\/daymark/);
-  assert.match(html, /github\.com\/rad1092\/repolens/);
-  assert.match(html, /github\.com\/rad1092\/siteboard/);
+  assert.match(html, /href="\/software"/);
+  assert.match(html, /href="\/software\/daymark"/);
+  assert.match(html, /href="\/software\/repolens"/);
+  assert.match(html, /href="\/software\/siteboard"/);
+  assert.match(html, /href="\/releases"/);
+  assert.match(html, /href="\/support"/);
+  assert.match(html, /href="\/house"/);
+  assert.match(html, /v(?:<!-- -->)?2\.2\.0/);
+  assert.match(html, /v(?:<!-- -->)?0\.3\.0/);
+  assert.match(html, /v(?:<!-- -->)?4\.0\.0/);
   assert.match(
     html,
-    /href="https:\/\/github\.com\/rad1092\/daymark\/releases\/tag\/v2\.2\.0"/,
-  );
-  assert.match(
-    html,
-    /href="https:\/\/github\.com\/rad1092\/repolens\/releases\/tag\/v0\.3\.0"/,
-  );
-  assert.match(
-    html,
-    /href="https:\/\/github\.com\/rad1092\/siteboard\/releases\/tag\/v4\.0\.0"/,
-  );
-  assert.match(html, />v2\.2\.0</);
-  assert.match(html, />v0\.3\.0</);
-  assert.match(html, />v4\.0\.0</);
-  assert.match(html, /최대 세 개/);
-  assert.doesNotMatch(html, /--base origin\/main|375px에서 배포 상태/);
-  assert.match(html, /release-daymark-v2\.2\.0\.jpg/);
-  assert.match(html, /release-repolens-v0\.3\.0\.jpg/);
-  assert.match(html, /release-siteboard-v4\.0\.0\.jpg/);
-  assert.match(html, /RELEASE CAPTURE/);
-  assert.match(html, /최근 릴리스/);
-  assert.match(html, /릴리스 노트/);
-  assert.doesNotMatch(html, /배포 #18|확인 완료|방금 전/);
-
-  assert.match(
-    html,
-    /property="og:image" content="https:\/\/whago\.net\/og-release-desk\.png"/,
+    /property="og:image" content="https:\/\/whago\.net\/og\.png"/,
   );
   assert.match(html, /rel="icon" href="https:\/\/whago\.net\/favicon\.svg"/);
   assert.doesNotMatch(
     html,
     /김홍대|FirstCall|gh-dep-risk|LocalFit Lab|rad1092\.github\.io/,
   );
-  assert.doesNotMatch(
-    html,
-    /일에 맞는 소프트웨어를 만듭니다|아닙니다|아니라|단순한|그저|데모/,
-  );
+  assert.doesNotMatch(html, /배포 #18|확인 완료|방금 전/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
+
+  const pages = [
+    ["/software", "소프트웨어 · WHAGO", "현재 배포 형태"],
+    ["/software/daymark", "Daymark · WHAGO", "하루 최대 세 약속"],
+    ["/software/repolens", "RepoLens · WHAGO", "GitHub Actions"],
+    ["/software/siteboard", "Siteboard · WHAGO", "Cloudflare"],
+    ["/releases", "릴리스 · WHAGO", "제품별 현재 버전"],
+    ["/support", "지원 · WHAGO", "제품별 지원"],
+    ["/house", "하우스 · WHAGO", "운영 원칙"],
+  ];
+
+  for (const [pathname, title, marker] of pages) {
+    const pageResponse = await render(pathname);
+    assert.equal(pageResponse.status, 200, pathname);
+    const pageHtml = await pageResponse.text();
+    assert.match(pageHtml, new RegExp(`<title>${title}</title>`, "i"), pathname);
+    assert.match(pageHtml, /<main[^>]*id="main"/i, pathname);
+    assert.match(pageHtml, new RegExp(marker), pathname);
+  }
+
+  const [daymarkResponse, releasesResponse, supportResponse] =
+    await Promise.all([
+      render("/software/daymark"),
+      render("/releases"),
+      render("/support"),
+    ]);
+  const daymarkHtml = await daymarkResponse.text();
+  const releasesHtml = await releasesResponse.text();
+  const supportHtml = await supportResponse.text();
+
+  assert.match(daymarkHtml, /release-daymark-v2\.2\.0\.jpg/);
+  assert.match(daymarkHtml, /href="https:\/\/daymark\.whago\.net\/"/);
+  assert.match(daymarkHtml, /github\.com\/rad1092\/daymark/);
+  assert.match(
+    daymarkHtml,
+    /github\.com\/rad1092\/daymark\/releases\/tag\/v2\.2\.0/,
+  );
+  assert.match(
+    releasesHtml,
+    /github\.com\/rad1092\/repolens\/releases\/tag\/v0\.3\.0/,
+  );
+  assert.match(
+    releasesHtml,
+    /github\.com\/rad1092\/siteboard\/releases\/tag\/v4\.0\.0/,
+  );
+  assert.match(supportHtml, /href="https:\/\/repolens\.whago\.net\/"/);
+  assert.match(supportHtml, /github\.com\/rad1092\/siteboard\/issues/);
 });
 
 test("keeps copy, accessibility, and deployment boundaries explicit", async () => {
@@ -132,19 +153,20 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   ]);
 
   assert.doesNotMatch(page, /"use client"/);
-  assert.match(page, /className="skip-link"/);
   assert.match(page, /id="main"/);
-  assert.match(page, /aria-labelledby="hero-title"/);
-  assert.doesNotMatch(
-    page,
-    /일에 맞는 소프트웨어를 만듭니다|아닙니다|아니라|단순한|그저|데모/,
-  );
+  assert.match(page, /href="\/software"/);
   assert.doesNotMatch(page, /김홍대|FirstCall|gh-dep-risk|LocalFit Lab/);
 
   assert.match(layout, /metadataBase:\s*new URL\("https:\/\/whago\.net"\)/);
   assert.match(layout, /export const viewport:\s*Viewport/);
+  assert.match(layout, /className="skip-link"/);
+  assert.match(layout, /href="\/software"/);
+  assert.match(layout, /href="\/releases"/);
+  assert.match(layout, /href="\/support"/);
+  assert.match(layout, /href="\/house"/);
+  assert.match(layout, /images:\s*\["\/og\.png"\]/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)/);
-  assert.match(css, /\.release-capture/);
+  assert.match(css, /\.product-shot/);
   assert.doesNotMatch(css, /\.daymark-preview|\.repolens-preview|\.siteboard-preview/);
   assert.doesNotMatch(css, /tailwindcss|@theme/);
   assert.doesNotMatch(packageJson, /@tailwindcss|tailwindcss/);
@@ -246,6 +268,7 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.deepEqual(previewFiles, []);
 
   await Promise.all([
+    access(new URL("../public/og.png", import.meta.url)),
     access(new URL("../public/og-release-desk.png", import.meta.url)),
     access(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),
     access(new URL("../public/release-repolens-v0.3.0.jpg", import.meta.url)),
@@ -289,7 +312,17 @@ test("serves health and search metadata without folding tool pages into the site
   assert.equal(sitemapResponse.status, 200);
   const sitemap = await sitemapResponse.text();
   assert.match(sitemap, /<loc>https:\/\/whago\.net<\/loc>/);
-  assert.doesNotMatch(sitemap, /\/daymark\/|\/repolens\/|\/siteboard\//);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/software<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/software\/daymark<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/software\/repolens<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/software\/siteboard<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/releases<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/support<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/house<\/loc>/);
+  assert.doesNotMatch(
+    sitemap,
+    /<loc>https:\/\/whago\.net\/(?:daymark|repolens|siteboard)\/?<\/loc>/,
+  );
 
   assert.equal(missingResponse.status, 404);
   const missingHtml = await missingResponse.text();
