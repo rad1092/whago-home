@@ -39,9 +39,9 @@ test("renders a scalable WHAGO software house with separate product pages", asyn
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="ko"/i);
-  assert.match(html, /<title>WHAGO — Independent software house<\/title>/i);
+  assert.match(html, /<title>WHAGO<\/title>/i);
   assert.match(html, />WHAGO</);
-  assert.match(html, /소프트웨어를 만들고 배포합니다/);
+  assert.match(html, /오늘 할 일, 저장소 검사/);
   assert.match(html, /Daymark/);
   assert.match(html, /RepoLens/);
   assert.match(html, /Siteboard/);
@@ -57,24 +57,28 @@ test("renders a scalable WHAGO software house with separate product pages", asyn
   assert.match(html, /v(?:<!-- -->)?4\.0\.0/);
   assert.match(
     html,
-    /property="og:image" content="https:\/\/whago\.net\/og\.png"/,
+    /property="og:image" content="https:\/\/whago\.net\/og-house-v2\.png"/,
   );
   assert.match(html, /rel="icon" href="https:\/\/whago\.net\/favicon\.svg"/);
   assert.doesNotMatch(
     html,
     /김홍대|FirstCall|gh-dep-risk|LocalFit Lab|rad1092\.github\.io/,
   );
+  assert.doesNotMatch(
+    html,
+    /Independent software house|새 제품도 같은 카탈로그|운영 방식 보기/,
+  );
   assert.doesNotMatch(html, /배포 #18|확인 완료|방금 전/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
 
   const pages = [
-    ["/software", "소프트웨어 · WHAGO", "현재 배포 형태"],
+    ["/software", "제품 · WHAGO", "브라우저 로컬"],
     ["/software/daymark", "Daymark · WHAGO", "하루 최대 세 약속"],
     ["/software/repolens", "RepoLens · WHAGO", "GitHub Actions"],
     ["/software/siteboard", "Siteboard · WHAGO", "Cloudflare"],
-    ["/releases", "릴리스 · WHAGO", "제품별 현재 버전"],
-    ["/support", "지원 · WHAGO", "제품별 지원"],
-    ["/house", "하우스 · WHAGO", "운영 원칙"],
+    ["/releases", "변경 기록 · WHAGO", "기준선 비교와 SARIF 출력"],
+    ["/support", "지원 · WHAGO", "오류 신고"],
+    ["/house", "소개 · WHAGO", "개발 기록"],
   ];
 
   for (const [pathname, title, marker] of pages) {
@@ -130,6 +134,8 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     dataMove,
     daymarkMove,
     siteboardMove,
+    productData,
+    housePage,
   ] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
@@ -150,12 +156,18 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     readFile(new URL("../public/data-move.js", import.meta.url), "utf8"),
     readFile(new URL("../public/daymark/index.html", import.meta.url), "utf8"),
     readFile(new URL("../public/siteboard/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../app/_data/products.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/house/page.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.doesNotMatch(page, /"use client"/);
   assert.match(page, /id="main"/);
   assert.match(page, /href="\/software"/);
   assert.doesNotMatch(page, /김홍대|FirstCall|gh-dep-risk|LocalFit Lab/);
+  assert.doesNotMatch(
+    page,
+    /Independent software house|새 제품|확장 가능한|운영 방식/,
+  );
 
   assert.match(layout, /metadataBase:\s*new URL\("https:\/\/whago\.net"\)/);
   assert.match(layout, /export const viewport:\s*Viewport/);
@@ -164,9 +176,13 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(layout, /href="\/releases"/);
   assert.match(layout, /href="\/support"/);
   assert.match(layout, /href="\/house"/);
-  assert.match(layout, /images:\s*\["\/og\.png"\]/);
+  assert.match(layout, /images:\s*\["\/og-house-v2\.png"\]/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)/);
   assert.match(css, /\.product-shot/);
+  assert.match(css, /\.product-showcase/);
+  assert.match(css, /\.product-catalog/);
+  assert.doesNotMatch(css, /font-size:\s*clamp\([^;]*8\.5rem/);
+  assert.doesNotMatch(css, /min-height:\s*38rem/);
   assert.doesNotMatch(css, /\.daymark-preview|\.repolens-preview|\.siteboard-preview/);
   assert.doesNotMatch(css, /tailwindcss|@theme/);
   assert.doesNotMatch(packageJson, /@tailwindcss|tailwindcss/);
@@ -260,6 +276,13 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.doesNotMatch(dataMove, /\bfetch\s*\(/);
   assert.match(daymarkMove, /새 Daymark 열기/);
   assert.match(siteboardMove, /새 Siteboard 열기/);
+  assert.match(productData, /export const releases:/);
+  assert.match(productData, /export const featuredProducts/);
+  assert.match(productData, /slug:\s*string/);
+  assert.doesNotMatch(
+    housePage,
+    /운영 원칙|Operating rules|확장 가능한 카탈로그|개 제품/,
+  );
 
   const previewFiles = await readdir(previewRoot).catch((error) => {
     if (error?.code === "ENOENT") return [];
@@ -269,6 +292,7 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
 
   await Promise.all([
     access(new URL("../public/og.png", import.meta.url)),
+    access(new URL("../public/og-house-v2.png", import.meta.url)),
     access(new URL("../public/og-release-desk.png", import.meta.url)),
     access(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),
     access(new URL("../public/release-repolens-v0.3.0.jpg", import.meta.url)),

@@ -3,12 +3,12 @@ import Link from "next/link";
 import "./globals.css";
 
 const description =
-  "WHAGO는 Daymark, RepoLens, Siteboard를 만들고 배포하는 독립 소프트웨어 하우스입니다.";
+  "WHAGO가 만드는 Daymark, RepoLens, Siteboard를 확인하세요.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://whago.net"),
   title: {
-    default: "WHAGO — Independent software house",
+    default: "WHAGO",
     template: "%s · WHAGO",
   },
   description,
@@ -24,22 +24,22 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: "/",
     siteName: "WHAGO",
-    title: "WHAGO — Independent software house",
+    title: "WHAGO",
     description,
     images: [
       {
-        url: "/og.png",
+        url: "/og-house-v2.png",
         width: 1200,
         height: 630,
-        alt: "WHAGO software catalog",
+        alt: "WHAGO의 세 가지 소프트웨어 화면",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "WHAGO — Independent software house",
+    title: "WHAGO",
     description,
-    images: ["/og.png"],
+    images: ["/og-house-v2.png"],
   },
 };
 
@@ -67,44 +67,27 @@ export default function RootLayout({
               WHAGO
             </Link>
             <nav aria-label="주요 메뉴">
-              <Link href="/software">소프트웨어</Link>
-              <Link href="/releases">릴리스</Link>
+              <Link href="/software">제품</Link>
+              <Link href="/releases">변경 기록</Link>
               <Link href="/support">지원</Link>
-              <Link href="/house">하우스</Link>
-              <a
-                href="https://github.com/rad1092"
-                rel="noreferrer"
-                target="_blank"
-              >
-                GitHub ↗
-                <span className="sr-only">(새 탭에서 열림)</span>
-              </a>
+              <Link href="/house">소개</Link>
             </nav>
           </div>
         </header>
         {children}
         <footer className="site-footer">
           <div className="site-footer__inner">
-            <div>
-              <Link className="wordmark" href="/">
-                WHAGO
-              </Link>
-              <p>Independent software house · Seoul</p>
-            </div>
-            <nav aria-label="하단 메뉴">
-              <Link href="/software">소프트웨어</Link>
-              <Link href="/releases">릴리스</Link>
-              <Link href="/support">지원</Link>
-              <Link href="/house">하우스</Link>
-              <a
-                href="https://github.com/rad1092"
-                rel="noreferrer"
-                target="_blank"
-              >
-                GitHub ↗
-              </a>
-            </nav>
+            <Link className="wordmark" href="/">
+              WHAGO
+            </Link>
             <p>© 2026 WHAGO</p>
+            <a
+              href="https://github.com/rad1092"
+              rel="noreferrer"
+              target="_blank"
+            >
+              GitHub ↗<span className="sr-only">(새 탭에서 열림)</span>
+            </a>
           </div>
         </footer>
       </body>

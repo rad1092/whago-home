@@ -6,18 +6,15 @@ export type ProductLink = {
 };
 
 export type Product = {
-  slug: "daymark" | "repolens" | "siteboard";
+  slug: string;
   index: string;
+  featured: boolean;
   name: string;
   category: string;
   summary: string;
   status: string;
-  version: string;
-  releaseDate: string;
-  releaseDateIso: string;
-  releaseTitle: string;
-  releaseSummary: string;
-  releaseChanges: readonly string[];
+  runtime: string;
+  dataLocation: string;
   source: string;
   productUrl: string;
   screenshot: string;
@@ -30,26 +27,28 @@ export type Product = {
   links: readonly ProductLink[];
 };
 
+export type Release = {
+  productSlug: Product["slug"];
+  version: string;
+  date: string;
+  dateIso: string;
+  title: string;
+  summary: string;
+  changes: readonly string[];
+};
+
 export const products: readonly Product[] = [
   {
     slug: "daymark",
     index: "01",
+    featured: true,
     name: "Daymark",
-    category: "Daily execution",
+    category: "하루 계획",
     summary:
-      "오늘의 약속을 최대 세 개로 봉인하고, 중단된 일의 다음 시작점을 남깁니다.",
-    status: "웹 데모 운영 · 설치판 개발",
-    version: "2.2.0",
-    releaseDate: "2026.07.29",
-    releaseDateIso: "2026-07-29",
-    releaseTitle: "완결된 하루",
-    releaseSummary:
-      "시작할 때 정한 약속 수를 유지하고, 남은 일에 날짜와 다음 행동을 기록합니다.",
-    releaseChanges: [
-      "시작할 때 고른 약속 수 고정",
-      "미완료 항목의 날짜와 다음 행동",
-      "되돌리기와 로컬 복구 스냅샷",
-    ],
+      "오늘 할 일을 세 개까지 정하고, 끝내지 못한 일에는 다음 행동과 날짜를 남깁니다.",
+    status: "웹 데모 · PWA",
+    runtime: "웹 · PWA",
+    dataLocation: "브라우저 로컬",
     source: "https://github.com/rad1092/daymark",
     productUrl: "https://daymark.whago.net/",
     screenshot: "/release-daymark-v2.2.0.jpg",
@@ -93,22 +92,14 @@ export const products: readonly Product[] = [
   {
     slug: "repolens",
     index: "02",
+    featured: true,
     name: "RepoLens",
-    category: "Repository maintenance",
+    category: "코드 유지보수",
     summary:
-      "기존 부채와 이번 변경에서 생긴 새 유지보수 회귀를 분리하는 CLI와 GitHub Action입니다.",
-    status: "CLI · GitHub Action 배포",
-    version: "0.3.0",
-    releaseDate: "2026.07.29",
-    releaseDateIso: "2026-07-29",
-    releaseTitle: "PR 회귀 게이트",
-    releaseSummary:
-      "기준선에 수용한 부채는 남겨 두고, 새 회귀만 파일과 줄 위치에 표시합니다.",
-    releaseChanges: [
-      "새 회귀만 파일과 줄 위치에 표시",
-      "수용 사유와 만료일을 가진 기준선",
-      "GitHub Job Summary와 SARIF 출력",
-    ],
+      "기존 문제는 기준선으로 남기고, 새로 생긴 저장소 문제만 CLI와 CI에서 찾습니다.",
+    status: "CLI · GitHub Action",
+    runtime: "터미널 · GitHub Actions",
+    dataLocation: "저장소 읽기 · 보고서 파일",
     source: "https://github.com/rad1092/repolens",
     productUrl: "https://repolens.whago.net/",
     screenshot: "/release-repolens-v0.3.0.jpg",
@@ -152,22 +143,14 @@ export const products: readonly Product[] = [
   {
     slug: "siteboard",
     index: "03",
+    featured: true,
     name: "Siteboard",
-    category: "Static site studio",
+    category: "사이트 제작",
     summary:
-      "한 장짜리 사업 사이트를 편집하고, 정적 파일 생성부터 배포 확인과 복구까지 관리합니다.",
-    status: "로컬 Studio 운영 · 설치판 개발",
-    version: "4.0.0",
-    releaseDate: "2026.07.29",
-    releaseDateIso: "2026-07-29",
-    releaseTitle: "검증 가능한 배포",
-    releaseSummary:
-      "대상 Cloudflare 프로젝트와 작업 파일을 연결하고, 공개 주소의 실제 리비전을 확인합니다.",
-    releaseChanges: [
-      "Cloudflare 프로젝트 명시 연결",
-      "리비전 마커 기반 배포 확인",
-      "초안 스냅샷과 운영 버전 롤백 분리",
-    ],
+      "한 페이지 사이트를 편집해 정적 파일로 내보내고, Cloudflare 배포 상태를 확인합니다.",
+    status: "웹 편집기 · 로컬 Studio",
+    runtime: "웹 · 로컬 Studio",
+    dataLocation: "브라우저 · 로컬 작업 파일",
     source: "https://github.com/rad1092/siteboard",
     productUrl: "https://siteboard.whago.net/",
     screenshot: "/release-siteboard-v4.0.0.jpg",
@@ -210,6 +193,57 @@ export const products: readonly Product[] = [
   },
 ] as const;
 
+export const featuredProducts = products.filter((product) => product.featured);
+
+export const releases: readonly Release[] = [
+  {
+    productSlug: "daymark",
+    version: "2.2.0",
+    date: "2026.07.29",
+    dateIso: "2026-07-29",
+    title: "약속 수 고정과 미완료 기록",
+    summary:
+      "시작할 때 정한 약속 수를 유지하고, 남은 일에 날짜와 다음 행동을 기록합니다.",
+    changes: [
+      "시작할 때 고른 약속 수 고정",
+      "미완료 항목의 날짜와 다음 행동",
+      "되돌리기와 로컬 복구 스냅샷",
+    ],
+  },
+  {
+    productSlug: "repolens",
+    version: "0.3.0",
+    date: "2026.07.29",
+    dateIso: "2026-07-29",
+    title: "기준선 비교와 SARIF 출력",
+    summary:
+      "기준선에 수용한 부채는 남겨 두고, 새 회귀만 파일과 줄 위치에 표시합니다.",
+    changes: [
+      "새 회귀만 파일과 줄 위치에 표시",
+      "수용 사유와 만료일을 가진 기준선",
+      "GitHub Job Summary와 SARIF 출력",
+    ],
+  },
+  {
+    productSlug: "siteboard",
+    version: "4.0.0",
+    date: "2026.07.29",
+    dateIso: "2026-07-29",
+    title: "배포 리비전 확인과 롤백",
+    summary:
+      "대상 Cloudflare 프로젝트와 작업 파일을 연결하고, 공개 주소의 실제 리비전을 확인합니다.",
+    changes: [
+      "Cloudflare 프로젝트 명시 연결",
+      "리비전 마커 기반 배포 확인",
+      "초안 스냅샷과 운영 버전 롤백 분리",
+    ],
+  },
+] as const;
+
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
+}
+
+export function getLatestRelease(slug: Product["slug"]) {
+  return releases.find((release) => release.productSlug === slug);
 }

@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductLinks } from "../../_components/product-links";
-import { getProduct, products } from "../../_data/products";
+import {
+  getLatestRelease,
+  getProduct,
+  products,
+} from "../../_data/products";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -42,6 +46,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
+  const release = getLatestRelease(product.slug);
+
   return (
     <main id="main" className={`product-page product-page--${product.slug}`}>
       <header className="product-hero page-shell">
@@ -50,7 +56,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <span aria-hidden="true">/</span>
           <span>{product.name}</span>
         </nav>
-        <p className="kicker">{product.category}</p>
+        <p className="product-hero__category">{product.category}</p>
         <h1>{product.name}</h1>
         <p className="product-hero__summary">{product.summary}</p>
         <ProductLinks links={product.links} />
@@ -65,12 +71,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
             height={649}
           />
           <figcaption>
-            <span>현재 릴리스 화면</span>
-            <strong>v{product.version}</strong>
+            <span>제품 화면</span>
+            <strong>{release ? `v${release.version}` : "현재 버전"}</strong>
           </figcaption>
         </figure>
 
         <dl className="fact-list">
+          {release ? (
+            <div>
+              <dt>현재 버전</dt>
+              <dd>
+                v{release.version} · {release.date}
+              </dd>
+            </div>
+          ) : null}
           {product.facts.map((fact) => (
             <div key={fact.label}>
               <dt>{fact.label}</dt>
@@ -82,8 +96,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <section className="product-details page-shell">
         <div>
-          <p className="kicker">Functions</p>
-          <h2>하는 일</h2>
+          <h2>주요 기능</h2>
         </div>
         <ol>
           {product.capabilities.map((capability, index) => (
@@ -95,29 +108,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </ol>
       </section>
 
-      <section className="product-release page-shell">
-        <div>
-          <p className="kicker">Current release</p>
-          <h2>v{product.version}</h2>
-          <time dateTime={product.releaseDateIso}>{product.releaseDate}</time>
-        </div>
-        <div>
-          <h3>{product.releaseTitle}</h3>
-          <p>{product.releaseSummary}</p>
-          <ul>
-            {product.releaseChanges.map((change) => (
-              <li key={change}>{change}</li>
-            ))}
-          </ul>
+      <section className="product-more page-shell" aria-labelledby="product-more">
+        <h2 id="product-more">더 보기</h2>
+        <nav aria-label={`${product.name} 추가 링크`}>
+          <Link href="/releases">변경 기록 →</Link>
           <a
-            href={`${product.source}/releases/tag/v${product.version}`}
+            href={`${product.source}/issues`}
             rel="noreferrer"
             target="_blank"
           >
-            GitHub 릴리스 보기 ↗
+            오류 신고 ↗
             <span className="sr-only">(새 탭에서 열림)</span>
           </a>
-        </div>
+        </nav>
       </section>
     </main>
   );
