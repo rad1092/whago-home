@@ -219,6 +219,10 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(nextConfig, /process\.env\.WHAGO_STATIC_EXPORT/);
 
   assert.match(nginxConfig, /root \/srv\/whago-home\/current\/out;/);
+  assert.match(
+    nginxConfig,
+    /try_files \$uri\.html \$uri\/index\.html \$uri =404;/,
+  );
   assert.match(nginxConfig, /X-Frame-Options "DENY" always/);
   assert.match(
     nginxConfig,
