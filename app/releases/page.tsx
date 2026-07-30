@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getProduct, releases } from "../_data/products";
+import {
+  formatReleaseDate,
+  getProduct,
+  releases,
+} from "../_data/products";
 
 export const metadata: Metadata = {
-  title: "변경 기록",
+  title: "업데이트",
   description: "WHAGO 소프트웨어의 버전과 변경 내용을 확인합니다.",
   alternates: {
     canonical: "/releases",
@@ -16,10 +20,16 @@ export default function ReleasesPage() {
   return (
     <main id="main">
       <header className="page-intro page-shell">
-        <h1>변경 기록</h1>
+        <h1>업데이트</h1>
       </header>
 
-      <section className="release-ledger page-shell" aria-label="제품 릴리스">
+      <section className="release-ledger page-shell" aria-label="제품 업데이트">
+        <div className="release-ledger__head" aria-hidden="true">
+          <span>날짜</span>
+          <span>제품</span>
+          <span>변경 내용</span>
+          <span>릴리스</span>
+        </div>
         {releases.map((release) => {
           const product = getProduct(release.productSlug);
 
@@ -27,20 +37,14 @@ export default function ReleasesPage() {
 
           return (
             <article key={`${release.productSlug}-${release.version}`}>
-              <div className="release-ledger__meta">
-                <time dateTime={release.dateIso}>{release.date}</time>
-                <strong>v{release.version}</strong>
-              </div>
-              <div className="release-ledger__main">
+              <time dateTime={release.publishedAt}>
+                {formatReleaseDate(release.publishedAt)}
+              </time>
+              <div>
                 <Link href={`/software/${product.slug}`}>{product.name}</Link>
-                <h2>{release.title}</h2>
-                <p>{release.summary}</p>
+                <span>v{release.version}</span>
               </div>
-              <ul>
-                {release.changes.map((change) => (
-                  <li key={change}>{change}</li>
-                ))}
-              </ul>
+              <p>{release.summary}</p>
               <a
                 href={`${product.source}/releases/tag/v${release.version}`}
                 rel="noreferrer"

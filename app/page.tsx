@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ProductShowcase } from "./_components/product-list";
+import { ProductIndex } from "./_components/product-list";
 import {
-  featuredProducts,
+  formatReleaseDate,
   getProduct,
+  products,
   releases,
 } from "./_data/products";
 
@@ -11,34 +12,29 @@ export const dynamic = "force-static";
 export default function Home() {
   return (
     <main id="main">
-      <header className="home-heading page-shell">
-        <h1>소프트웨어</h1>
-        <p>
-          오늘 할 일, 저장소 검사, 한 페이지 사이트 제작을 위한
-          도구입니다.
-        </p>
-      </header>
-
-      <section
-        className="home-products page-shell"
-        aria-label="WHAGO 주요 제품"
-      >
-        <ProductShowcase items={featuredProducts} />
-        <div className="home-products__footer">
-          <Link href="/software">모든 제품 보기 →</Link>
+      <section className="software-index page-shell" aria-labelledby="products-title">
+        <header className="index-title">
+          <h1 id="products-title">제품</h1>
+          <Link href="/software">제품 비교 →</Link>
+        </header>
+        <div className="product-index__head" aria-hidden="true">
+          <span>제품</span>
+          <span>용도</span>
+          <span>제공 형태</span>
+          <span>버전</span>
+          <span>화면</span>
+          <span>바로가기</span>
         </div>
+        <ProductIndex items={products} />
       </section>
 
-      <section
-        className="home-updates page-shell"
-        aria-labelledby="recent-updates"
-      >
-        <div className="compact-heading">
+      <section className="release-desk page-shell" aria-labelledby="recent-updates">
+        <header>
           <h2 id="recent-updates">최근 업데이트</h2>
-          <Link href="/releases">변경 기록 보기 →</Link>
-        </div>
+          <Link href="/releases">전체 기록 →</Link>
+        </header>
         <ol>
-          {releases.slice(0, 3).map((release) => {
+          {releases.map((release) => {
             const product = getProduct(release.productSlug);
 
             if (!product) return null;
@@ -48,7 +44,9 @@ export default function Home() {
                 <Link href={`/software/${product.slug}`}>
                   <span>{product.name}</span>
                   <strong>v{release.version}</strong>
-                  <time dateTime={release.dateIso}>{release.date}</time>
+                  <time dateTime={release.publishedAt}>
+                    {formatReleaseDate(release.publishedAt)}
+                  </time>
                 </Link>
               </li>
             );

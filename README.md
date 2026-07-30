@@ -1,27 +1,26 @@
 # WHAGO
 
-[whago.net](https://whago.net)은 WHAGO의 소프트웨어 카탈로그, 릴리스,
-지원 경로와 운영 원칙을 나누어 제공하는 홈페이지입니다. 제품 수가
-늘어나도 한 페이지를 계속 늘이지 않도록 다음 경로를 독립적으로
-관리합니다.
+[whago.net](https://whago.net)은 WHAGO의 제품, 업데이트와 지원
+경로를 제공하는 홈페이지입니다. 홈에서는 각 제품을 바로 열거나
+설치할 수 있고, 아래 경로에서 상세 정보를 분리해 제공합니다.
 
-- `/software`: 전체 제품 카탈로그
-- `/software/[slug]`: 실행 형태, 데이터 위치, 기능과 현재 릴리스
-- `/releases`: 제품별 버전과 변경 기록
-- `/support`: 문서, Issues, 소스와 전체 릴리스
-- `/house`: WHAGO의 제품 운영 원칙
+- `/software`: 용도, 실행 방식과 데이터 위치 비교
+- `/software/[slug]`: 실제 화면, 사용 흐름, 설치와 데이터
+- `/releases`: 제품별 버전과 변경 내용
+- `/support`: 사용법과 Issues
+- `/house`: WHAGO 소개
 
 제품 정보는 `app/_data/products.ts` 한곳에서 관리합니다. 새 제품은
 저장소와 릴리스 경로를 준비한 뒤 이 카탈로그에 추가합니다.
 
 ## 현재 제품
 
-- [Daymark](https://daymark.whago.net/) — 웹 데모를 운영하며 macOS,
-  Windows, iOS, Android 설치판을 개발합니다.
-- [RepoLens](https://repolens.whago.net/) — 저장소 점검, 기준선 비교,
-  GitHub Action 자동화를 제공하는 CLI입니다.
-- [Siteboard](https://siteboard.whago.net/) — 현재 로컬 Studio를
-  제공하며 macOS와 Windows 설치판을 개발합니다.
+- [Daymark](https://daymark.whago.net/) — 오늘 끝낼 일을 세 개까지
+  정하고, 남은 일에는 다음 행동과 날짜를 남기는 웹 앱입니다.
+- [RepoLens](https://repolens.whago.net/) — 새로 생기거나 악화된
+  저장소 유지보수 문제만 표시하는 CLI와 GitHub Action입니다.
+- [Siteboard](https://siteboard.whago.net/) — 홈페이지를 편집해
+  정적 파일로 내보내고 Cloudflare Pages에 배포합니다.
 
 코드, 이슈, 버전과 설치 산출물은 제품별 저장소에서 관리합니다.
 
@@ -42,8 +41,8 @@ npm run lint
 npm run build:static
 ```
 
-- `npm test`는 Sites용 Worker에서 홈, 카탈로그, 제품 상세, 릴리스,
-  지원과 하우스 페이지를 렌더링하고 보안 헤더와 배포 경계를 확인합니다.
+- `npm test`는 Sites용 Worker에서 홈, 제품 상세, 업데이트, 지원과
+  소개 페이지를 렌더링하고 보안 헤더와 배포 경계를 확인합니다.
 - `npm run build:static`은 Lightsail의 Nginx가 제공할 정적 파일을
   `out/`에 만듭니다.
 

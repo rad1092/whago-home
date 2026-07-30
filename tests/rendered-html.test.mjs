@@ -26,7 +26,7 @@ async function render(pathname = "/") {
   );
 }
 
-test("renders a scalable WHAGO software house with separate product pages", async () => {
+test("renders a direct product index with separate product pages", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -41,7 +41,9 @@ test("renders a scalable WHAGO software house with separate product pages", asyn
   assert.match(html, /<html[^>]*lang="ko"/i);
   assert.match(html, /<title>WHAGO<\/title>/i);
   assert.match(html, />WHAGO</);
-  assert.match(html, /오늘 할 일, 저장소 검사/);
+  assert.match(html, /오늘 끝낼 일을 세 개까지/);
+  assert.match(html, /Pull request에서 새로 생기거나 악화된/);
+  assert.match(html, /Cloudflare Pages에 배포/);
   assert.match(html, /Daymark/);
   assert.match(html, /RepoLens/);
   assert.match(html, /Siteboard/);
@@ -55,30 +57,35 @@ test("renders a scalable WHAGO software house with separate product pages", asyn
   assert.match(html, /v(?:<!-- -->)?2\.2\.0/);
   assert.match(html, /v(?:<!-- -->)?0\.3\.0/);
   assert.match(html, /v(?:<!-- -->)?4\.0\.0/);
+  assert.doesNotMatch(html, /og-house-v2\.png|og-release-desk\.png/);
   assert.match(
     html,
-    /property="og:image" content="https:\/\/whago\.net\/og-house-v2\.png"/,
+    /property="og:image" content="https:\/\/whago\.net\/og\.png"/,
   );
   assert.match(html, /rel="icon" href="https:\/\/whago\.net\/favicon\.svg"/);
+  assert.match(html, /href="https:\/\/daymark\.whago\.net\/"/);
+  assert.match(html, /href="https:\/\/repolens\.whago\.net\/"/);
+  assert.match(html, /href="https:\/\/siteboard\.whago\.net\/"/);
   assert.doesNotMatch(
     html,
     /김홍대|FirstCall|gh-dep-risk|LocalFit Lab|rad1092\.github\.io/,
   );
   assert.doesNotMatch(
     html,
-    /Independent software house|새 제품도 같은 카탈로그|운영 방식 보기/,
+    /Independent software house|새 제품도 같은 카탈로그|운영 방식 보기|웹 데모|개발 중/,
   );
+  assert.doesNotMatch(html, /모든 제품 보기|product-card|product-showcase/);
   assert.doesNotMatch(html, /배포 #18|확인 완료|방금 전/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
 
   const pages = [
-    ["/software", "제품 · WHAGO", "브라우저 로컬"],
-    ["/software/daymark", "Daymark · WHAGO", "하루 최대 세 약속"],
-    ["/software/repolens", "RepoLens · WHAGO", "GitHub Actions"],
-    ["/software/siteboard", "Siteboard · WHAGO", "Cloudflare"],
-    ["/releases", "변경 기록 · WHAGO", "기준선 비교와 SARIF 출력"],
+    ["/software", "제품 · WHAGO", "데이터 위치"],
+    ["/software/daymark", "Daymark · WHAGO", "사용 흐름"],
+    ["/software/repolens", "RepoLens · WHAGO", "프로젝트 스크립트를 실행하지 않고"],
+    ["/software/siteboard", "Siteboard · WHAGO", "Local Studio"],
+    ["/releases", "업데이트 · WHAGO", "기준선과 비교해 새 회귀"],
     ["/support", "지원 · WHAGO", "오류 신고"],
-    ["/house", "소개 · WHAGO", "개발 기록"],
+    ["/house", "소개 · WHAGO", "서울에서 소프트웨어를 만들고 운영합니다"],
   ];
 
   for (const [pathname, title, marker] of pages) {
@@ -102,6 +109,7 @@ test("renders a scalable WHAGO software house with separate product pages", asyn
 
   assert.match(daymarkHtml, /release-daymark-v2\.2\.0\.jpg/);
   assert.match(daymarkHtml, /href="https:\/\/daymark\.whago\.net\/"/);
+  assert.match(daymarkHtml, /브라우저에서 바로 사용하거나 홈 화면에 설치/);
   assert.match(daymarkHtml, /github\.com\/rad1092\/daymark/);
   assert.match(
     daymarkHtml,
@@ -123,6 +131,7 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   const [
     page,
     layout,
+    siteNavigation,
     css,
     packageJson,
     nextConfig,
@@ -135,10 +144,15 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     daymarkMove,
     siteboardMove,
     productData,
+    productList,
     housePage,
   ] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(
+      new URL("../app/_components/site-navigation.tsx", import.meta.url),
+      "utf8",
+    ),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
@@ -157,6 +171,10 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     readFile(new URL("../public/daymark/index.html", import.meta.url), "utf8"),
     readFile(new URL("../public/siteboard/index.html", import.meta.url), "utf8"),
     readFile(new URL("../app/_data/products.ts", import.meta.url), "utf8"),
+    readFile(
+      new URL("../app/_components/product-list.tsx", import.meta.url),
+      "utf8",
+    ),
     readFile(new URL("../app/house/page.tsx", import.meta.url), "utf8"),
   ]);
 
@@ -168,19 +186,29 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     page,
     /Independent software house|새 제품|확장 가능한|운영 방식/,
   );
+  assert.match(page, /ProductIndex/);
+  assert.match(page, /제품 비교/);
+  assert.doesNotMatch(page, /ProductShowcase|모든 제품 보기/);
 
   assert.match(layout, /metadataBase:\s*new URL\("https:\/\/whago\.net"\)/);
   assert.match(layout, /export const viewport:\s*Viewport/);
   assert.match(layout, /className="skip-link"/);
-  assert.match(layout, /href="\/software"/);
-  assert.match(layout, /href="\/releases"/);
-  assert.match(layout, /href="\/support"/);
-  assert.match(layout, /href="\/house"/);
-  assert.match(layout, /images:\s*\["\/og-house-v2\.png"\]/);
+  assert.match(layout, /<SiteNavigation \/>/);
+  assert.match(siteNavigation, /href:\s*"\/software"/);
+  assert.match(siteNavigation, /href:\s*"\/releases"/);
+  assert.match(siteNavigation, /href:\s*"\/support"/);
+  assert.match(siteNavigation, /href:\s*"\/house"/);
+  assert.match(siteNavigation, /aria-current=/);
+  assert.doesNotMatch(layout, /og-house-v2|og-release-desk/);
+  assert.match(layout, /images:\s*\[\s*\{\s*url:\s*"\/og\.png"/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)/);
   assert.match(css, /\.product-shot/);
-  assert.match(css, /\.product-showcase/);
+  assert.match(css, /\.product-index/);
   assert.match(css, /\.product-catalog/);
+  assert.doesNotMatch(css, /\.product-card|\.product-showcase/);
+  assert.doesNotMatch(css, /box-shadow:/);
+  assert.doesNotMatch(css, /border-radius:/);
+  assert.doesNotMatch(css, /translateY\(|scale\(/);
   assert.doesNotMatch(css, /font-size:\s*clamp\([^;]*8\.5rem/);
   assert.doesNotMatch(css, /min-height:\s*38rem/);
   assert.doesNotMatch(css, /\.daymark-preview|\.repolens-preview|\.siteboard-preview/);
@@ -277,8 +305,13 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(daymarkMove, /새 Daymark 열기/);
   assert.match(siteboardMove, /새 Siteboard 열기/);
   assert.match(productData, /export const releases:/);
-  assert.match(productData, /export const featuredProducts/);
+  assert.doesNotMatch(productData, /featured|status:\s*"/);
   assert.match(productData, /slug:\s*string/);
+  assert.match(productData, /workflow:/);
+  assert.match(productData, /primaryAction:/);
+  assert.match(productList, /className="product-index"/);
+  assert.match(productList, /product\.primaryAction\.label/);
+  assert.doesNotMatch(productList, /product-card|ProductShowcase/);
   assert.doesNotMatch(
     housePage,
     /운영 원칙|Operating rules|확장 가능한 카탈로그|개 제품/,
@@ -292,15 +325,23 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
 
   await Promise.all([
     access(new URL("../public/og.png", import.meta.url)),
-    access(new URL("../public/og-house-v2.png", import.meta.url)),
-    access(new URL("../public/og-release-desk.png", import.meta.url)),
     access(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),
     access(new URL("../public/release-repolens-v0.3.0.jpg", import.meta.url)),
     access(new URL("../public/release-siteboard-v4.0.0.jpg", import.meta.url)),
+    access(new URL("../public/product-daymark-icon.png", import.meta.url)),
+    access(new URL("../public/product-siteboard-icon.png", import.meta.url)),
     access(new URL("../public/favicon.svg", import.meta.url)),
     access(new URL("../public/daymark/index.html", import.meta.url)),
     access(new URL("../public/siteboard/index.html", import.meta.url)),
     access(new URL("../public/data-move.js", import.meta.url)),
+  ]);
+  await Promise.all([
+    assert.rejects(
+      access(new URL("../public/og-house-v2.png", import.meta.url)),
+    ),
+    assert.rejects(
+      access(new URL("../public/og-release-desk.png", import.meta.url)),
+    ),
   ]);
   const releaseCaptures = await Promise.all([
     readFile(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),

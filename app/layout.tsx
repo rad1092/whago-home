@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import { SiteNavigation } from "./_components/site-navigation";
 import "./globals.css";
 
 const description =
-  "WHAGO가 만드는 Daymark, RepoLens, Siteboard를 확인하세요.";
+  "WHAGO의 Daymark, RepoLens, Siteboard를 열고 설치할 수 있습니다.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://whago.net"),
@@ -28,10 +29,10 @@ export const metadata: Metadata = {
     description,
     images: [
       {
-        url: "/og-house-v2.png",
+        url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "WHAGO의 세 가지 소프트웨어 화면",
+        alt: "WHAGO 제품 인덱스",
       },
     ],
   },
@@ -39,13 +40,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "WHAGO",
     description,
-    images: ["/og-house-v2.png"],
+    images: ["/og.png"],
   },
 };
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#f7f7f3",
+  themeColor: "#f3f2ed",
   width: "device-width",
   initialScale: 1,
 };
@@ -66,20 +67,12 @@ export default function RootLayout({
             <Link className="wordmark" href="/" aria-label="WHAGO 홈">
               WHAGO
             </Link>
-            <nav aria-label="주요 메뉴">
-              <Link href="/software">제품</Link>
-              <Link href="/releases">변경 기록</Link>
-              <Link href="/support">지원</Link>
-              <Link href="/house">소개</Link>
-            </nav>
+            <SiteNavigation />
           </div>
         </header>
         {children}
         <footer className="site-footer">
           <div className="site-footer__inner">
-            <Link className="wordmark" href="/">
-              WHAGO
-            </Link>
             <p>© 2026 WHAGO</p>
             <a
               href="https://github.com/rad1092"

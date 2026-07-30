@@ -3,89 +3,103 @@ import {
   getLatestRelease,
   type Product,
 } from "../_data/products";
+import { ProductMark } from "./product-mark";
 
-export function ProductShowcase({ items }: { items: readonly Product[] }) {
+function ExternalMark() {
   return (
-    <div className="product-showcase">
-      {items.map((product) => (
-        <article
-          className={`product-card product-card--${product.slug}`}
-          key={product.slug}
-        >
-          <Link href={`/software/${product.slug}`}>
-            <div className="product-card__image">
+    <>
+      <span aria-hidden="true">↗</span>
+      <span className="sr-only">(새 탭에서 열림)</span>
+    </>
+  );
+}
+
+export function ProductIndex({ items }: { items: readonly Product[] }) {
+  return (
+    <ol className="product-index">
+      {items.map((product, index) => {
+        const release = getLatestRelease(product.slug);
+
+        return (
+          <li className={`product-row product-row--${product.slug}`} key={product.slug}>
+            <div className="product-row__identity">
+              <ProductMark product={product} priority={index === 0} />
+              <div>
+                <p>{product.typeLabel}</p>
+                <h2>
+                  <Link href={`/software/${product.slug}`}>{product.name}</Link>
+                </h2>
+              </div>
+            </div>
+            <p className="product-row__purpose">{product.purpose}</p>
+            <p className="product-row__offering">{product.offering}</p>
+            <p className="product-row__version">
+              {release ? `v${release.version}` : "—"}
+            </p>
+            <Link
+              className="product-row__media"
+              href={`/software/${product.slug}`}
+              aria-label={`${product.name} 제품 정보`}
+            >
               <img
                 alt=""
-                height={649}
-                loading={product.index === "01" ? "eager" : "lazy"}
-                src={product.screenshot}
-                width={885}
+                height={product.media.height}
+                loading={index === 0 ? "eager" : "lazy"}
+                src={product.media.src}
+                style={{ objectPosition: product.media.objectPosition }}
+                width={product.media.width}
               />
+            </Link>
+            <div className="product-row__actions">
+              <a
+                href={product.primaryAction.href}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {product.primaryAction.label} <ExternalMark />
+              </a>
+              <Link href={`/software/${product.slug}`}>제품 정보 →</Link>
             </div>
-            <div className="product-card__body">
-              <div className="product-card__heading">
-                <div>
-                  <span>{product.category}</span>
-                  <h2>{product.name}</h2>
-                </div>
-                <span aria-hidden="true">↗</span>
-              </div>
-              <p>{product.summary}</p>
-              <span className="product-card__status">{product.status}</span>
-            </div>
-          </Link>
-        </article>
-      ))}
-    </div>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
 export function ProductCatalog({ items }: { items: readonly Product[] }) {
   return (
     <div className="product-catalog">
-      {items.map((product) => {
-        const release = getLatestRelease(product.slug);
-
-        return (
-          <article
-            className={`catalog-item catalog-item--${product.slug}`}
-            key={product.slug}
-          >
-            <header>
-              <span>{product.index}</span>
-              <div>
-                <p>{product.category}</p>
-                <h2>
-                  <Link href={`/software/${product.slug}`}>
-                    {product.name}
-                  </Link>
-                </h2>
-              </div>
-            </header>
-            <p className="catalog-item__summary">{product.summary}</p>
-            <dl>
-              <div>
-                <dt>실행</dt>
-                <dd>{product.runtime}</dd>
-              </div>
-              <div>
-                <dt>데이터</dt>
-                <dd>{product.dataLocation}</dd>
-              </div>
-              <div>
-                <dt>버전</dt>
-                <dd>{release ? `v${release.version}` : "—"}</dd>
-              </div>
-            </dl>
-            <Link
-              className="catalog-item__link"
-              href={`/software/${product.slug}`}
+      <div className="product-catalog__head" aria-hidden="true">
+        <span>제품</span>
+        <span>용도</span>
+        <span>제공 형태</span>
+        <span>데이터</span>
+        <span>바로가기</span>
+      </div>
+      {items.map((product) => (
+        <article className="catalog-row" key={product.slug}>
+          <div className="catalog-row__name">
+            <h2>
+              <Link href={`/software/${product.slug}`}>{product.name}</Link>
+            </h2>
+            <span>{product.typeLabel}</span>
+          </div>
+          <p>{product.purpose}</p>
+          <p>{product.runtime}</p>
+          <p>{product.dataLocation}</p>
+          <nav aria-label={`${product.name} 바로가기`}>
+            <a
+              href={product.primaryAction.href}
+              rel="noreferrer"
+              target="_blank"
             >
-              제품 보기 <span aria-hidden="true">→</span>
-            </Link>
-          </article>
-        );
-      })}
+              {product.primaryAction.label} <ExternalMark />
+            </a>
+            <Link href={`/software/${product.slug}`}>제품 정보 →</Link>
+          </nav>
+        </article>
+      ))}
     </div>
   );
 }

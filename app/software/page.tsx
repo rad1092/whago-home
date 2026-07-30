@@ -4,7 +4,7 @@ import { products } from "../_data/products";
 
 export const metadata: Metadata = {
   title: "제품",
-  description: "WHAGO가 만들고 배포하는 소프트웨어 제품 목록입니다.",
+  description: "WHAGO 제품의 용도, 실행 방식과 데이터 위치를 비교합니다.",
   alternates: {
     canonical: "/software",
   },
@@ -17,12 +17,10 @@ export default function SoftwarePage() {
     <main id="main">
       <header className="page-intro page-shell">
         <h1>제품</h1>
+        <p>용도, 실행 방식과 데이터 위치를 한곳에서 확인합니다.</p>
       </header>
 
-      <section
-        className="catalog-section page-shell"
-        aria-label="WHAGO 제품 비교"
-      >
+      <section className="catalog-section page-shell" aria-label="WHAGO 제품 비교">
         <ProductCatalog items={products} />
       </section>
     </main>
