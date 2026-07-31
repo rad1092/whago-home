@@ -73,14 +73,17 @@ export default function RootLayout({
         {children}
         <footer className="site-footer">
           <div className="site-footer__inner">
-            <p>© 2026 WHAGO</p>
-            <a
-              href="https://github.com/rad1092"
-              rel="noreferrer"
-              target="_blank"
-            >
-              GitHub ↗<span className="sr-only">(새 탭에서 열림)</span>
-            </a>
+            <p>© 2026 WHAGO · 울산</p>
+            <nav className="site-footer__links" aria-label="WHAGO 연락">
+              <a href="mailto:rad174951@gmail.com">이메일 ↗</a>
+              <a
+                href="https://github.com/rad1092"
+                rel="noreferrer"
+                target="_blank"
+              >
+                GitHub ↗<span className="sr-only">(새 탭에서 열림)</span>
+              </a>
+            </nav>
           </div>
         </footer>
       </body>

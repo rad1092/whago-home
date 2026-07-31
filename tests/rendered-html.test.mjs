@@ -100,7 +100,7 @@ test("renders a direct product index with separate product pages", async () => {
     ["/software/gh-dep-risk", "gh-dep-risk · WHAGO", "Dependency Review API 우선"],
     ["/releases", "업데이트 · WHAGO", "기준선과 비교해 새 회귀"],
     ["/support", "지원 · WHAGO", "오류 신고"],
-    ["/house", "소개 · WHAGO", "서울에서 소프트웨어를 만들고 운영합니다"],
+    ["/house", "소개 · WHAGO", "울산에서 소프트웨어를 만들고 운영합니다"],
   ];
 
   for (const [pathname, title, marker] of pages) {
@@ -118,6 +118,7 @@ test("renders a direct product index with separate product pages", async () => {
     depRiskResponse,
     releasesResponse,
     supportResponse,
+    houseResponse,
   ] =
     await Promise.all([
       render("/software/daymark"),
@@ -125,12 +126,14 @@ test("renders a direct product index with separate product pages", async () => {
       render("/software/gh-dep-risk"),
       render("/releases"),
       render("/support"),
+      render("/house"),
     ]);
   const daymarkHtml = await daymarkResponse.text();
   const firstcallHtml = await firstcallResponse.text();
   const depRiskHtml = await depRiskResponse.text();
   const releasesHtml = await releasesResponse.text();
   const supportHtml = await supportResponse.text();
+  const houseHtml = await houseResponse.text();
 
   assert.match(daymarkHtml, /release-daymark-v2\.2\.0\.jpg/);
   assert.match(daymarkHtml, /href="https:\/\/daymark\.whago\.net\/"/);
@@ -178,6 +181,17 @@ test("renders a direct product index with separate product pages", async () => {
     supportHtml,
     /github\.com\/rad1092\/gh-dependency-risk\/issues/,
   );
+  assert.match(houseHtml, /울산에서 소프트웨어를 만들고 운영합니다/);
+  assert.match(houseHtml, /ULSAN, KR/);
+  assert.match(houseHtml, /href="mailto:rad174951@gmail\.com"/);
+  assert.match(houseHtml, /href="\/software\/daymark"/);
+  assert.match(houseHtml, /href="\/software\/repolens"/);
+  assert.match(houseHtml, /href="\/software\/siteboard"/);
+  assert.match(houseHtml, /href="\/software\/firstcall"/);
+  assert.match(houseHtml, /href="\/software\/gh-dep-risk"/);
+  assert.match(houseHtml, /href="\/support"/);
+  assert.match(houseHtml, /<strong>5<\/strong><span> products<\/span>/);
+  assert.doesNotMatch(houseHtml, /서울|house-profile/);
 });
 
 test("keeps copy, accessibility, and deployment boundaries explicit", async () => {
@@ -247,6 +261,8 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(layout, /export const viewport:\s*Viewport/);
   assert.match(layout, /className="skip-link"/);
   assert.match(layout, /<SiteNavigation \/>/);
+  assert.match(layout, /© 2026 WHAGO · 울산/);
+  assert.match(layout, /mailto:rad174951@gmail\.com/);
   assert.match(siteNavigation, /href:\s*"\/software"/);
   assert.match(siteNavigation, /href:\s*"\/releases"/);
   assert.match(siteNavigation, /href:\s*"\/support"/);
@@ -258,7 +274,11 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(css, /\.product-shot/);
   assert.match(css, /\.product-index/);
   assert.match(css, /\.product-catalog/);
+  assert.match(css, /\.house-hero/);
+  assert.match(css, /\.house-directory/);
+  assert.match(css, /\.house-contact/);
   assert.doesNotMatch(css, /\.product-card|\.product-showcase/);
+  assert.doesNotMatch(css, /\.house-profile/);
   assert.doesNotMatch(css, /box-shadow:/);
   assert.doesNotMatch(css, /border-radius:/);
   assert.doesNotMatch(css, /translateY\(|scale\(/);
@@ -381,8 +401,14 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.doesNotMatch(productList, /product-card|ProductShowcase/);
   assert.doesNotMatch(
     housePage,
-    /운영 원칙|Operating rules|확장 가능한 카탈로그|개 제품/,
+    /운영 원칙|Operating rules|확장 가능한 카탈로그/,
   );
+  assert.match(housePage, /products\.map/);
+  assert.match(housePage, /const contactEmail = "rad174951@gmail\.com"/);
+  assert.match(housePage, /mailto:\$\{contactEmail\}/);
+  assert.match(housePage, /href="\/support"/);
+  assert.match(housePage, /울산/);
+  assert.doesNotMatch(housePage, /서울|house-profile/);
 
   const previewFiles = await readdir(previewRoot).catch((error) => {
     if (error?.code === "ENOENT") return [];
