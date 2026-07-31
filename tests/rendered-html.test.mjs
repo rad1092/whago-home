@@ -148,13 +148,13 @@ test("renders a direct product index with separate product pages", async () => {
     releasesHtml,
     /github\.com\/rad1092\/siteboard\/releases\/tag\/v4\.0\.0/,
   );
-  assert.match(firstcallHtml, /firstcall-gui-still\.png/);
+  assert.match(firstcallHtml, /firstcall-gui-workbench\.gif/);
   assert.match(
     firstcallHtml,
     /github\.com\/rad1092\/firstcall-local-api-workbench\/releases\/tag\/v0\.2\.1/,
   );
   assert.match(firstcallHtml, /firstcall-cli version/);
-  assert.match(depRiskHtml, /dep-risk-still\.png/);
+  assert.match(depRiskHtml, /gh-dep-risk-demo\.gif/);
   assert.match(
     depRiskHtml,
     /github\.com\/rad1092\/gh-dependency-risk\/releases\/tag\/v0\.2\.1/,
@@ -395,8 +395,8 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     access(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),
     access(new URL("../public/release-repolens-v0.3.0.jpg", import.meta.url)),
     access(new URL("../public/release-siteboard-v4.0.0.jpg", import.meta.url)),
-    access(new URL("../public/firstcall-gui-still.png", import.meta.url)),
-    access(new URL("../public/dep-risk-still.png", import.meta.url)),
+    access(new URL("../public/firstcall-gui-workbench.gif", import.meta.url)),
+    access(new URL("../public/gh-dep-risk-demo.gif", import.meta.url)),
     access(new URL("../public/product-daymark-icon.png", import.meta.url)),
     access(new URL("../public/product-siteboard-icon.png", import.meta.url)),
     access(new URL("../public/favicon.svg", import.meta.url)),
@@ -411,6 +411,12 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     assert.rejects(
       access(new URL("../public/og-release-desk.png", import.meta.url)),
     ),
+    assert.rejects(
+      access(new URL("../public/firstcall-gui-still.png", import.meta.url)),
+    ),
+    assert.rejects(
+      access(new URL("../public/dep-risk-still.png", import.meta.url)),
+    ),
   ]);
   const releaseCaptures = await Promise.all([
     readFile(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),
@@ -420,15 +426,24 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   for (const capture of releaseCaptures) {
     assert.deepEqual([...capture.subarray(0, 3)], [0xff, 0xd8, 0xff]);
   }
-  const productCaptures = await Promise.all([
-    readFile(new URL("../public/firstcall-gui-still.png", import.meta.url)),
-    readFile(new URL("../public/dep-risk-still.png", import.meta.url)),
+  const productDemos = await Promise.all([
+    readFile(new URL("../public/firstcall-gui-workbench.gif", import.meta.url)),
+    readFile(new URL("../public/gh-dep-risk-demo.gif", import.meta.url)),
   ]);
-  for (const capture of productCaptures) {
-    assert.deepEqual(
-      [...capture.subarray(0, 8)],
-      [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
-    );
+  for (const demo of productDemos) {
+    assert.equal(demo.subarray(0, 6).toString("ascii"), "GIF89a");
+
+    let frameCount = 0;
+    for (let index = 0; index < demo.length - 2; index += 1) {
+      if (
+        demo[index] === 0x21 &&
+        demo[index + 1] === 0xf9 &&
+        demo[index + 2] === 0x04
+      ) {
+        frameCount += 1;
+      }
+    }
+    assert.ok(frameCount > 1, "product demo GIF must contain multiple frames");
   }
   await assert.rejects(access(new URL("public/_sites-preview", templateRoot)));
   await assert.rejects(access(new URL("../postcss.config.mjs", import.meta.url)));
