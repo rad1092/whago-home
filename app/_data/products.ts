@@ -190,7 +190,7 @@ export const products: readonly Product[] = [
     source: "https://github.com/rad1092/firstcall-local-api-workbench",
     glyph: "FC",
     media: {
-      src: "/firstcall-gui-still.png",
+      src: "/firstcall-gui-workbench.gif",
       width: 1100,
       height: 760,
       alt: "FirstCall 데스크톱 GUI에서 curl 요청을 분석해 API 후보와 인증 입력을 구성하는 화면",
@@ -238,9 +238,9 @@ export const products: readonly Product[] = [
     source: "https://github.com/rad1092/gh-dependency-risk",
     glyph: "DR",
     media: {
-      src: "/dep-risk-still.png",
-      width: 968,
-      height: 612,
+      src: "/gh-dep-risk-demo.gif",
+      width: 1040,
+      height: 720,
       alt: "gh-dep-risk가 Pull request의 의존성 위험을 분석하는 터미널 데모",
       objectPosition: "top center",
     },
