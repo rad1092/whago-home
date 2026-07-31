@@ -4,7 +4,7 @@ import { SiteNavigation } from "./_components/site-navigation";
 import "./globals.css";
 
 const description =
-  "WHAGO의 Daymark, RepoLens, Siteboard를 열고 설치할 수 있습니다.";
+  "WHAGO의 소프트웨어를 비교하고 열거나 설치할 수 있습니다.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://whago.net"),

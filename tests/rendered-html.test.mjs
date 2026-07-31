@@ -47,16 +47,21 @@ test("renders a direct product index with separate product pages", async () => {
   assert.match(html, /Daymark/);
   assert.match(html, /RepoLens/);
   assert.match(html, /Siteboard/);
+  assert.match(html, /FirstCall/);
+  assert.match(html, /gh-dep-risk/);
   assert.match(html, /href="\/software"/);
   assert.match(html, /href="\/software\/daymark"/);
   assert.match(html, /href="\/software\/repolens"/);
   assert.match(html, /href="\/software\/siteboard"/);
+  assert.match(html, /href="\/software\/firstcall"/);
+  assert.match(html, /href="\/software\/gh-dep-risk"/);
   assert.match(html, /href="\/releases"/);
   assert.match(html, /href="\/support"/);
   assert.match(html, /href="\/house"/);
   assert.match(html, /v(?:<!-- -->)?2\.2\.0/);
   assert.match(html, /v(?:<!-- -->)?0\.3\.0/);
   assert.match(html, /v(?:<!-- -->)?4\.0\.0/);
+  assert.match(html, /v(?:<!-- -->)?0\.2\.1/);
   assert.doesNotMatch(html, /og-house-v2\.png|og-release-desk\.png/);
   assert.match(
     html,
@@ -66,9 +71,17 @@ test("renders a direct product index with separate product pages", async () => {
   assert.match(html, /href="https:\/\/daymark\.whago\.net\/"/);
   assert.match(html, /href="https:\/\/repolens\.whago\.net\/"/);
   assert.match(html, /href="https:\/\/siteboard\.whago\.net\/"/);
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/rad1092\/firstcall-local-api-workbench\/releases\/latest"/,
+  );
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/rad1092\/gh-dependency-risk#install"/,
+  );
   assert.doesNotMatch(
     html,
-    /김홍대|FirstCall|gh-dep-risk|LocalFit Lab|rad1092\.github\.io/,
+    /김홍대|LocalFit Lab|rad1092\.github\.io/,
   );
   assert.doesNotMatch(
     html,
@@ -83,6 +96,8 @@ test("renders a direct product index with separate product pages", async () => {
     ["/software/daymark", "Daymark · WHAGO", "사용 흐름"],
     ["/software/repolens", "RepoLens · WHAGO", "프로젝트 스크립트를 실행하지 않고"],
     ["/software/siteboard", "Siteboard · WHAGO", "Local Studio"],
+    ["/software/firstcall", "FirstCall · WHAGO", "클라우드 백엔드 없음"],
+    ["/software/gh-dep-risk", "gh-dep-risk · WHAGO", "Dependency Review API 우선"],
     ["/releases", "업데이트 · WHAGO", "기준선과 비교해 새 회귀"],
     ["/support", "지원 · WHAGO", "오류 신고"],
     ["/house", "소개 · WHAGO", "서울에서 소프트웨어를 만들고 운영합니다"],
@@ -97,13 +112,23 @@ test("renders a direct product index with separate product pages", async () => {
     assert.match(pageHtml, new RegExp(marker), pathname);
   }
 
-  const [daymarkResponse, releasesResponse, supportResponse] =
+  const [
+    daymarkResponse,
+    firstcallResponse,
+    depRiskResponse,
+    releasesResponse,
+    supportResponse,
+  ] =
     await Promise.all([
       render("/software/daymark"),
+      render("/software/firstcall"),
+      render("/software/gh-dep-risk"),
       render("/releases"),
       render("/support"),
     ]);
   const daymarkHtml = await daymarkResponse.text();
+  const firstcallHtml = await firstcallResponse.text();
+  const depRiskHtml = await depRiskResponse.text();
   const releasesHtml = await releasesResponse.text();
   const supportHtml = await supportResponse.text();
 
@@ -123,8 +148,36 @@ test("renders a direct product index with separate product pages", async () => {
     releasesHtml,
     /github\.com\/rad1092\/siteboard\/releases\/tag\/v4\.0\.0/,
   );
+  assert.match(firstcallHtml, /firstcall-gui-still\.png/);
+  assert.match(
+    firstcallHtml,
+    /github\.com\/rad1092\/firstcall-local-api-workbench\/releases\/tag\/v0\.2\.1/,
+  );
+  assert.match(firstcallHtml, /firstcall-cli version/);
+  assert.match(depRiskHtml, /dep-risk-still\.png/);
+  assert.match(
+    depRiskHtml,
+    /github\.com\/rad1092\/gh-dependency-risk\/releases\/tag\/v0\.2\.1/,
+  );
+  assert.match(depRiskHtml, /gh extension install rad1092\/gh-dep-risk/);
+  assert.match(
+    releasesHtml,
+    /github\.com\/rad1092\/firstcall-local-api-workbench\/releases\/tag\/v0\.2\.1/,
+  );
+  assert.match(
+    releasesHtml,
+    /github\.com\/rad1092\/gh-dependency-risk\/releases\/tag\/v0\.2\.1/,
+  );
   assert.match(supportHtml, /href="https:\/\/repolens\.whago\.net\/"/);
   assert.match(supportHtml, /github\.com\/rad1092\/siteboard\/issues/);
+  assert.match(
+    supportHtml,
+    /github\.com\/rad1092\/firstcall-local-api-workbench\/issues/,
+  );
+  assert.match(
+    supportHtml,
+    /github\.com\/rad1092\/gh-dependency-risk\/issues/,
+  );
 });
 
 test("keeps copy, accessibility, and deployment boundaries explicit", async () => {
@@ -181,7 +234,7 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.doesNotMatch(page, /"use client"/);
   assert.match(page, /id="main"/);
   assert.match(page, /href="\/software"/);
-  assert.doesNotMatch(page, /김홍대|FirstCall|gh-dep-risk|LocalFit Lab/);
+  assert.doesNotMatch(page, /김홍대|LocalFit Lab/);
   assert.doesNotMatch(
     page,
     /Independent software house|새 제품|확장 가능한|운영 방식/,
@@ -267,6 +320,8 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(deployScript, /restore_current_link "\$previous_home"/);
   assert.match(deployScript, /systemctl stop "\$service_name"/);
   assert.match(deployScript, /systemctl disable "\$service_name"/);
+  assert.match(deployScript, /grep -q "FirstCall"/);
+  assert.match(deployScript, /grep -q "gh-dep-risk"/);
   assert.doesNotMatch(
     deployScript,
     /git clone .*\/(daymark|repolens|siteboard)\.git|tools_root|tools_release/,
@@ -298,6 +353,8 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(readme, /https:\/\/daymark\.whago\.net\//);
   assert.match(readme, /https:\/\/repolens\.whago\.net\//);
   assert.match(readme, /https:\/\/siteboard\.whago\.net\//);
+  assert.match(readme, /rad1092\/firstcall-local-api-workbench/);
+  assert.match(readme, /rad1092\/gh-dependency-risk/);
   assert.doesNotMatch(readme, /GitHub Pages|rad1092\.github\.io/);
 
   assert.match(dataMove, /daymark:data:v2/);
@@ -317,6 +374,8 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   assert.match(productData, /slug:\s*string/);
   assert.match(productData, /workflow:/);
   assert.match(productData, /primaryAction:/);
+  assert.match(productData, /slug:\s*"firstcall"/);
+  assert.match(productData, /slug:\s*"gh-dep-risk"/);
   assert.match(productList, /className="product-index"/);
   assert.match(productList, /product\.primaryAction\.label/);
   assert.doesNotMatch(productList, /product-card|ProductShowcase/);
@@ -336,6 +395,8 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
     access(new URL("../public/release-daymark-v2.2.0.jpg", import.meta.url)),
     access(new URL("../public/release-repolens-v0.3.0.jpg", import.meta.url)),
     access(new URL("../public/release-siteboard-v4.0.0.jpg", import.meta.url)),
+    access(new URL("../public/firstcall-gui-still.png", import.meta.url)),
+    access(new URL("../public/dep-risk-still.png", import.meta.url)),
     access(new URL("../public/product-daymark-icon.png", import.meta.url)),
     access(new URL("../public/product-siteboard-icon.png", import.meta.url)),
     access(new URL("../public/favicon.svg", import.meta.url)),
@@ -358,6 +419,16 @@ test("keeps copy, accessibility, and deployment boundaries explicit", async () =
   ]);
   for (const capture of releaseCaptures) {
     assert.deepEqual([...capture.subarray(0, 3)], [0xff, 0xd8, 0xff]);
+  }
+  const productCaptures = await Promise.all([
+    readFile(new URL("../public/firstcall-gui-still.png", import.meta.url)),
+    readFile(new URL("../public/dep-risk-still.png", import.meta.url)),
+  ]);
+  for (const capture of productCaptures) {
+    assert.deepEqual(
+      [...capture.subarray(0, 8)],
+      [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
+    );
   }
   await assert.rejects(access(new URL("public/_sites-preview", templateRoot)));
   await assert.rejects(access(new URL("../postcss.config.mjs", import.meta.url)));
@@ -389,12 +460,14 @@ test("serves health and search metadata without folding tool pages into the site
   assert.match(sitemap, /<loc>https:\/\/whago\.net\/software\/daymark<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/whago\.net\/software\/repolens<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/whago\.net\/software\/siteboard<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/software\/firstcall<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/whago\.net\/software\/gh-dep-risk<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/whago\.net\/releases<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/whago\.net\/support<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/whago\.net\/house<\/loc>/);
   assert.doesNotMatch(
     sitemap,
-    /<loc>https:\/\/whago\.net\/(?:daymark|repolens|siteboard)\/?<\/loc>/,
+    /<loc>https:\/\/whago\.net\/(?:daymark|repolens|siteboard|firstcall|gh-dep-risk)\/?<\/loc>/,
   );
 
   assert.equal(missingResponse.status, 404);

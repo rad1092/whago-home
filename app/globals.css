@@ -101,12 +101,13 @@ pre {
 .skip-link {
   position: fixed;
   z-index: 100;
-  top: -6rem;
+  top: -100%;
   left: 0.75rem;
   padding: 0.65rem 0.9rem;
   background: var(--inverse);
   color: var(--ink);
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .skip-link:focus {
@@ -287,19 +288,33 @@ pre {
   height: 4.75rem;
 }
 
-.product-mark--repolens {
+.product-mark--glyph {
   display: grid;
   place-items: center;
-  border: 1px solid #24ccef;
-  background: #061421;
-  color: #5de8ff;
+  border: 1px solid currentcolor;
   font-family: var(--mono);
   font-size: 0.86rem;
   font-weight: 800;
   line-height: 1;
 }
 
-.product-mark--repolens.product-mark--large {
+.product-mark--repolens {
+  border-color: #24ccef;
+  background: #061421;
+  color: #5de8ff;
+}
+
+.product-mark--firstcall {
+  background: #101c27;
+  color: #8dd3ff;
+}
+
+.product-mark--gh-dep-risk {
+  background: #0d1418;
+  color: #9be9ae;
+}
+
+.product-mark--glyph.product-mark--large {
   font-size: 1.2rem;
 }
 
@@ -943,7 +958,7 @@ pre {
   font-weight: 750;
 }
 
-@media (max-width: 68rem) {
+@media (max-width: 72rem) {
   .product-index__head,
   .product-row {
     grid-template-columns:
@@ -980,7 +995,7 @@ pre {
   }
 }
 
-@media (max-width: 56rem) {
+@media (max-width: 60rem) {
   .product-index__head {
     display: none;
   }

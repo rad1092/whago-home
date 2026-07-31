@@ -21,6 +21,10 @@
   저장소 유지보수 문제만 표시하는 CLI와 GitHub Action입니다.
 - [Siteboard](https://siteboard.whago.net/) — 홈페이지를 편집해
   정적 파일로 내보내고 Cloudflare Pages에 배포합니다.
+- [FirstCall](https://github.com/rad1092/firstcall-local-api-workbench/releases/latest)
+  — API 요청을 로컬에서 검증해 실행 가능한 MCP 도구 패키지로 만듭니다.
+- [gh-dep-risk](https://github.com/rad1092/gh-dependency-risk) — Pull request의
+  의존성 변경 위험을 GitHub CLI에서 요약합니다.
 
 코드, 이슈, 버전과 설치 산출물은 제품별 저장소에서 관리합니다.
 
@@ -53,13 +57,15 @@ npm run build:static
 - `repolens.whago.net`: `rad1092/repolens`
 - `siteboard.whago.net`: `rad1092/siteboard`
 
-홈페이지와 세 제품은 각각 별도 릴리스 경로로 배포합니다. 기존
+홈페이지와 독립 웹 주소를 가진 세 제품은 각각 별도 릴리스 경로로
+배포합니다. FirstCall과 gh-dep-risk는 각 GitHub 저장소의 릴리스와 설치
+경로를 사용합니다. 기존
 `whago.net/daymark/`와 `whago.net/siteboard/`에는 브라우저 저장 자료를
 내려받아 새 주소로 옮기는 이전 화면을 유지합니다.
 
-첫 설치에서는 세 제품을 먼저 빌드해 release 경로에 적재한 뒤 인증서와
-Nginx를 전환합니다. 배포 스크립트는 root가 아닌 일반 배포 계정으로
-실행합니다.
+첫 설치에서는 독립 웹 주소를 가진 세 제품을 먼저 빌드해 release 경로에
+적재한 뒤 인증서와 Nginx를 전환합니다. 배포 스크립트는 root가 아닌
+일반 배포 계정으로 실행합니다.
 
 ```bash
 ./ops/deploy-product-on-lightsail.sh daymark <git-ref> --bootstrap

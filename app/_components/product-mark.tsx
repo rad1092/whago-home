@@ -25,9 +25,9 @@ export function ProductMark({
   return (
     <span
       aria-hidden="true"
-      className={`product-mark product-mark--repolens product-mark--${size}`}
+      className={`product-mark product-mark--glyph product-mark--${product.slug} product-mark--${size}`}
     >
-      <span>&gt;_</span>
+      <span>{product.glyph ?? ">_"}</span>
     </span>
   );
 }

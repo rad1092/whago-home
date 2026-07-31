@@ -34,7 +34,7 @@ export default function Home() {
           <Link href="/releases">전체 기록 →</Link>
         </header>
         <ol>
-          {releases.map((release) => {
+          {releases.slice(0, 3).map((release) => {
             const product = getProduct(release.productSlug);
 
             if (!product) return null;

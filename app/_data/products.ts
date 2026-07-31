@@ -13,6 +13,7 @@ export type Product = {
   dataLocation: string;
   source: string;
   mark?: string;
+  glyph?: string;
   media: {
     src: string;
     width: number;
@@ -177,6 +178,103 @@ export const products: readonly Product[] = [
       href: "https://github.com/rad1092/siteboard/releases/tag/v4.0.0",
     },
   },
+  {
+    slug: "firstcall",
+    name: "FirstCall",
+    typeLabel: "API 도구 제작",
+    purpose:
+      "API 요청을 로컬에서 검증하고 비밀값을 분리해 실행 가능한 MCP 도구 패키지로 만듭니다.",
+    offering: "데스크톱 GUI · CLI · macOS/Windows/Linux",
+    runtime: "데스크톱 · 터미널",
+    dataLocation: "로컬 SQLite · 로컬 패키지",
+    source: "https://github.com/rad1092/firstcall-local-api-workbench",
+    glyph: "FC",
+    media: {
+      src: "/firstcall-gui-still.png",
+      width: 1100,
+      height: 760,
+      alt: "FirstCall 데스크톱 GUI에서 curl 요청을 분석해 API 후보와 인증 입력을 구성하는 화면",
+      objectPosition: "top center",
+    },
+    facts: [
+      { label: "실행", value: "데스크톱 GUI · 자동화 CLI" },
+      { label: "플랫폼", value: "macOS · Windows · Linux" },
+      { label: "저장", value: "로컬 SQLite · 클라우드 백엔드 없음" },
+      { label: "출력", value: "비밀값을 분리한 MCP 도구 패키지" },
+    ],
+    workflow: [
+      "curl, OpenAPI, Postman, HAR 등의 요청 소스를 가져와 후보를 만듭니다.",
+      "비밀값은 로컬 런타임에서 제공하고 대상 API에 요청해 동작을 검증합니다.",
+      "검증 결과를 recipe, 정책과 실행 가능한 MCP 서버가 든 패키지로 내보냅니다.",
+    ],
+    setup: {
+      title: "다운로드와 실행",
+      body:
+        "운영체제용 릴리스 압축 파일을 내려받아 풉니다. GUI와 CLI가 함께 들어 있으며, 저장과 패키징은 로컬에서 처리하고 검증할 때만 선택한 API로 직접 요청합니다.",
+      commands: [
+        "firstcall --screen new --sample curl",
+        "firstcall-cli version",
+        "firstcall-cli --help",
+      ],
+    },
+    primaryAction: {
+      label: "다운로드",
+      href: "https://github.com/rad1092/firstcall-local-api-workbench/releases/latest",
+    },
+    guide: {
+      label: "사용 흐름",
+      href: "https://github.com/rad1092/firstcall-local-api-workbench/blob/main/docs/cli-lifecycle.md",
+    },
+  },
+  {
+    slug: "gh-dep-risk",
+    name: "gh-dep-risk",
+    typeLabel: "의존성 검토",
+    purpose:
+      "Pull request의 의존성 변경을 분석해 검토자가 확인할 위험 점수와 근거를 요약합니다.",
+    offering: "GitHub CLI 확장 · Go · 사전 컴파일 바이너리",
+    runtime: "GitHub CLI · 로컬 터미널",
+    dataLocation: "GitHub API · 로컬 보고서",
+    source: "https://github.com/rad1092/gh-dependency-risk",
+    glyph: "DR",
+    media: {
+      src: "/dep-risk-still.png",
+      width: 968,
+      height: 612,
+      alt: "gh-dep-risk가 Pull request의 의존성 위험을 분석하는 터미널 데모",
+      objectPosition: "top center",
+    },
+    facts: [
+      { label: "실행", value: "GitHub CLI · 로컬 터미널" },
+      { label: "분석", value: "Dependency Review API 우선 · 정적 fallback" },
+      { label: "입력", value: "Pull request · manifest · lockfile" },
+      { label: "출력", value: "Human · JSON · Markdown" },
+      { label: "접근", value: "기존 gh 인증 · comment는 선택 사항" },
+    ],
+    workflow: [
+      "PR 번호, URL 또는 현재 branch를 지정해 gh dep-risk를 실행합니다.",
+      "Dependency Review API를 먼저 확인하고 필요하면 지원 파일을 정적으로 비교합니다.",
+      "위험 점수와 근거를 출력하고 필요할 때 bundle, comment 또는 실패 기준으로 사용합니다.",
+    ],
+    setup: {
+      title: "GitHub CLI 확장 설치",
+      body:
+        "기존 gh 인증을 재사용하며 별도 서버, GitHub App이나 데이터베이스를 운영하지 않습니다. --comment를 지정할 때만 PR timeline comment를 작성합니다.",
+      commands: [
+        "gh auth login",
+        "gh extension install rad1092/gh-dep-risk",
+        "gh dep-risk pr 123",
+      ],
+    },
+    primaryAction: {
+      label: "설치 방법",
+      href: "https://github.com/rad1092/gh-dependency-risk#install",
+    },
+    guide: {
+      label: "지원 범위",
+      href: "https://github.com/rad1092/gh-dependency-risk/blob/main/docs/support-matrix.md",
+    },
+  },
 ] as const;
 
 export const releases: readonly Release[] = [
@@ -200,6 +298,20 @@ export const releases: readonly Release[] = [
     publishedAt: "2026-07-29",
     summary:
       "Cloudflare 프로젝트 연결, 공개 리비전 확인, 이전 production 복구를 추가했습니다.",
+  },
+  {
+    productSlug: "firstcall",
+    version: "0.2.1",
+    publishedAt: "2026-06-10",
+    summary:
+      "검증 가능한 데스크톱 GUI 실행 경로를 추가하고, 배포 바이너리로 만든 CLI·MCP 데모를 갱신했습니다.",
+  },
+  {
+    productSlug: "gh-dep-risk",
+    version: "0.2.1",
+    publishedAt: "2026-06-10",
+    summary:
+      "설치 경로를 정리하고 실제 Pull request 기반 smoke 검증과 크로스 플랫폼 릴리스 흐름을 강화했습니다.",
   },
 ] as const;
 
