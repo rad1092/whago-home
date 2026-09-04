@@ -54,11 +54,11 @@ documentation, not fabricated customer research or adoption metrics.
 2. [x] Decide product scope and retirement with explicit reasons.
 3. [x] Implement native FirstCall runtime, structured tool metadata and GUI export.
 4. [x] Implement retirement/recovery with legacy access; update portfolio and support.
-5. [ ] Test real loopback HTTP → verified export → independent MCP call, error cases,
+5. [x] Test real loopback HTTP → verified export → independent MCP call, error cases,
    secret redaction and package tampering. Inspect native GUI and web results.
-6. [ ] Build the actual native distributable; verify clean-directory execution and
+6. [x] Build the actual native distributable; verify clean-directory execution and
    preserve platform limits. Run web build, route/link/security/recovery tests.
-7. [ ] Publish exact tested sources/artifacts, update Sites and existing production
+7. [x] Publish exact tested sources/artifacts, update Sites and existing production
    addresses through the existing deployment path, verify production outcomes.
 
 ## Existing deployment constraint
@@ -100,5 +100,48 @@ the existing production host has been reached and release metadata verified.
   original JSON download produced a valid local JSON file. User storage and old
   caches were not deleted. Worker registration uses an external script compatible
   with the existing CSP; legacy offline routes have dedicated fallback coverage.
-- macOS release package and final homepage/Sites publication are the remaining
-  delivery gates at this checkpoint.
+- Final native UI: readable theme inspected, real API request/export repeated in
+  the packaged app, result scroll position corrected, and connection configuration
+  copy confirmed on the visible success screen. The final app and CLI are built
+  from FirstCall commit `a07b1878263b0cc724b5ba1678db0edd79c763cd`.
+- FirstCall v0.3.0 published with ZIP, tar.gz and SHA256SUMS. GitHub asset digests
+  match the locally verified final archives; public ZIP returns HTTP 200.
+  ZIP SHA256: `97804da889a93adb39c28e646037b49d0b431309fde04a8abe3e3b860e939d59`.
+- Homepage production release `whago-rebuild-20260905-1396b61` is live at
+  https://whago.net, built from `1396b61fdebca7cf0bfcd94732056f6817bafd38`.
+  Origin and public DNS metadata checks passed; public homepage is visually
+  confirmed. FirstCall detail, archive, and www data recovery entries are verified.
+- Sites version 17 deployed successfully at
+  https://whago-studio-preview.rad174951.chatgpt.site with its existing owner-only
+  audience preserved. Source and locally packaged artifact match the production
+  homepage implementation.
+- Product repositories and homepage implementation are published on their existing
+  GitHub main branches without force-push; the old app source/releases are retained.
+
+## Delivered scope and limits
+
+- FirstCall v0.3.0 ships Apple Silicon macOS only, with ad-hoc signing and no Apple
+  notarization. Other platforms are not represented as tested v0.3.0 releases.
+- Exported local MCP settings use absolute application/package paths. Moving either
+  requires exporting new settings. Authentication is supplied separately by the
+  user's MCP client environment.
+- Retired app data remains browser-local. Previously installed offline apps must
+  connect once to receive their retirement service worker. Existing source,
+  legacy access and backups are preserved; retirement is not a data deletion.
+- RepoLens and gh-dep-risk retain their working scoped CLI implementations. Their
+  catalog positioning/support boundaries changed; they were not falsely described
+  as rewritten products.
+- This decision is an implemented product direction with technical acceptance
+  evidence, not a claim of validated customer demand or adoption.
+
+## Dependency advisory triage
+
+The existing dependency audit is not clean: the homepage reports 11 affected
+packages and Siteboard reports 5. A read-only reachability check found no affected
+runtime API in the current static public outputs or the generated owner-private
+Sites Worker. Reported Next/React/RSC packages are not affected in these audit
+results. Most notices concern build/deployment tools; the flagged image parser
+is absent from the generated Worker. No major beta framework migration or
+unverified dependency update was introduced as a last-minute automatic fix.
+Retained source/CLI tooling still has maintenance advisories; this is not a
+claim that every legacy dependency is vulnerability-free.
