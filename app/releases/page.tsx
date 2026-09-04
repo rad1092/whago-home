@@ -20,7 +20,7 @@ export default function ReleasesPage() {
   return (
     <main id="main">
       <header className="page-intro page-shell">
-        <h1>업데이트</h1>
+        <h1>업데이트</h1><p>2026.09.05 · Daymark와 Siteboard 개발 종료. <Link href="/archive">자료 회수 안내</Link></p>
       </header>
 
       <section className="release-ledger page-shell" aria-label="제품 업데이트">

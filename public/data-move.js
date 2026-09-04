@@ -1,86 +1,64 @@
 /* global Blob, URL, document, window */
-
-const products = {
-  Daymark: {
-    destination: "https://daymark.whago.net/",
-    files: [
-      ["daymark:data:v2", "daymark-backup-v2.json", "현재 백업"],
-      ["daymark:data:backup:v2", "daymark-backup-v2-previous.json", "직전 정상 백업"],
-      ["daymark:data:v1", "daymark-backup-v1.json", "이전 버전 백업"],
-      ["daymark:data:backup", "daymark-backup-v1-previous.json", "이전 버전 정상 백업"],
-      [
-        "daymark:data:backup:v1",
-        "daymark-backup-v1-compat.json",
-        "이전 호환 백업",
-      ],
-    ],
-  },
-  Siteboard: {
-    destination: "https://siteboard.whago.net/",
-    files: [
-      ["siteboard.document.v2", "siteboard-work-v2.json", "현재 작업 파일"],
-      [
-        "siteboard.document.backup.v2",
-        "siteboard-work-v2-previous.json",
-        "직전 정상 작업 파일",
-      ],
-      [
-        "siteboard.document.recovery.raw",
-        "siteboard-recovery-raw.txt",
-        "복구용 원본",
-        "text/plain;charset=utf-8",
-      ],
-      ["siteboard.document.v1", "siteboard-work-v1.json", "이전 버전 작업 파일"],
-      [
-        "siteboard.document.backup.v1",
-        "siteboard-work-v1-previous.json",
-        "이전 버전 정상 작업 파일",
-      ],
-    ],
-  },
-};
-
-const productName = document.body.dataset.product;
-const product = products[productName];
-const list = document.querySelector("#backup-list");
-const count = document.querySelector("#backup-count");
-const destination = document.querySelector(".destination");
-
-if (product && list && count && destination) {
-  destination.href = product.destination;
-  let found = 0;
-
-  for (
-    const [key, filename, label, mimeType = "application/json"] of product.files
-  ) {
-    const value = window.localStorage.getItem(key);
-    if (!value) continue;
-    found += 1;
-
-    const button = document.createElement("button");
-    button.className = "backup-button";
-    button.type = "button";
-    button.innerHTML = `<span>${label}</span><span aria-hidden="true">↓</span>`;
-    button.addEventListener("click", () => {
-      const blob = new Blob([value], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = filename;
-      document.body.append(anchor);
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(url);
-    });
-    list.append(button);
+(() => {
+  const prefixes = { Daymark: ["daymark:"], Siteboard: ["siteboard.document.", "siteboard.project."] };
+  function collect(storage, name) {
+    if (!prefixes[name]) throw new Error("Unknown product");
+    const records = [];
+    for (let i = 0; i < storage.length; i += 1) {
+      const key = storage.key(i);
+      if (!key || !prefixes[name].some((prefix) => key.startsWith(prefix))) continue;
+      const raw = storage.getItem(key);
+      if (raw === null) continue;
+      let parsed = null;
+      try { parsed = JSON.parse(raw); } catch { /* Keep damaged originals too. */ }
+      records.push({ key, raw, parsed });
+    }
+    return records.sort((a, b) => a.key.localeCompare(b.key));
   }
-
-  count.textContent = `${found}개`;
-  if (found === 0) {
-    const message = document.createElement("p");
-    message.className = "empty";
-    message.textContent =
-      "이 브라우저에서 찾은 기존 자료 0개 · 새 주소를 바로 열어 시작할 수 있습니다.";
-    list.append(message);
+  function csvCell(value) {
+    let text = typeof value === "string" ? value : value == null ? "" : String(value);
+    if (/^[\s]*[=+@-]/.test(text) || /^[\t\r]/.test(text)) text = "'" + text;
+    return '"' + text.replaceAll('"', '""') + '"';
   }
-}
+  function tasksCsv(value) {
+    if (!value || !Array.isArray(value.tasks)) return null;
+    const fields = ["title", "status", "notes", "nextStep", "reviewOn", "blockedReason", "estimateMinutes", "createdAt", "completedAt"];
+    return "\uFEFF" + [fields.map(csvCell).join(","), ...value.tasks.filter((t) => t && typeof t === "object").map((t) => fields.map((f) => csvCell(t[f])).join(","))].join("\r\n");
+  }
+  globalThis.WhagoRecovery = { collect, tasksCsv };
+  if (typeof document === "undefined") return;
+  const productName = document.body.dataset.product;
+  const list = document.querySelector("#backup-list");
+  const count = document.querySelector("#backup-count");
+  if (!list || !count || !prefixes[productName]) return;
+  function download(contents, filename, type) {
+    const url = URL.createObjectURL(new Blob([contents], { type }));
+    const anchor = document.createElement("a");
+    anchor.href = url; anchor.download = filename;
+    document.body.append(anchor); anchor.click(); anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+  }
+  let records;
+  try { records = collect(window.localStorage, productName); }
+  catch { count.textContent = "저장소 접근 불가"; list.textContent = "브라우저가 저장소 접근을 막고 있습니다. 사용하던 일반 창에서 다시 열어주세요. 자료를 읽거나 변경하지 못했습니다."; return; }
+  count.textContent = `${records.length}개`;
+  if (!records.length) {
+    list.textContent = "이 주소에서 찾은 자료가 없습니다. 사용하던 브라우저와 주소인지 확인하세요. 설치판 자료는 설치판에서 백업해야 합니다.";
+    return;
+  }
+  for (const record of records) {
+    const row = document.createElement("div"); row.className = "backup-row";
+    const label = document.createElement("p"); label.textContent = record.key;
+    const filename = record.key.replace(/[^a-zA-Z0-9._-]/g, "-");
+    const original = document.createElement("button"); original.type = "button"; original.className = "backup-button";
+    original.textContent = record.parsed === null ? "원본 그대로 저장 (.txt)" : "원본 JSON 저장";
+    original.addEventListener("click", () => download(record.raw, filename + (record.parsed === null ? ".txt" : ".json"), record.parsed === null ? "text/plain;charset=utf-8" : "application/json"));
+    row.append(label, original);
+    const csv = productName === "Daymark" ? tasksCsv(record.parsed) : null;
+    if (csv !== null) {
+      const readable = document.createElement("button"); readable.type = "button"; readable.className = "backup-button secondary"; readable.textContent = "할 일 CSV 저장";
+      readable.addEventListener("click", () => download(csv, filename + "-tasks.csv", "text/csv;charset=utf-8")); row.append(readable);
+    }
+    list.append(row);
+  }
+})();

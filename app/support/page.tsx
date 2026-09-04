@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { products } from "../_data/products";
 
 export const metadata: Metadata = {
@@ -48,6 +49,7 @@ export default function SupportPage() {
           </article>
         ))}
       </section>
+      <aside className="archive-note page-shell"><p>Daymark·Siteboard의 기존 자료를 찾으시나요?</p><Link href="/archive">자료 회수와 구버전 안내 →</Link></aside>
     </main>
   );
 }

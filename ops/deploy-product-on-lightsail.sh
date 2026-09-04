@@ -43,7 +43,7 @@ case "$product" in
     repository_url="https://github.com/rad1092/daymark.git"
     artifact_name="dist"
     origin_host="daymark.whago.net"
-    page_marker="Daymark"
+    page_marker="Daymark 개발을 종료"
     ;;
   repolens)
     repository_url="https://github.com/rad1092/repolens.git"
@@ -55,7 +55,7 @@ case "$product" in
     repository_url="https://github.com/rad1092/siteboard.git"
     artifact_name="dist"
     origin_host="siteboard.whago.net"
-    page_marker="Siteboard"
+    page_marker="Siteboard 개발을 종료"
     ;;
   *)
     usage
@@ -221,7 +221,8 @@ case "$product" in
   daymark | siteboard)
     npm --prefix "$source_dir" test
     npm --prefix "$source_dir" run lint
-    npm --prefix "$source_dir" run build
+    npm --prefix "$source_dir" run test:retirement
+    npm --prefix "$source_dir" run build:retired
     ;;
   repolens)
     npm --prefix "$source_dir" run ci
@@ -330,6 +331,18 @@ origin_page="$(
 if ! grep -Fq "$page_marker" <<<"$origin_page"; then
   echo "Local origin page does not contain the expected product marker." >&2
   false
+fi
+
+if [[ "$product" == "daymark" || "$product" == "siteboard" ]]; then
+  legacy_page="$(curl "${curl_options[@]}" "https://$origin_host/legacy/")"
+  if ! grep -q '<script .*src="/assets/' <<<"$legacy_page" ||
+    grep -q 'data-product=' <<<"$legacy_page"; then
+    echo "The preserved legacy application is missing or replaced by the retirement page." >&2
+    false
+  fi
+  for asset in data-move.js data-move.css register-retirement.js; do
+    curl "${curl_options[@]}" "https://$origin_host/$asset" >/dev/null
+  done
 fi
 
 # The current symlink now points at a locally verified product release.

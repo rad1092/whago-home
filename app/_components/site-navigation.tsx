@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/software", label: "제품" },
+  { href: "/software", label: "소프트웨어" },
   { href: "/releases", label: "업데이트" },
   { href: "/support", label: "지원" },
   { href: "/house", label: "소개" },

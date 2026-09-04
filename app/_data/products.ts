@@ -42,7 +42,7 @@ export type Release = {
   summary: string;
 };
 
-export const products: readonly Product[] = [
+export const allProducts: readonly Product[] = [
   {
     slug: "daymark",
     name: "Daymark",
@@ -183,8 +183,8 @@ export const products: readonly Product[] = [
     name: "FirstCall",
     typeLabel: "API 도구 제작",
     purpose:
-      "API 요청을 로컬에서 검증하고 비밀값을 분리해 실행 가능한 MCP 도구 패키지로 만듭니다.",
-    offering: "데스크톱 GUI · CLI · macOS/Windows/Linux",
+      "쓰고 있는 HTTP API를 검증하고, AI가 호출할 수 있는 로컬 MCP 도구로 만듭니다.",
+    offering: "macOS Apple Silicon 앱 · 네이티브 MCP 런타임",
     runtime: "데스크톱 · 터미널",
     dataLocation: "로컬 SQLite · 로컬 패키지",
     source: "https://github.com/rad1092/firstcall-local-api-workbench",
@@ -197,29 +197,24 @@ export const products: readonly Product[] = [
       objectPosition: "top center",
     },
     facts: [
-      { label: "실행", value: "데스크톱 GUI · 자동화 CLI" },
-      { label: "플랫폼", value: "macOS · Windows · Linux" },
+      { label: "실행", value: "설치 앱 · Node.js나 npm 불필요" },
+      { label: "배포판", value: "macOS Apple Silicon · v0.3.0" },
       { label: "저장", value: "로컬 SQLite · 클라우드 백엔드 없음" },
       { label: "출력", value: "비밀값을 분리한 MCP 도구 패키지" },
     ],
     workflow: [
-      "curl, OpenAPI, Postman, HAR 등의 요청 소스를 가져와 후보를 만듭니다.",
-      "비밀값은 로컬 런타임에서 제공하고 대상 API에 요청해 동작을 검증합니다.",
-      "검증 결과를 recipe, 정책과 실행 가능한 MCP 서버가 든 패키지로 내보냅니다.",
+      "curl 또는 OpenAPI 요청을 가져옵니다. 공개 GitHub API 예제로 바로 시작할 수도 있습니다.",
+      "입력값을 채워 실제 API에 요청합니다. 성공한 요청에 도구 이름, 용도와 입력 설명을 붙입니다.",
+      "MCP 패키지를 내보내고 연결 설정을 AI 클라이언트에 추가합니다. 이후 호출은 함께 설치한 런타임이 실행합니다.",
     ],
     setup: {
       title: "다운로드와 실행",
       body:
-        "운영체제용 릴리스 압축 파일을 내려받아 풉니다. GUI와 CLI가 함께 들어 있으며, 저장과 패키징은 로컬에서 처리하고 검증할 때만 선택한 API로 직접 요청합니다.",
-      commands: [
-        "firstcall --screen new --sample curl",
-        "firstcall-cli version",
-        "firstcall-cli --help",
-      ],
+        "ZIP을 풀고 FirstCall.app을 Applications에 옮긴 뒤 실행하세요. Try an example → Send and verify → Continue to MCP tool 순으로 시작합니다. 패키지는 앱 설치 위치를 참조하므로 옮긴 뒤 내보내세요. 인증이 필요한 API는 연결 설정에 표시된 환경 변수로 비밀값을 제공합니다. 이번 배포판은 Apple Silicon Mac에서 검증했으며 Apple 공증은 없습니다. Intel Mac·Windows·Linux의 0.3.0 설치 파일은 제공하지 않습니다.",
     },
     primaryAction: {
-      label: "다운로드",
-      href: "https://github.com/rad1092/firstcall-local-api-workbench/releases/latest",
+      label: "macOS Apple Silicon 다운로드",
+      href: "https://github.com/rad1092/firstcall-local-api-workbench/releases/download/v0.3.0/firstcall-v0.3.0-aarch64-apple-darwin.zip",
     },
     guide: {
       label: "사용 흐름",
@@ -259,7 +254,7 @@ export const products: readonly Product[] = [
     setup: {
       title: "GitHub CLI 확장 설치",
       body:
-        "기존 gh 인증을 재사용하며 별도 서버, GitHub App이나 데이터베이스를 운영하지 않습니다. --comment를 지정할 때만 PR timeline comment를 작성합니다.",
+        "기존 gh 인증을 사용합니다. 위험 점수는 검토를 돕는 휴리스틱이며 취약점 검사 결과가 아닙니다. PR 댓글은 --comment 또는 설정 파일의 comment 옵션으로 활성화합니다.",
       commands: [
         "gh auth login",
         "gh extension install rad1092/gh-dep-risk",
@@ -277,7 +272,23 @@ export const products: readonly Product[] = [
   },
 ] as const;
 
+export const retiredSlugs = ["daymark", "siteboard"] as const;
+
+export const products: readonly Product[] = ["firstcall", "repolens", "gh-dep-risk"].map(
+  (slug) => allProducts.find((product) => product.slug === slug)!,
+);
+
+export function isRetired(slug: string) {
+  return retiredSlugs.some((retired) => retired === slug);
+}
+
 export const releases: readonly Release[] = [
+  {
+    productSlug: "firstcall",
+    version: "0.3.0",
+    publishedAt: "2026-09-05",
+    summary: "앱에서 API 검증부터 도구 설명·입력 형식 지정, MCP 연결 설정 내보내기까지 완료합니다. 별도 빌드 없이 실행하는 네이티브 런타임과 실제 JSON 응답 반환을 추가했습니다.",
+  },
   {
     productSlug: "daymark",
     version: "2.2.0",
@@ -316,7 +327,7 @@ export const releases: readonly Release[] = [
 ] as const;
 
 export function getProduct(slug: string) {
-  return products.find((product) => product.slug === slug);
+  return allProducts.find((product) => product.slug === slug);
 }
 
 export function getLatestRelease(slug: Product["slug"]) {

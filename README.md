@@ -13,20 +13,22 @@
 제품 정보는 `app/_data/products.ts` 한곳에서 관리합니다. 새 제품은
 저장소와 릴리스 경로를 준비한 뒤 이 카탈로그에 추가합니다.
 
-## 현재 제품
+## 현재 소프트웨어
 
-- [Daymark](https://daymark.whago.net/) — 오늘 끝낼 일을 세 개까지
-  정하고, 남은 일에는 다음 행동과 날짜를 남기는 웹 앱입니다.
-- [RepoLens](https://repolens.whago.net/) — 새로 생기거나 악화된
-  저장소 유지보수 문제만 표시하는 CLI와 GitHub Action입니다.
-- [Siteboard](https://siteboard.whago.net/) — 홈페이지를 편집해
-  정적 파일로 내보내고 Cloudflare Pages에 배포합니다.
-- [FirstCall](https://github.com/rad1092/firstcall-local-api-workbench/releases/latest)
-  — API 요청을 로컬에서 검증해 실행 가능한 MCP 도구 패키지로 만듭니다.
-- [gh-dep-risk](https://github.com/rad1092/gh-dependency-risk) — Pull request의
-  의존성 변경 위험을 GitHub CLI에서 요약합니다.
+- [FirstCall](https://whago.net/software/firstcall) — 기존 HTTP API를 검증하고,
+  입력과 용도를 설명한 MCP 도구로 연결합니다. v0.3.0은 네이티브 런타임과
+  GUI 내보내기를 포함한 macOS Apple Silicon 배포판입니다.
+- [RepoLens](https://repolens.whago.net/) — 기준선 이후 새 유지보수 회귀를
+  표시하는 공개 CLI·GitHub Action입니다.
+- [gh-dep-risk](https://github.com/rad1092/gh-dependency-risk) — 의존성이 바뀐
+  PR의 검토 근거를 요약하는 GitHub CLI 확장입니다.
 
-코드, 이슈, 버전과 설치 산출물은 제품별 저장소에서 관리합니다.
+Daymark와 Siteboard는 2026-09-05에 독립 제품 개발을 종료했습니다.
+`/archive`와 각 기존 주소는 자료 내려받기, `/legacy/`는 구버전 이용 경로입니다.
+소스와 이전 릴리스, 브라우저 저장 자료는 보존합니다. 구버전이 오프라인으로
+설치되어 있다면 한 번 온라인으로 연결해야 종료 안내가 갱신됩니다.
+
+제품 결정과 완료 기준은 [재설계 기록](docs/rebuild-plan.md)에 있습니다.
 
 ## 로컬 실행
 
@@ -61,7 +63,8 @@ npm run build:static
 배포합니다. FirstCall과 gh-dep-risk는 각 GitHub 저장소의 릴리스와 설치
 경로를 사용합니다. 기존
 `whago.net/daymark/`와 `whago.net/siteboard/`에는 브라우저 저장 자료를
-내려받아 새 주소로 옮기는 이전 화면을 유지합니다.
+원래 형태로 내려받는 복구 화면을 유지합니다. 각 subdomain도 같은 출처에서
+자료를 읽으며, legacy 앱과 서비스 워커 캐시를 보존합니다.
 
 첫 설치에서는 독립 웹 주소를 가진 세 제품을 먼저 빌드해 release 경로에
 적재한 뒤 인증서와 Nginx를 전환합니다. 배포 스크립트는 root가 아닌

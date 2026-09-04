@@ -321,7 +321,7 @@ daymark_move_html="$(
     --resolve "whago.net:443:127.0.0.1" \
     https://whago.net/daymark/
 )"
-grep -q "기존 자료를 챙겨" <<<"$daymark_move_html"
+grep -q "Daymark 개발을 종료" <<<"$daymark_move_html"
 
 siteboard_move_html="$(
   curl --fail --silent --show-error \
@@ -330,7 +330,7 @@ siteboard_move_html="$(
     --resolve "whago.net:443:127.0.0.1" \
     https://whago.net/siteboard/
 )"
-grep -q "기존 작업을 챙겨" <<<"$siteboard_move_html"
+grep -q "Siteboard 개발을 종료" <<<"$siteboard_move_html"
 
 www_daymark_move_html="$(
   curl --fail --silent --show-error \
@@ -339,7 +339,7 @@ www_daymark_move_html="$(
     --resolve "www.whago.net:443:127.0.0.1" \
     https://www.whago.net/daymark/
 )"
-grep -q "기존 자료를 챙겨" <<<"$www_daymark_move_html"
+grep -q "Daymark 개발을 종료" <<<"$www_daymark_move_html"
 
 www_siteboard_move_html="$(
   curl --fail --silent --show-error \
@@ -348,7 +348,7 @@ www_siteboard_move_html="$(
     --resolve "www.whago.net:443:127.0.0.1" \
     https://www.whago.net/siteboard/
 )"
-grep -q "기존 작업을 챙겨" <<<"$www_siteboard_move_html"
+grep -q "Siteboard 개발을 종료" <<<"$www_siteboard_move_html"
 
 for asset in /data-move.css /data-move.js; do
   curl --fail --silent --show-error \

@@ -4,7 +4,7 @@ import { SiteNavigation } from "./_components/site-navigation";
 import "./globals.css";
 
 const description =
-  "WHAGO의 소프트웨어를 비교하고 열거나 설치할 수 있습니다.";
+  "기존 API를 로컬 MCP 도구로 연결하는 FirstCall과 공개 개발 도구.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://whago.net"),
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "WHAGO 제품 인덱스",
+        alt: "WHAGO",
       },
     ],
   },
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#f3f2ed",
+  themeColor: "#f8fafc",
   width: "device-width",
   initialScale: 1,
 };
@@ -75,6 +75,7 @@ export default function RootLayout({
           <div className="site-footer__inner">
             <p>© 2026 WHAGO · 울산</p>
             <nav className="site-footer__links" aria-label="WHAGO 연락">
+              <Link href="/archive">종료 제품·자료 회수</Link>
               <a href="mailto:rad174951@gmail.com">이메일 ↗</a>
               <a
                 href="https://github.com/rad1092"
