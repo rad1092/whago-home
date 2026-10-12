@@ -42,7 +42,7 @@ export default function ReleasesPage() {
               </time>
               <div>
                 <Link href={`/software/${product.slug}`}>{product.name}</Link>
-                <span>v{release.version}</span>
+                <span>v{release.version}{release.prerelease ? " preview" : ""}</span>
               </div>
               <p>{release.summary}</p>
               <a
