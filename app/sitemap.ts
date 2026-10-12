@@ -4,7 +4,7 @@ import { products } from "./_data/products";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date("2026-09-05");
+  const lastModified = new Date("2026-10-12");
   const base = "https://whago.net";
 
   return [

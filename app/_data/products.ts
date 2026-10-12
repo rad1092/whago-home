@@ -1,3 +1,5 @@
+import { recentTools } from "./recent-tools";
+
 export type ProductLink = {
   label: string;
   href: string;
@@ -14,7 +16,9 @@ export type Product = {
   source: string;
   mark?: string;
   glyph?: string;
-  media: {
+  audience?: string;
+  boundary?: string;
+  media?: {
     src: string;
     width: number;
     height: number;
@@ -270,13 +274,17 @@ export const allProducts: readonly Product[] = [
       href: "https://github.com/rad1092/gh-dependency-risk/blob/main/docs/support-matrix.md",
     },
   },
+  ...recentTools,
 ] as const;
 
 export const retiredSlugs = ["daymark", "siteboard"] as const;
 
-export const products: readonly Product[] = ["firstcall", "repolens", "gh-dep-risk"].map(
-  (slug) => allProducts.find((product) => product.slug === slug)!,
-);
+export const products: readonly Product[] = [
+  ...["firstcall", "repolens", "gh-dep-risk"].map(
+    (slug) => allProducts.find((product) => product.slug === slug)!,
+  ),
+  ...recentTools,
+];
 
 export function isRetired(slug: string) {
   return retiredSlugs.some((retired) => retired === slug);

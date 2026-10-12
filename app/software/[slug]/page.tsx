@@ -101,10 +101,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div className="flow-step"><span className="step-label">도구 호출</span><pre>{'{\n  "name": "get_github_repository",\n  "arguments": {\n    "owner": "octocat",\n    "repository": "Hello-World"\n  }\n}'}</pre></div>
             <div className="flow-step"><span className="step-label">반환된 JSON 중 일부</span><pre>{'{\n  "status": 200,\n  "data": {\n    "full_name": "octocat/Hello-World"\n  }\n}'}</pre></div>
           </div>
-        ) : (
+        ) : product.media ? (
           <figure className="product-shot">
             <img src={product.media.src} alt={product.media.alt} width={product.media.width} height={product.media.height} />
           </figure>
+        ) : (
+          <div className="notice-panel tool-scope">
+            <p className="eyebrow">사용 대상과 범위</p>
+            <h2>{product.audience}</h2>
+            <p>{product.boundary}</p>
+            <a href={product.guide.href}>지원 범위와 사용 안내 ↗</a>
+          </div>
         )}
 
         <div className="spec-panel">

@@ -20,6 +20,10 @@ export default function SupportPage() {
         <p>제품별 사용법과 오류 신고 경로입니다.</p>
       </header>
 
+      <section className="page-shell contact-panel" aria-labelledby="contact-title">
+        <div><h2 id="contact-title">프로젝트 문의</h2><p>제품에 관한 질문과 협업 제안은 이메일로 보내주세요.</p></div>
+        <a className="solid-link" href="mailto:rad174951@gmail.com">rad174951@gmail.com ↗</a>
+      </section>
       <section className="support-list page-shell" aria-label="제품별 지원">
         {products.map((product) => (
           <article key={product.slug}>
