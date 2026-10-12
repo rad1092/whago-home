@@ -12,6 +12,8 @@ export default tseslint.config(
       "out/**",
       "products/**",
       "node_modules/**",
+      // Upstream distribution; its two-call security patch is covered by tests.
+      "vendor/vite-plugin-dynamic-import/dist/**",
       "next-env.d.ts",
     ],
   },

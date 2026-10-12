@@ -15,7 +15,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {
-    "next": "16.3.7",
+    "next": "16.4.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -35,14 +35,16 @@
     "typescript-eslint": "^8.65.0",
     "vinext": "0.0.50",
     "vite": "^8.1.5",
-    "wrangler": "^4.115.0"
+    "wrangler": "^4.115.0",
+    "vite-plugin-dynamic-import": "file:vendor/vite-plugin-dynamic-import"
   },
   "overrides": {
     "postcss": "8.5.23",
     "sharp": "0.35.5",
     "vinext": {
       "image-size": "2.0.4"
-    }
+    },
+    "vite-plugin-dynamic-import": "$vite-plugin-dynamic-import"
   },
   "type": "module"
 }
