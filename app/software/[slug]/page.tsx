@@ -121,7 +121,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div>
                 <dt>버전</dt>
                 <dd>
-                  v{release.version} · {formatReleaseDate(release.publishedAt)}
+                  v{release.version}{release.prerelease ? " preview" : ""} · {formatReleaseDate(release.publishedAt)}
                 </dd>
               </div>
             ) : null}
@@ -163,6 +163,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </section>
 
+      {product.demo && product.result ? (
+        <section className="product-section page-shell" aria-labelledby="example-title">
+          <header><h2 id="example-title">직접 확인하기</h2></header>
+          <div className="setup-copy"><p>{product.result}</p><a href={product.demo.href} target="_blank" rel="noreferrer">{product.demo.label} ↗<span className="sr-only">(새 탭에서 열림)</span></a></div>
+        </section>
+      ) : null}
+
       <section className="product-resources page-shell" aria-labelledby="resources-title">
         <h2 id="resources-title">링크</h2>
         <nav aria-label={`${product.name} 관련 링크`}>
@@ -191,7 +198,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               rel="noreferrer"
               target="_blank"
             >
-              v{release.version} 릴리스 ↗
+              v{release.version}{release.prerelease ? " preview" : ""} 릴리스 ↗
               <span className="sr-only">(새 탭에서 열림)</span>
             </a>
           ) : null}

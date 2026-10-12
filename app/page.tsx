@@ -34,13 +34,13 @@ export default function Home() {
         </div>
       </section>
       <section className="tool-shelf page-shell" aria-labelledby="recent-tools-title">
-        <header><div><p className="eyebrow">RECENT TOOLS · 2026.10</p><h2 id="recent-tools-title">검토하고 결정하는 일을 돕습니다</h2></div><Link href="/software">전체 소프트웨어 →</Link></header>
-        <p className="intro-description">문서와 파일을 다루는 사람부터 작업장 계획 담당자와 개발팀까지. 필요한 작업에 맞는 도구를 고르고, 지원 범위와 시작 방법을 확인하세요.</p>
+        <header><div><p className="eyebrow">TOOLS & UPDATES · 2026.10</p><h2 id="recent-tools-title">검토하고 결정하는 일을 돕습니다</h2></div><Link href="/software">전체 소프트웨어 →</Link></header>
+        <p className="intro-description">문서와 파일을 다루는 사람부터 작업장 계획 담당자, 개발팀과 홈브루 개발자까지. 필요한 작업에 맞는 도구를 고르고, 지원 범위와 시작 방법을 확인하세요.</p>
         <div className="tool-shelf__grid">
           {recentTools.map((tool) => (
             <article key={tool.slug}>
               <span className="tool-symbol" aria-hidden="true">{tool.glyph}</span>
-              <h3>{tool.name}</h3><p>{tool.purpose}</p>
+              <h3>{tool.name}</h3><p className="caption">{tool.typeLabel}</p><p>{tool.purpose}</p>
               <p className="caption">{tool.offering}</p>
               <Link href={`/software/${tool.slug}`}>설치와 사용 흐름 →</Link>
             </article>

@@ -34,7 +34,7 @@ export function ProductIndex({ items }: { items: readonly Product[] }) {
             <p className="product-row__purpose">{product.purpose}</p>
             <p className="product-row__offering">{product.offering}</p>
             <p className="product-row__version">
-              {release ? `v${release.version}` : "—"}
+              {release ? `v${release.version}${release.prerelease ? " preview" : ""}` : "—"}
             </p>
             <Link
               className="product-row__media"

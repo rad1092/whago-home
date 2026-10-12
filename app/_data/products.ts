@@ -37,6 +37,8 @@ export type Product = {
   };
   primaryAction: ProductLink;
   guide: ProductLink;
+  demo?: ProductLink;
+  result?: string;
 };
 
 export type Release = {
@@ -44,6 +46,7 @@ export type Release = {
   version: string;
   publishedAt: string;
   summary: string;
+  prerelease?: boolean;
 };
 
 export const allProducts: readonly Product[] = [
@@ -182,49 +185,64 @@ export const allProducts: readonly Product[] = [
       href: "https://github.com/rad1092/siteboard/releases/tag/v4.0.0",
     },
   },
-  {
-    slug: "firstcall",
-    name: "FirstCall",
-    typeLabel: "API 도구 제작",
-    purpose:
-      "쓰고 있는 HTTP API를 검증하고, AI가 호출할 수 있는 로컬 MCP 도구로 만듭니다.",
-    offering: "macOS Apple Silicon 앱 · 네이티브 MCP 런타임",
-    runtime: "데스크톱 · 터미널",
-    dataLocation: "로컬 SQLite · 로컬 패키지",
-    source: "https://github.com/rad1092/firstcall-local-api-workbench",
-    glyph: "FC",
-    media: {
-      src: "/firstcall-gui-workbench.gif",
-      width: 1100,
-      height: 760,
-      alt: "FirstCall 데스크톱 GUI에서 curl 요청을 분석해 API 후보와 인증 입력을 구성하는 화면",
-      objectPosition: "top center",
+{
+  "slug": "firstcall",
+  "name": "FirstCall",
+  "typeLabel": "API → 로컬 MCP 도구",
+  "glyph": "FC",
+  "purpose": "API를 AI 클라이언트에 연결하려는 개발자가 curl·OpenAPI 요청을 실제로 검증하고, 용도와 입력을 설명한 로컬 MCP 도구로 내보냅니다.",
+  "offering": "macOS Apple Silicon 앱 · CLI · 네이티브 MCP",
+  "runtime": "macOS Apple Silicon · 데스크톱/터미널",
+  "dataLocation": "로컬 SQLite·패키지 · 선택한 API 직접 호출",
+  "source": "https://github.com/rad1092/firstcall-local-api-workbench",
+  "facts": [
+    {
+      "label": "배포판",
+      "value": "v0.3.1 · macOS Apple Silicon"
     },
-    facts: [
-      { label: "실행", value: "설치 앱 · Node.js나 npm 불필요" },
-      { label: "배포판", value: "macOS Apple Silicon · v0.3.0" },
-      { label: "저장", value: "로컬 SQLite · 클라우드 백엔드 없음" },
-      { label: "출력", value: "비밀값을 분리한 MCP 도구 패키지" },
-    ],
-    workflow: [
-      "curl 또는 OpenAPI 요청을 가져옵니다. 공개 GitHub API 예제로 바로 시작할 수도 있습니다.",
-      "입력값을 채워 실제 API에 요청합니다. 성공한 요청에 도구 이름, 용도와 입력 설명을 붙입니다.",
-      "MCP 패키지를 내보내고 연결 설정을 AI 클라이언트에 추가합니다. 이후 호출은 함께 설치한 런타임이 실행합니다.",
-    ],
-    setup: {
-      title: "다운로드와 실행",
-      body:
-        "ZIP을 풀고 FirstCall.app을 Applications에 옮긴 뒤 실행하세요. Try an example → Send and verify → Continue to MCP tool 순으로 시작합니다. 패키지는 앱 설치 위치를 참조하므로 옮긴 뒤 내보내세요. 인증이 필요한 API는 연결 설정에 표시된 환경 변수로 비밀값을 제공합니다. 이번 배포판은 Apple Silicon Mac에서 검증했으며 Apple 공증은 없습니다. Intel Mac·Windows·Linux의 0.3.0 설치 파일은 제공하지 않습니다.",
+    {
+      "label": "실행",
+      "value": "앱·CLI 포함 · npm 설치 불필요"
     },
-    primaryAction: {
-      label: "macOS Apple Silicon 다운로드",
-      href: "https://github.com/rad1092/firstcall-local-api-workbench/releases/download/v0.3.0/firstcall-v0.3.0-aarch64-apple-darwin.zip",
+    {
+      "label": "입력",
+      "value": "curl · OpenAPI · 선택 query/header 생략 가능"
     },
-    guide: {
-      label: "사용 흐름",
-      href: "https://github.com/rad1092/firstcall-local-api-workbench/blob/main/docs/cli-lifecycle.md",
+    {
+      "label": "연결",
+      "value": "검증한 요청 → 네이티브 MCP 패키지"
     },
+    {
+      "label": "범위",
+      "value": "Apple 공증 없음 · Intel/Windows/Linux 0.3.1 바이너리 없음"
+    }
+  ],
+  "workflow": [
+    "Create a tool에서 curl·OpenAPI 요청을 가져오거나 공개 GitHub API 예제를 선택합니다.",
+    "입력을 채워 Send and verify로 실제 요청을 보냅니다. 선택 query/header는 빈 채로 두면 요청에서 생략됩니다.",
+    "도구 이름·용도·입력 설명을 정해 Export MCP package를 실행하고 연결 설정을 AI 클라이언트에 추가합니다. 인증 환경 변수는 클라이언트에도 별도로 제공합니다."
+  ],
+  "setup": {
+    "title": "다운로드와 실행",
+    "body": "v0.3.1 ZIP을 풀고 FirstCall.app을 Applications로 옮긴 뒤 실행하세요. Apple Silicon macOS용 앱과 companion CLI가 포함되어 있으며 ad-hoc 서명만 있고 Apple 공증은 없습니다. 요청 검증과 MCP 호출은 선택한 API에 실제로 연결합니다. 기본 GET·HEAD 외 쓰기는 내보내기 시 명시적으로 허용해야 합니다. 앱 또는 패키지를 옮겼다면 새 CLI 위치에서 connect --package로 연결 설정을 다시 생성하세요.",
+    "commands": [
+      "/path/to/firstcall-cli connect --package /absolute/path/to/moved-tool"
+    ]
   },
+  "primaryAction": {
+    "label": "v0.3.1 Apple Silicon 다운로드",
+    "href": "https://github.com/rad1092/firstcall-local-api-workbench/releases/download/v0.3.1/firstcall-v0.3.1-aarch64-apple-darwin.zip"
+  },
+  "guide": {
+    "label": "설치와 첫 도구 만들기",
+    "href": "https://github.com/rad1092/firstcall-local-api-workbench#make-your-first-tool"
+  },
+  "demo": {
+    "label": "CLI·MCP 사용 흐름",
+    "href": "https://github.com/rad1092/firstcall-local-api-workbench/blob/main/docs/cli-lifecycle.md"
+  },
+  "result": "Try an example로 공개 GitHub 저장소 조회를 검증하고 실제 JSON을 반환하는 MCP 도구를 만들 수 있습니다. v0.3.1은 빈 선택 query/header를 생략하며, 옮긴 패키지에서 connect로 설정을 갱신한 뒤 다시 호출할 수 있습니다. 검증 당시의 응답은 향후 모든 API 호출의 성공을 보장하지 않습니다."
+},
   {
     slug: "gh-dep-risk",
     name: "gh-dep-risk",
@@ -291,6 +309,69 @@ export function isRetired(slug: string) {
 }
 
 export const releases: readonly Release[] = [
+{
+  "productSlug": "firstcall",
+  "version": "0.3.1",
+  "publishedAt": "2026-10-12",
+  "prerelease": false,
+  "summary": "선택 query/header를 비워도 검증·MCP 호출에서 생략합니다. 이동한 패키지의 연결 설정은 connect로 갱신합니다."
+},
+{
+  "productSlug": "matcha",
+  "version": "0.1.1",
+  "publishedAt": "2026-10-12",
+  "prerelease": false,
+  "summary": "잘못된 MCP 요청을 머신·슬롯·중단점 보존 상태로 거부하고 재현 가능한 홈브루 디버깅 실습을 제공합니다."
+},
+{
+  "productSlug": "annotrail",
+  "version": "0.1.3",
+  "publishedAt": "2026-10-12",
+  "prerelease": true,
+  "summary": "PDF 주석 이전 preview. docs·예제를 현재 소스에서 묶으며 합성 old/new PDF의 검토·이전 실습을 제공합니다."
+},
+{
+  "productSlug": "lifecase",
+  "version": "0.1.3",
+  "publishedAt": "2026-10-12",
+  "prerelease": false,
+  "summary": "fixture와 검증 CLI를 함께 배포합니다. 보고서 경로를 실행 전에 예약하고 기존 파일·별칭 충돌을 거부합니다."
+},
+{
+  "productSlug": "serdeproof",
+  "version": "0.1.1",
+  "publishedAt": "2026-10-12",
+  "prerelease": false,
+  "summary": "프로세스 소유권 확인과 입력 파일 덮어쓰기 방지를 보강했습니다. --fail-on-untested로 미검증 입력을 CI 실패로 처리할 수 있습니다."
+},
+{
+  "productSlug": "conflictbench",
+  "version": "0.1.0",
+  "publishedAt": "2026-10-08",
+  "prerelease": false,
+  "summary": "Syncthing 충돌을 비교하고 선택한 결과를 외부 백업·복구 기록과 함께 적용하는 로컬 데스크톱 앱입니다."
+},
+{
+  "productSlug": "shopshift",
+  "version": "0.1.0",
+  "publishedAt": "2026-10-08",
+  "prerelease": false,
+  "summary": "ERP CSV/XLSX 복사본으로 작업을 배치하고 재입력 시 시작 시각·잠금을 유지하는 단일 계획자용 앱입니다."
+},
+{
+  "productSlug": "paperstager",
+  "version": "0.1.1",
+  "publishedAt": "2026-10-08",
+  "prerelease": true,
+  "summary": "PDF 경계·이름을 검토·승인해 새 PDF와 manifest로 내보내는 사전 공개 데스크톱 앱입니다."
+},
+{
+  "productSlug": "treeport",
+  "version": "0.1.3",
+  "publishedAt": "2026-10-08",
+  "prerelease": false,
+  "summary": "목적지 루트의 길이 예산과 부모 경로까지 포함해 이름 트리의 충돌을 읽기 전용으로 검사합니다."
+},
   {
     productSlug: "firstcall",
     version: "0.3.0",

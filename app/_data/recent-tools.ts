@@ -1,11 +1,11 @@
 import type { Product } from "./products";
 
-// Introductions follow each public README; release links include prereleases.
+// Current public releases and reproducible examples; no universal compatibility claims.
 export const recentTools: readonly Product[] = [
   {
     "slug": "annotrail",
     "name": "Annotrail",
-    "typeLabel": "PDF 주석 이동",
+    "typeLabel": "PDF 주석 이전",
     "glyph": "AN",
     "purpose": "논문·교재 개정판을 읽는 사용자가 이전 PDF의 하이라이트와 댓글을 새 PDF의 텍스트와 대조하고, 승인한 주석을 새 파일로 옮깁니다.",
     "offering": "데스크톱 · CLI · 사전 공개판",
@@ -42,13 +42,18 @@ export const recentTools: readonly Product[] = [
       "body": "Releases에서 운영체제에 맞는 사전 공개 패키지와 SHA256SUMS를 받으세요. 체크섬 확인 후 압축을 풀어 앱을 실행합니다. Java가 포함되어 있으며, 독립 JAR은 Java 17 이상이 필요합니다. macOS는 ad-hoc 서명만 있으며 Apple 공증과 Windows Authenticode 서명은 없습니다."
     },
     "primaryAction": {
-      "label": "사전 공개판 다운로드",
-      "href": "https://github.com/rad1092/annotrail/releases"
+      "label": "v0.1.3 사전 공개판",
+      "href": "https://github.com/rad1092/annotrail/releases/tag/v0.1.3"
     },
     "guide": {
       "label": "사용 안내",
       "href": "https://github.com/rad1092/annotrail/blob/main/README.md#review-workflow"
-    }
+    },
+    "demo": {
+      "label": "합성 PDF 실습",
+      "href": "https://github.com/rad1092/annotrail/tree/main/examples/review-demo"
+    },
+    "result": "합성 old/new PDF에서 정확한 일치·중복 문구·찾지 못한 문구·지원하지 않는 주석을 구분합니다. 기본 선택은 1개 이전·3개 건너뛰기이며, 중복 문구의 두 번째 후보를 선택하면 2개 이전·2개 건너뛰기를 확인할 수 있습니다."
   },
   {
     "slug": "conflictbench",
@@ -90,13 +95,18 @@ export const recentTools: readonly Product[] = [
       "body": "Releases에서 운영체제에 맞는 패키지를 받고 SHA-256을 확인한 뒤 압축을 풀어 실행하세요. Try demo로 임시 예제를 볼 수 있습니다. 배포판은 서명되지 않았으며 macOS 공증도 없습니다. Linux 실행 조건은 저장소의 BUILDING 문서를 확인하세요."
     },
     "primaryAction": {
-      "label": "다운로드·릴리스",
-      "href": "https://github.com/rad1092/conflictbench/releases"
+      "label": "v0.1.0 다운로드",
+      "href": "https://github.com/rad1092/conflictbench/releases/tag/v0.1.0"
     },
     "guide": {
       "label": "사용 안내",
       "href": "https://github.com/rad1092/conflictbench/blob/main/docs/QUICKSTART.ko.md"
-    }
+    },
+    "demo": {
+      "label": "첫 실행과 복구 실습",
+      "href": "https://github.com/rad1092/conflictbench/blob/main/docs/FIRST-RUN.md"
+    },
+    "result": "Try demo의 임시 파일에서 세 선택의 결과를 비교하고 History / recovery를 확인할 수 있습니다. 실제 파일을 다루기 전에는 동기화와 편집기를 멈추고 모든 동기화 폴더 밖에 백업 위치를 정하세요."
   },
   {
     "slug": "shopshift",
@@ -138,13 +148,18 @@ export const recentTools: readonly Product[] = [
       "body": "Releases의 운영체제별 패키지는 전체 압축을 푼 뒤 실행하세요. 서명·공증되지 않은 배포판입니다. 소스 체크아웃에서는 Python 3.12 또는 3.13의 가상환경에 설치한 뒤 shopshift --demo로 합성 예제를 열 수 있습니다."
     },
     "primaryAction": {
-      "label": "다운로드·릴리스",
-      "href": "https://github.com/rad1092/shopshift/releases"
+      "label": "v0.1.0 다운로드",
+      "href": "https://github.com/rad1092/shopshift/releases/tag/v0.1.0"
     },
     "guide": {
       "label": "사용 안내",
       "href": "https://github.com/rad1092/shopshift/blob/main/docs/QUICKSTART.ko.md"
-    }
+    },
+    "demo": {
+      "label": "CSV 가져오기 실습",
+      "href": "https://github.com/rad1092/shopshift#daily-workflow"
+    },
+    "result": "합성 데모나 샘플 CSV로 가져오기→필드 매핑→첫 import를 진행합니다. 시작 시각을 고정·잠근 뒤 다시 가져와 유지 여부를 살피고, 일일 CSV와 인쇄용 HTML에서 배치와 충돌을 확인하세요."
   },
   {
     "slug": "treeport",
@@ -186,13 +201,18 @@ export const recentTools: readonly Product[] = [
       "body": "Releases에서 플랫폼별 바이너리와 SHA256SUMS를 받거나 Go 1.25 이상으로 설치하세요. 명령 옵션은 입력 경로 앞에 둡니다. --root는 검사할 폴더가 아니라 앞으로 사용할 목적지 루트입니다."
     },
     "primaryAction": {
-      "label": "다운로드·릴리스",
-      "href": "https://github.com/rad1092/treeport/releases"
+      "label": "v0.1.3 다운로드",
+      "href": "https://github.com/rad1092/treeport/releases/tag/v0.1.3"
     },
     "guide": {
       "label": "사용 안내",
       "href": "https://github.com/rad1092/treeport/blob/main/README.ko.md"
-    }
+    },
+    "demo": {
+      "label": "폴더·ZIP 실습",
+      "href": "https://github.com/rad1092/treeport/blob/main/docs/first-run.md"
+    },
+    "result": "샘플 이름 트리에서 대소문자·부모 경로 충돌과 Windows 예약명을 확인한 뒤 이름 생성 규칙을 고쳐 다시 검사합니다. 도구는 입력이나 ZIP의 내용물을 바꾸지 않으며 결과 JSON과 종료 코드로 차이를 확인할 수 있습니다."
   },
   {
     "slug": "lifecase",
@@ -200,15 +220,15 @@ export const recentTools: readonly Product[] = [
     "typeLabel": "하위 프로세스 테스트",
     "glyph": "LC",
     "purpose": "하위 프로세스를 실행하는 앱 개발자가 제어된 네이티브 fixture로 프로세스 종료, 출력 EOF, 취소와 자식 프로세스 정리를 각각 테스트합니다.",
-    "offering": "네이티브 fixture · .NET 예제 · 선택적 Go 검증기",
-    "runtime": "네이티브 실행 파일 · .NET 8+ / Go",
+    "offering": "네이티브 fixture + 검증 CLI · .NET 예제",
+    "runtime": "패키지 CLI · 선택적 .NET 8 계약 테스트",
     "dataLocation": "합성 입력 · 로컬 테스트 보고서",
     "audience": "CliWrap 등으로 하위 프로세스를 실행하는 앱 개발자",
     "boundary": "앱의 명시적 완료 정책을 시험하는 작은 fixture입니다. CliWrap 자체 테스트나 임의의 프로세스 트리 검증을 대체하지 않습니다.",
     "workflow": [
-      "운영체제·아키텍처에 맞는 fixture를 받거나 CMake와 C++17로 빌드합니다.",
-      "LIFECASE_FIXTURE에 실행 파일의 절대 경로를 지정하고 .NET 8 이상에서 제공된 CliWrap 계약 테스트를 실행합니다.",
-      "필요한 정책을 앱의 통합 테스트에 적용합니다. 선택적 Go 검증기로 JSON·JUnit 증거를 남길 수 있습니다."
+      "배포 ZIP의 fixture와 검증기를 전체 추출합니다.",
+      "exit·flood부터 실행하고 JSON·JUnit에 기록된 종료·출력 완료 단언을 확인합니다.",
+      "앱의 정책에 맞는 시나리오를 고르거나 .NET/CliWrap 통합 예제로 확장합니다. 보고서는 매번 새 경로에 기록합니다."
     ],
     "source": "https://github.com/rad1092/lifecase",
     "facts": [
@@ -218,7 +238,7 @@ export const recentTools: readonly Product[] = [
       },
       {
         "label": "실행",
-        "value": "네이티브 실행 파일 · .NET 8+ / Go"
+        "value": "패키지 CLI · 선택적 .NET 8 계약 테스트"
       },
       {
         "label": "데이터",
@@ -226,21 +246,30 @@ export const recentTools: readonly Product[] = [
       },
       {
         "label": "제공",
-        "value": "네이티브 fixture · .NET 예제 · 선택적 Go 검증기"
+        "value": "네이티브 fixture + 검증 CLI · .NET 예제"
       }
     ],
     "setup": {
-      "title": "설치와 시작",
-      "body": "Releases는 Linux x64, macOS arm64, Windows x64 fixture ZIP과 체크섬을 제공합니다. .NET 테스트에는 .NET 8 SDK와 네이티브 fixture가 필요하며 Go는 선택 사항입니다. macOS 서명·공증은 보장하지 않습니다. 소스 빌드와 경로 설정은 .NET 가이드를 따르세요."
+      "title": "빌드 없이 첫 테스트",
+      "body": "v0.1.3 ZIP에는 fixture와 lifecase 검증기가 함께 들어 있습니다. 운영체제·아키텍처에 맞는 ZIP의 SHA-256을 확인하고 전체를 푼 뒤 그 폴더에서 실행하세요. 아래 예제에는 Go나 .NET이 필요하지 않습니다. 별도의 CliWrap 계약 테스트에는 .NET 8 SDK가 필요합니다. macOS 서명·공증은 보장하지 않습니다. Windows는 .\\lifecase.exe와 .\\lifecase-fixture.exe를 사용하세요.",
+      "commands": [
+        "./lifecase version",
+        "./lifecase run --fixture ./lifecase-fixture --scenario exit --scenario flood --json reports/first.json --junit reports/first.xml"
+      ]
     },
     "primaryAction": {
-      "label": "다운로드·릴리스",
-      "href": "https://github.com/rad1092/lifecase/releases"
+      "label": "v0.1.3 다운로드",
+      "href": "https://github.com/rad1092/lifecase/releases/tag/v0.1.3"
     },
     "guide": {
-      "label": "사용 안내",
-      "href": "https://github.com/rad1092/lifecase/blob/main/dotnet/README.md"
-    }
+      "label": "한국어 시작 안내",
+      "href": "https://github.com/rad1092/lifecase/blob/main/docs/quickstart.ko.md"
+    },
+    "demo": {
+      "label": "빌드 없는 첫 실행",
+      "href": "https://github.com/rad1092/lifecase#run-the-net-contracts"
+    },
+    "result": "배포 ZIP의 verifier와 fixture로 exit·flood 두 시나리오를 실행하면 종료 코드 0과 JSON·JUnit의 통과 결과를 확인할 수 있습니다. flood는 stdout과 stderr에서 각각 262,144바이트를 셉니다. 반복 실행에는 새 보고서 경로를 사용하세요."
   },
   {
     "slug": "paperstager",
@@ -255,7 +284,7 @@ export const recentTools: readonly Product[] = [
     "boundary": "스캐너나 OCR 엔진이 아닙니다. 이미지 전용 PDF는 미리 검색 가능한 PDF로 만들거나 필드를 직접 입력해야 하며, 주석·양식 등 지원하지 않는 PDF 구조는 거부합니다.",
     "workflow": [
       "PDF를 가져오고 페이지 미리보기에서 각 문서의 첫 페이지를 표시합니다.",
-      "라벨·정규식 규칙과 이름 템플릿을 정한 뒤 누락된 필드·중복 경로·잘못된 이름을 검토합니다.",
+      "라벨·정규식 규칙과 이름 템플릿을 정하고 제안 이름을 새로 계산합니다. 누락 필드·중복 경로·잘못된 이름을 다시 검토합니다.",
       "승인 후 새 묶음 폴더로 PDF와 원본 페이지·출력 파일을 연결하는 manifest.json을 내보냅니다."
     ],
     "source": "https://github.com/rad1092/paperstager",
@@ -282,13 +311,18 @@ export const recentTools: readonly Product[] = [
       "body": "Releases의 사전 공개 포터블 패키지를 풀어 실행하세요. .NET 런타임이 포함되어 있습니다. macOS는 ad-hoc 서명만 있으며 Developer ID·Apple 공증과 Windows Authenticode 서명은 없습니다. Linux는 X11 데스크톱과 안내된 시스템 라이브러리가 필요합니다. Try a synthetic example로 예제를 열 수 있습니다."
     },
     "primaryAction": {
-      "label": "사전 공개판 다운로드",
-      "href": "https://github.com/rad1092/paperstager/releases"
+      "label": "v0.1.1 사전 공개판",
+      "href": "https://github.com/rad1092/paperstager/releases/tag/v0.1.1"
     },
     "guide": {
       "label": "사용 안내",
       "href": "https://github.com/rad1092/paperstager/blob/main/docs/QUICKSTART.ko.md"
-    }
+    },
+    "demo": {
+      "label": "합성 PDF로 시작하기",
+      "href": "https://github.com/rad1092/paperstager#get-started"
+    },
+    "result": "Try a synthetic example의 가상 문서 두 개로 경계와 이름을 편집합니다. 이름을 새로 계산한 뒤 다시 검토·승인하여 PDF 두 개와 원본 페이지·출력 해시를 연결하는 manifest.json을 확인하세요. OCR은 실행하지 않습니다."
   },
   {
     "slug": "serdeproof",
@@ -300,7 +334,7 @@ export const recentTools: readonly Product[] = [
     "runtime": "JDK 17+ · 로컬 JVM · CI",
     "dataLocation": "로컬 코퍼스 · JSON/JUnit 보고서",
     "audience": "Java 직렬화 라이브러리 업그레이드를 검토하는 개발팀",
-    "boundary": "통과는 해당 코퍼스에서 예상 밖 차이가 없었다는 뜻입니다. 업무 의미의 동등성을 증명하지 않습니다. 어댑터는 사용자 권한의 신뢰된 로컬 코드로 실행됩니다.",
+    "boundary": "통과는 해당 코퍼스에서 예상 밖 차이가 없었다는 뜻입니다. 업무 의미의 동등성을 증명하지 않습니다. 어댑터는 사용자 권한의 신뢰된 로컬 코드로 실행됩니다. 양쪽 버전에서 모두 거절한 입력은 미검증입니다. CI에서 미검증도 실패로 처리하려면 --fail-on-untested를 사용합니다.",
     "workflow": [
       "같은 DTO와 매퍼를 기준·후보 의존성 버전으로 각각 빌드하고 매니페스트에 경로를 지정합니다.",
       "분리된 JVM에서 코퍼스와 네 가지 생산자·소비자 조합을 실행합니다.",
@@ -326,16 +360,80 @@ export const recentTools: readonly Product[] = [
       }
     ],
     "setup": {
-      "title": "설치와 시작",
-      "body": "JDK 17 이상이 필요합니다. Releases ZIP의 source/ 또는 저장소 체크아웃에서 Maven wrapper로 빌드하고 제공된 예제를 실행하세요. ZIP에는 실행 JAR도 포함됩니다. Maven Central에는 게시되지 않았습니다. 예제의 차이 발견은 종료 코드 1, 불완전한 실험은 2로 구분합니다."
+      "title": "빌드 없는 릴리스 실습",
+      "body": "JDK 17 이상에서 serdeproof-0.1.1.zip과 SHA256SUMS를 받고 확인한 뒤 전체 압축을 풉니다. 추출한 serdeproof-0.1.1 폴더에서 아래 명령을 실행하세요. 예제의 차이 발견은 종료 코드 1, 불완전한 실험은 2입니다. Maven 설치나 계정은 필요하지 않으며 lib/의 모든 JAR을 함께 유지해야 합니다. 자체 DTO 통합은 사용 안내를 따르세요. Maven Central에는 게시되지 않았습니다.",
+      "commands": [
+        "java -jar lib/serdeproof-cli-0.1.1.jar run --manifest examples/release-demo.json --json reports/first.json --junit reports/first.xml --as-of 2026-10-08"
+      ]
     },
     "primaryAction": {
-      "label": "다운로드·릴리스",
-      "href": "https://github.com/rad1092/serdeproof/releases"
+      "label": "v0.1.1 다운로드",
+      "href": "https://github.com/rad1092/serdeproof/releases/tag/v0.1.1"
     },
     "guide": {
       "label": "사용 안내",
       "href": "https://github.com/rad1092/serdeproof/blob/main/docs/QUICKSTART.ko.md"
-    }
+    },
+    "demo": {
+      "label": "빌드 없는 Jackson 실습",
+      "href": "https://github.com/rad1092/serdeproof#try-the-release-without-building"
+    },
+    "result": "공개 ZIP의 예제는 17개 fixture에서 예상 밖 차이 12개, 미검증 5개, 기반 실행 오류 0개를 출력하고 의도적으로 종료 코드 1을 반환합니다. 이 수치는 합성 예제 결과이며 실제 서비스의 호환성 판정은 자체 코퍼스로 해야 합니다."
+  },
+  {
+    "slug": "matcha",
+    "name": "Matcha",
+    "typeLabel": "게임보이 홈브루 디버깅",
+    "glyph": "MA",
+    "purpose": "게임보이 홈브루 개발자와 에뮬레이터 학습자가 CPU·메모리·화면을 관찰하고, 저장 상태를 재생하거나 MCP 도구로 같은 실행을 반복합니다.",
+    "offering": "오프라인 HTML · MCP 플러그인 · Rust CLI 소스",
+    "runtime": "브라우저 · Node 18+ MCP · 소스 빌드 CLI",
+    "dataLocation": "로컬 ROM · 브라우저 저장 · 프로세스 내 슬롯",
+    "source": "https://github.com/rad1092/matcha",
+    "audience": "자작 게임보이 소프트웨어를 시험하는 개발자·학습자",
+    "boundary": "DMG/CGB의 일부 정밀 타이밍과 CGB의 DMG 호환 모드는 남아 있습니다. MCP 저장 슬롯은 프로세스 종료 시 사라집니다. 실행 권한이 있는 ROM만 사용하세요. 전체 하드웨어나 모든 게임의 호환성을 보장하지 않습니다.",
+    "facts": [
+      {
+        "label": "실행",
+        "value": "HTML 파일 · Node 18+ MCP"
+      },
+      {
+        "label": "도구",
+        "value": "MCP 17개 · 브레이크포인트·메모리 검색"
+      },
+      {
+        "label": "입력",
+        "value": "직접 만든 ROM · 포함된 오픈소스 홈브루"
+      },
+      {
+        "label": "CLI",
+        "value": "Rust로 소스 빌드"
+      }
+    ],
+    "workflow": [
+      "v0.1.1의 matcha.html 또는 matcha.plugin과 체크섬을 받습니다.",
+      "HTML을 로컬 브라우저에서 열거나 플러그인 ZIP을 추출해 Node stdio 서버를 MCP 클라이언트에 연결합니다.",
+      "홈브루 예제의 쓰기 명령을 찾아 실행하고, 저장·복원 후 같은 입력이 같은 레지스터·메모리·화면을 만드는지 비교합니다."
+    ],
+    "setup": {
+      "title": "다운로드와 디버깅 실습",
+      "body": "HTML 플레이어와 MCP 플러그인은 Rust 빌드가 필요하지 않습니다. matcha.plugin은 ZIP이며 전체 추출 후 server/server.mjs를 Node 18 이상으로 실행합니다. npm 패키지 설치는 필요하지 않습니다. MCP 설정에는 실제 절대 경로를 사용하세요. 아래 합성 홈브루 실습은 같은 태그의 소스 아카이브 루트에서 실행합니다.",
+      "commands": [
+        "node mcp/debug-homebrew.mjs"
+      ]
+    },
+    "primaryAction": {
+      "label": "v0.1.1 다운로드",
+      "href": "https://github.com/rad1092/matcha/releases/tag/v0.1.1"
+    },
+    "guide": {
+      "label": "설치와 실행 안내",
+      "href": "https://github.com/rad1092/matcha#download-011"
+    },
+    "demo": {
+      "label": "홈브루 디버깅 실습",
+      "href": "https://github.com/rad1092/matcha/blob/main/docs/MCP-HOMEBREW.md"
+    },
+    "result": "실습은 자체 생성한 ROM에서 $C000에 $42를 쓰는 명령을 찾고 저장·복원 후 같은 실행을 재현합니다. v0.1.1은 잘못된 도구 요청을 실행 중 머신·저장 슬롯·중단점을 유지한 채 거부합니다. 이 결과는 디버깅 흐름의 확인이며 하드웨어 정확도 점수가 아닙니다."
   }
 ];

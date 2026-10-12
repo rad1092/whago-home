@@ -15,15 +15,13 @@
 
 ## 현재 소프트웨어
 
-- [FirstCall](https://whago.net/software/firstcall) — 기존 HTTP API를 검증하고,
-  입력과 용도를 설명한 MCP 도구로 연결합니다. v0.3.0은 네이티브 런타임과
-  GUI 내보내기를 포함한 macOS Apple Silicon 배포판입니다.
+- [FirstCall](https://whago.net/software/firstcall) — HTTP API를 검증하고 로컬 MCP 도구로 연결합니다. v0.3.1은 macOS Apple Silicon용이며 선택 query/header 생략과 이동한 패키지의 연결 설정 갱신을 지원합니다.
 - [RepoLens](https://repolens.whago.net/) — 기준선 이후 새 유지보수 회귀를
   표시하는 공개 CLI·GitHub Action입니다.
 - [gh-dep-risk](https://github.com/rad1092/gh-dependency-risk) — 의존성이 바뀐
   PR의 검토 근거를 요약하는 GitHub CLI 확장입니다.
 
-## 최근 공개한 도구
+## 도구 모음과 최근 업데이트
 
 - [Annotrail](https://whago.net/software/annotrail) — 논문·교재 개정판을 읽는 사용자가 이전 PDF의 하이라이트와 댓글을 새 PDF의 텍스트와 대조하고, 승인한 주석을 새 파일로 옮깁니다.
 - [ConflictBench](https://whago.net/software/conflictbench) — Syncthing 사용자가 충돌 파일의 텍스트·이미지·메타데이터를 비교하고, 원본 유지·충돌본 사용·둘 다 보존 중 하나를 직접 선택합니다.
@@ -33,7 +31,9 @@
 - [PaperStager](https://whago.net/software/paperstager) — 묶음 PDF를 정리하는 사용자가 페이지 미리보기로 문서 경계를 나누고, 텍스트 규칙으로 제안된 파일명을 검토한 뒤 승인하여 내보냅니다.
 - [SerdeProof](https://whago.net/software/serdeproof) — Java 개발팀이 실제 DTO·매퍼 설정·페이로드 코퍼스를 두 직렬화 빌드에서 실행해 입력 수용, JSON 차이와 생산자·소비자 조합을 비교합니다.
 
-Annotrail과 PaperStager는 사전 공개판입니다. 각 제품 페이지에서 설치·사용 안내와 공개 저장소로 연결합니다.
+- [Matcha](https://whago.net/software/matcha) — 게임보이 홈브루를 관찰·재생하는 오프라인 HTML 플레이어와 MCP 디버깅 도구입니다.
+
+Annotrail 0.1.3과 PaperStager 0.1.1은 사전 공개판입니다. 각 제품 페이지에서 설치·사용 안내와 공개 저장소로 연결합니다.
 프로젝트 문의: [rad174951@gmail.com](mailto:rad174951@gmail.com) · [개인 포트폴리오](https://rad1092.github.io/)
 
 Daymark와 Siteboard는 2026-09-05에 독립 제품 개발을 종료했습니다.
