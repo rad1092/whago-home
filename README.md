@@ -10,7 +10,7 @@
 - `/support`: 사용법과 Issues
 - `/house`: WHAGO 소개
 
-제품 정보는 `app/_data/products.ts` 한곳에서 관리합니다. 새 제품은
+기존 제품 정보는 `app/_data/products.ts`, 최근 도구는 `app/_data/recent-tools.ts`에서 관리합니다. 새 제품은
 저장소와 릴리스 경로를 준비한 뒤 이 카탈로그에 추가합니다.
 
 ## 현재 소프트웨어
@@ -22,6 +22,19 @@
   표시하는 공개 CLI·GitHub Action입니다.
 - [gh-dep-risk](https://github.com/rad1092/gh-dependency-risk) — 의존성이 바뀐
   PR의 검토 근거를 요약하는 GitHub CLI 확장입니다.
+
+## 최근 공개한 도구
+
+- [Annotrail](https://whago.net/software/annotrail) — 논문·교재 개정판을 읽는 사용자가 이전 PDF의 하이라이트와 댓글을 새 PDF의 텍스트와 대조하고, 승인한 주석을 새 파일로 옮깁니다.
+- [ConflictBench](https://whago.net/software/conflictbench) — Syncthing 사용자가 충돌 파일의 텍스트·이미지·메타데이터를 비교하고, 원본 유지·충돌본 사용·둘 다 보존 중 하나를 직접 선택합니다.
+- [ShopShift](https://whago.net/software/shopshift) — 소규모 작업장의 계획 담당자가 ERP에서 내보낸 CSV·XLSX로 일일 작업을 배치하고, 잠금과 수동 시작 시각을 유지하며 충돌과 대안을 검토합니다.
+- [Treeport](https://whago.net/software/treeport) — 내보내기·압축·배포 파이프라인 개발자가 폴더, ZIP 또는 JSONL 목록의 이름 충돌과 경로 길이를 대상 모델에 맞춰 읽기 전용으로 검사합니다.
+- [Lifecase](https://whago.net/software/lifecase) — 하위 프로세스를 실행하는 앱 개발자가 제어된 네이티브 fixture로 프로세스 종료, 출력 EOF, 취소와 자식 프로세스 정리를 각각 테스트합니다.
+- [PaperStager](https://whago.net/software/paperstager) — 묶음 PDF를 정리하는 사용자가 페이지 미리보기로 문서 경계를 나누고, 텍스트 규칙으로 제안된 파일명을 검토한 뒤 승인하여 내보냅니다.
+- [SerdeProof](https://whago.net/software/serdeproof) — Java 개발팀이 실제 DTO·매퍼 설정·페이로드 코퍼스를 두 직렬화 빌드에서 실행해 입력 수용, JSON 차이와 생산자·소비자 조합을 비교합니다.
+
+Annotrail과 PaperStager는 사전 공개판입니다. 각 제품 페이지에서 설치·사용 안내와 공개 저장소로 연결합니다.
+프로젝트 문의: [rad174951@gmail.com](mailto:rad174951@gmail.com) · [개인 포트폴리오](https://rad1092.github.io/)
 
 Daymark와 Siteboard는 2026-09-05에 독립 제품 개발을 종료했습니다.
 `/archive`와 각 기존 주소는 자료 내려받기, `/legacy/`는 구버전 이용 경로입니다.

@@ -4,7 +4,7 @@ import { products } from "../_data/products";
 
 export const metadata: Metadata = {
   title: "소프트웨어",
-  description: "FirstCall과 공개 CLI 도구의 실행 방식과 지원 범위를 확인합니다.",
+  description: "문서·파일·작업 계획과 개발 검토를 돕는 WHAGO 도구의 실행 방식과 지원 범위를 확인합니다.",
   alternates: {
     canonical: "/software",
   },
@@ -17,7 +17,7 @@ export default function SoftwarePage() {
     <main id="main">
       <header className="page-intro page-shell">
         <h1>소프트웨어</h1>
-        <p>API를 AI 도구로 연결하는 FirstCall과, 좁은 개발 작업을 돕는 공개 CLI 도구입니다.</p>
+        <p>API 연결, PDF 검토, 파일 점검, 작업 계획과 개발 테스트를 위한 도구입니다. 각 제품의 대상과 실행 방식, 설치 경로를 비교하세요.</p>
       </header>
 
       <section className="catalog-section page-shell" aria-label="WHAGO 제품 비교">

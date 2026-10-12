@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { recentTools } from "./_data/recent-tools";
 import { getProduct } from "./_data/products";
 
 export const dynamic = "force-static";
@@ -31,6 +32,24 @@ export default function Home() {
           <article><span className="tool-symbol" aria-hidden="true">↳</span><h3>RepoLens</h3><p>기준선과 비교해 새로 생긴 저장소 관리 문제를 PR에 표시합니다.</p><p className="caption">Node · GitHub Actions · 구성 검사</p><Link href="/software/repolens">설치와 범위 →</Link></article>
           <article><span className="tool-symbol" aria-hidden="true">±</span><h3>gh-dep-risk</h3><p>의존성이 바뀐 PR에서 검토할 변경과 위험 점수의 근거를 요약합니다.</p><p className="caption">GitHub CLI · 의존성 변경 검토</p><Link href="/software/gh-dep-risk">설치와 범위 →</Link></article>
         </div>
+      </section>
+      <section className="tool-shelf page-shell" aria-labelledby="recent-tools-title">
+        <header><div><p className="eyebrow">RECENT TOOLS · 2026.10</p><h2 id="recent-tools-title">검토하고 결정하는 일을 돕습니다</h2></div><Link href="/software">전체 소프트웨어 →</Link></header>
+        <p className="intro-description">문서와 파일을 다루는 사람부터 작업장 계획 담당자와 개발팀까지. 필요한 작업에 맞는 도구를 고르고, 지원 범위와 시작 방법을 확인하세요.</p>
+        <div className="tool-shelf__grid">
+          {recentTools.map((tool) => (
+            <article key={tool.slug}>
+              <span className="tool-symbol" aria-hidden="true">{tool.glyph}</span>
+              <h3>{tool.name}</h3><p>{tool.purpose}</p>
+              <p className="caption">{tool.offering}</p>
+              <Link href={`/software/${tool.slug}`}>설치와 사용 흐름 →</Link>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="page-shell contact-panel" aria-labelledby="contact-title">
+        <div><p className="eyebrow">CONTACT</p><h2 id="contact-title">프로젝트 문의</h2><p>도구에 관한 질문이나 협업 제안을 보내주세요.</p></div>
+        <a className="solid-link" href="mailto:rad174951@gmail.com">rad174951@gmail.com <span aria-hidden="true">↗</span></a>
       </section>
       <aside className="archive-note page-shell"><p>Daymark와 Siteboard는 개발을 종료했습니다. 기존 자료와 구버전은 계속 열 수 있습니다.</p><Link href="/archive">자료와 구버전 찾기 →</Link></aside>
     </main>

@@ -4,7 +4,7 @@ import { SiteNavigation } from "./_components/site-navigation";
 import "./globals.css";
 
 const description =
-  "기존 API를 로컬 MCP 도구로 연결하는 FirstCall과 공개 개발 도구.";
+  "문서·파일·작업 계획과 개발 검토를 돕는 독립 소프트웨어. FirstCall과 공개 데스크톱 앱, CLI, 라이브러리.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://whago.net"),
@@ -76,7 +76,7 @@ export default function RootLayout({
             <p>© 2026 WHAGO · 울산</p>
             <nav className="site-footer__links" aria-label="WHAGO 연락">
               <Link href="/archive">종료 제품·자료 회수</Link>
-              <a href="mailto:rad174951@gmail.com">이메일 ↗</a>
+              <a href="mailto:rad174951@gmail.com">문의 · rad174951@gmail.com</a>
               <a
                 href="https://github.com/rad1092"
                 rel="noreferrer"

@@ -41,14 +41,14 @@ export function ProductIndex({ items }: { items: readonly Product[] }) {
               href={`/software/${product.slug}`}
               aria-label={`${product.name} 제품 정보`}
             >
-              <img
+              {product.media ? <img
                 alt=""
                 height={product.media.height}
                 loading={index === 0 ? "eager" : "lazy"}
                 src={product.media.src}
                 style={{ objectPosition: product.media.objectPosition }}
                 width={product.media.width}
-              />
+              /> : <ProductMark product={product} />}
             </Link>
             <div className="product-row__actions">
               <a
