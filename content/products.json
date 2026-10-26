@@ -6,12 +6,13 @@
     "repo": "rad1092/firstcall-local-api-workbench",
     "license": "MIT",
     "media": {
-      "src": "/media/firstcall.png",
-      "width": 1280,
-      "height": 820,
+      "src": "/media/firstcall.gif",
+      "poster": "/media/firstcall.png",
+      "width": 960,
+      "height": 615,
       "alt": {
-        "en": "FirstCall with a GitHub API request on the left, its inputs in the middle and the verified response on the right",
-        "ko": "왼쪽에 GitHub API 요청, 가운데 입력값, 오른쪽에 확인한 응답이 보이는 FirstCall 화면"
+        "en": "FirstCall reading a GitHub API request, sending it, and exporting it as an MCP tool",
+        "ko": "GitHub API 요청을 읽고 보낸 뒤 MCP 도구로 내보내는 FirstCall"
       }
     },
     "downloads": {

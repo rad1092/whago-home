@@ -14,7 +14,7 @@ const escape = (text) => text.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&
 
 function visual(product) {
   if (product.media) {
-    const file = path.join(root, "public", product.media.src);
+    const file = path.join(root, "public", product.media.poster ?? product.media.src);
     const data = readFileSync(file).toString("base64");
     const type =
       path.extname(file) === ".gif" ? "image/gif" : path.extname(file) === ".jpg" ? "image/jpeg" : "image/png";

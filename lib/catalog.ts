@@ -33,6 +33,8 @@ export type Product = {
   terminal?: string;
   media?: {
     src: string;
+    // A still image for share cards when src is animated.
+    poster?: string;
     width: number;
     height: number;
     alt: Record<Locale, string>;
