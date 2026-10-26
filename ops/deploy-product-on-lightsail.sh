@@ -4,7 +4,7 @@ set -Eeuo pipefail
 umask 022
 
 usage() {
-  echo "Usage: $0 daymark|repolens|siteboard <git-ref> [--bootstrap|--verify-public]" >&2
+  echo "Usage: $0 daymark|repolens|siteboard|matcha <git-ref> [--bootstrap|--verify-public]" >&2
 }
 
 product="${1:-}"
@@ -56,6 +56,12 @@ case "$product" in
     artifact_name="dist"
     origin_host="siteboard.whago.net"
     page_marker="Siteboard 개발을 종료"
+    ;;
+  matcha)
+    repository_url="https://github.com/rad1092/matcha.git"
+    artifact_name="dist"
+    origin_host="play.whago.net"
+    page_marker="matcha"
     ;;
   *)
     usage
@@ -216,7 +222,11 @@ if sudo test -e "$release_dir" || sudo test -L "$release_dir"; then
   false
 fi
 
-npm --prefix "$source_dir" ci
+case "$product" in
+  daymark | siteboard | repolens)
+    npm --prefix "$source_dir" ci
+    ;;
+esac
 case "$product" in
   daymark | siteboard)
     npm --prefix "$source_dir" test
@@ -226,6 +236,11 @@ case "$product" in
     ;;
   repolens)
     npm --prefix "$source_dir" run ci
+    ;;
+  matcha)
+    # The player is one HTML file built from the committed web/matcha.wasm.
+    node "$source_dir/scripts/build-web.mjs"
+    cp "$source_dir/dist/matcha.html" "$source_dir/dist/index.html"
     ;;
 esac
 

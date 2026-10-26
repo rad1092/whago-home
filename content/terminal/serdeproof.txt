@@ -1,0 +1,13 @@
+$ java -jar lib/serdeproof-cli-0.1.1.jar run --manifest examples/release-demo.json \
+    --json reports/first.json --junit reports/first.xml
+Completed: unexpected differences found. Review JSON or JUnit report.
+
+$ jq .summary reports/first.json
+{
+  "errors": 0,
+  "exitCode": 1,
+  "expectedDifferences": 0,
+  "fixturesProcessed": 17,
+  "unexpectedDifferences": 12,
+  "untestedFixtures": 5
+}
