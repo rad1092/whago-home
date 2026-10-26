@@ -253,9 +253,7 @@ page_html="$(
     https://whago.net/
 )"
 grep -q "WHAGO" <<<"$page_html"
-grep -q "Daymark" <<<"$page_html"
 grep -q "RepoLens" <<<"$page_html"
-grep -q "Siteboard" <<<"$page_html"
 grep -q "FirstCall" <<<"$page_html"
 grep -q "gh-dep-risk" <<<"$page_html"
 
