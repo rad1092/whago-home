@@ -20,7 +20,7 @@ npm run format     # Prettier
 | Path                     | What                                                          |
 | ------------------------ | ------------------------------------------------------------- |
 | `content/products.json`  | Every product: copy in both languages, screenshots, downloads |
-| `content/releases.json`  | Release notes. The newest entry sets a product's version      |
+| `content/releases.json`  | Versions and dates. The newest entry sets a product's version |
 | `content/terminal/`      | Real command output shown for command-line tools              |
 | `lib/catalog.ts`         | Loads and validates `content/` at build time                  |
 | `lib/site.ts`            | Interface text, contact address, page metadata                |
@@ -69,12 +69,18 @@ and installs the Nginx config.
 Servers set up before October 2026 load Nginx from `sites-available/localfit`.
 Run `ops/rename-nginx-site.sh` once to move it to `sites-available/whago`.
 
+## Language
+
+Every page exists in English at `/` and in Korean at `/ko`. A script in the page
+head sends a browser set to Korean to the Korean page on its first visit. Once a
+visitor picks EN or 한국어 in the header, that choice is kept in `localStorage`.
+
 ## Daymark and Siteboard
 
-Both were retired on 2026-09-05. `public/daymark/` and `public/siteboard/` are
-the pages at their old whago.net addresses. They read the data still stored in
-that browser and download it without changing anything. `/archive` explains
-how to get the data.
+Both were retired on 2026-09-05 and are not mentioned on the site.
+`public/daymark/` and `public/siteboard/` stay at their old whago.net addresses
+only so earlier users can download data still stored in their browser; the
+deploy script checks that they exist.
 
 ## License
 

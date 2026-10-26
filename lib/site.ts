@@ -5,7 +5,12 @@ export const SITE_URL = "https://whago.net";
 // Switch to a whago.net address once Cloudflare Email Routing is set up.
 export const CONTACT_EMAIL = "rad174951@gmail.com";
 export const GITHUB_URL = "https://github.com/rad1092";
-export const PORTFOLIO_URL = "https://rad1092.github.io/";
+export const LANGUAGE_KEY = "whago-language";
+
+// Runs in the page head before anything is drawn. A language the visitor picked
+// before wins; otherwise a browser set to Korean goes from an English page to the
+// same page in Korean. Everyone else stays where they are.
+export const LANGUAGE_SCRIPT = `(function(){try{var chosen=localStorage.getItem("${LANGUAGE_KEY}"),path=location.pathname,onKo=path==="/ko"||path.indexOf("/ko/")===0,browser=(navigator.languages&&navigator.languages[0])||navigator.language||"",want=chosen||(/^ko(-|$)/i.test(browser)?"ko":""),rest=location.search+location.hash;if(want==="ko"&&!onKo)location.replace((path==="/"?"/ko":"/ko"+path)+rest);else if(want==="en"&&onKo)location.replace((path==="/ko"?"/":path.slice(3))+rest)}catch(e){}})();`;
 
 export function localePath(locale: Locale, path: string) {
   if (locale === "en") return path;
@@ -60,13 +65,12 @@ export function pageMetadata({
 
 type Strings = {
   skip: string;
-  nav: { software: string; updates: string; support: string; about: string };
+  nav: { software: string; support: string; about: string };
   navLabel: string;
-  switchTo: string;
-  switchLabel: string;
+  languageLabel: string;
   homeLabel: string;
   newTab: string;
-  footer: { place: string; archive: string; email: string; links: string };
+  footer: { email: string; links: string };
   home: {
     title: string;
     description: string;
@@ -100,7 +104,6 @@ type Strings = {
     issues: string;
     sampleOutput: string;
   };
-  updates: { title: string; description: string; notes: string; ended: string; archive: string };
   support: {
     title: string;
     description: string;
@@ -117,13 +120,12 @@ type Strings = {
 export const strings: Record<Locale, Strings> = {
   en: {
     skip: "Skip to content",
-    nav: { software: "Software", updates: "Updates", support: "Support", about: "About" },
+    nav: { software: "Software", support: "Support", about: "About" },
     navLabel: "Main",
-    switchTo: "한국어",
-    switchLabel: "한국어로 보기",
+    languageLabel: "Language",
     homeLabel: "WHAGO home",
     newTab: "(opens in a new tab)",
-    footer: { place: "Ulsan, Korea", archive: "Daymark and Siteboard data", email: "Email", links: "Contact" },
+    footer: { email: "Email", links: "Contact" },
     home: {
       title: "WHAGO makes tools that let you compare and approve changes to files, documents and code.",
       description:
@@ -163,13 +165,6 @@ export const strings: Record<Locale, Strings> = {
       issues: "Report a problem",
       sampleOutput: "Sample output",
     },
-    updates: {
-      title: "Updates",
-      description: "Release notes for every WHAGO app and tool, newest first.",
-      notes: "Release notes",
-      ended: "Development ended",
-      archive: "Get your data",
-    },
     support: {
       title: "Support",
       description: "Documentation and problem reports for each WHAGO product.",
@@ -192,13 +187,12 @@ export const strings: Record<Locale, Strings> = {
   },
   ko: {
     skip: "본문으로 건너뛰기",
-    nav: { software: "소프트웨어", updates: "업데이트", support: "지원", about: "소개" },
+    nav: { software: "소프트웨어", support: "지원", about: "소개" },
     navLabel: "주요 메뉴",
-    switchTo: "English",
-    switchLabel: "View in English",
+    languageLabel: "언어",
     homeLabel: "WHAGO 홈",
     newTab: "(새 탭에서 열림)",
-    footer: { place: "울산", archive: "Daymark, Siteboard 자료", email: "이메일", links: "연락" },
+    footer: { email: "이메일", links: "연락" },
     home: {
       title: "WHAGO는 파일, 문서, 코드를 바꾸기 전에 비교하고 승인하게 해주는 도구를 만듭니다.",
       description: "바꾸기 전에 비교하고 승인하게 해주는 데스크톱 앱과 CLI. FirstCall, Matcha, SerdeProof 외 8개.",
@@ -236,13 +230,6 @@ export const strings: Record<Locale, Strings> = {
       source: "소스 코드",
       issues: "오류 신고",
       sampleOutput: "실행 예",
-    },
-    updates: {
-      title: "업데이트",
-      description: "WHAGO 앱과 도구의 릴리스 기록입니다. 최신순.",
-      notes: "릴리스 노트",
-      ended: "개발 종료",
-      archive: "자료 받기",
     },
     support: {
       title: "지원",

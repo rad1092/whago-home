@@ -65,22 +65,6 @@
     "ko": "경로 길이 검사에 목적지 폴더와 상위 경로를 포함."
   },
   {
-    "product": "daymark",
-    "version": null,
-    "date": "2026-09-05",
-    "retired": true,
-    "en": "Development ended. Your data stays downloadable.",
-    "ko": "개발 종료. 기존 자료는 계속 내려받을 수 있음."
-  },
-  {
-    "product": "siteboard",
-    "version": null,
-    "date": "2026-09-05",
-    "retired": true,
-    "en": "Development ended. Your projects stay downloadable.",
-    "ko": "개발 종료. 기존 프로젝트는 계속 내려받을 수 있음."
-  },
-  {
     "product": "firstcall",
     "version": "0.3.0",
     "date": "2026-09-04",

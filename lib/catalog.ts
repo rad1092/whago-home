@@ -46,10 +46,9 @@ export type Product = {
 
 export type Release = {
   product: string;
-  version: string | null;
+  version: string;
   date: string;
   prerelease?: boolean;
-  retired?: boolean;
   en: string;
   ko: string;
 };
@@ -64,7 +63,6 @@ const platforms: readonly Platform[] = [
   "linux-arm64",
   "any",
 ];
-const retiredSlugs = ["daymark", "siteboard"];
 
 function fail(message: string): never {
   throw new Error(`content/: ${message}`);
@@ -130,14 +128,10 @@ function validateProducts(input: unknown): Product[] {
 function validateReleases(input: unknown, known: Set<string>): Release[] {
   if (!Array.isArray(input)) fail("releases.json must be a list");
   for (const release of input as Release[]) {
-    const where = `releases.json ${release?.product} ${release?.version ?? "retired"}`;
-    if (!known.has(release.product) && !retiredSlugs.includes(release.product)) fail(`${where}: unknown product`);
+    const where = `releases.json ${release?.product} ${release?.version}`;
+    if (!known.has(release.product)) fail(`${where}: unknown product`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(release.date ?? "")) fail(`${where}: date must be YYYY-MM-DD`);
-    if (release.retired) {
-      if (release.version !== null) fail(`${where}: a retirement entry has no version`);
-    } else if (!/^\d+\.\d+\.\d+$/.test(release.version ?? "")) {
-      fail(`${where}: version must look like 1.2.3`);
-    }
+    if (!/^\d+\.\d+\.\d+$/.test(release.version ?? "")) fail(`${where}: version must look like 1.2.3`);
     if (!isText(release.en) || !isText(release.ko)) fail(`${where}: notes are required in both languages`);
   }
   return input as Release[];

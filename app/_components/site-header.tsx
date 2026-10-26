@@ -3,21 +3,33 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Locale } from "../../lib/catalog";
-import { localePath, strings } from "../../lib/site";
+import { LANGUAGE_KEY, localePath, strings } from "../../lib/site";
 
 function stripLocale(pathname: string) {
   if (pathname === "/ko") return "/";
   return pathname.startsWith("/ko/") ? pathname.slice(3) : pathname;
 }
 
+// Remember an explicit choice so the language detection in the page head follows it.
+function remember(locale: Locale) {
+  try {
+    localStorage.setItem(LANGUAGE_KEY, locale);
+  } catch {
+    // Storage can be unavailable (private mode); the link still switches the page.
+  }
+}
+
+const languages: { locale: Locale; label: string }[] = [
+  { locale: "en", label: "EN" },
+  { locale: "ko", label: "한국어" },
+];
+
 export function SiteHeader({ locale }: { locale: Locale }) {
   const pathname = usePathname() ?? "/";
   const path = stripLocale(pathname);
   const text = strings[locale];
-  const other: Locale = locale === "en" ? "ko" : "en";
   const links = [
     { path: "/software", label: text.nav.software },
-    { path: "/releases", label: text.nav.updates },
     { path: "/support", label: text.nav.support },
     { path: "/house", label: text.nav.about },
   ];
@@ -37,15 +49,20 @@ export function SiteHeader({ locale }: { locale: Locale }) {
               </Link>
             );
           })}
-          <Link
-            aria-label={text.switchLabel}
-            className="language-link"
-            href={localePath(other, path)}
-            hrefLang={other}
-            lang={other}
-          >
-            {text.switchTo}
-          </Link>
+          <span aria-label={text.languageLabel} className="language-switch" role="group">
+            {languages.map((language) => (
+              <a
+                aria-current={language.locale === locale ? "true" : undefined}
+                href={localePath(language.locale, path)}
+                hrefLang={language.locale}
+                key={language.locale}
+                lang={language.locale}
+                onClick={() => remember(language.locale)}
+              >
+                {language.label}
+              </a>
+            ))}
+          </span>
         </nav>
       </div>
     </header>
