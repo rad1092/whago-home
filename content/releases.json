@@ -1,63 +1,6 @@
 [
   {
     "product": "firstcall",
-    "version": "0.4.0",
-    "date": "2026-10-26",
-    "en": "One MCP server for many tools, tokens kept in the system keychain, and downloads for Windows, Linux and Intel Macs.",
-    "ko": "MCP 서버 하나로 여러 도구 제공, 토큰은 시스템 키체인에 저장. Windows·Linux·Intel Mac 배포판 추가."
-  },
-  {
-    "product": "gh-dep-risk",
-    "version": "0.3.0",
-    "date": "2026-10-26",
-    "en": "Each score shows the signals behind it and which package to check first. New registry signals and a GitHub Action.",
-    "ko": "점수마다 근거 신호와 먼저 볼 패키지를 표시. 레지스트리 신호와 GitHub Action 추가."
-  },
-  {
-    "product": "repolens",
-    "version": "0.4.0",
-    "date": "2026-10-26",
-    "en": "Reads pnpm, Yarn and Bun lockfiles, and installs from npm.",
-    "ko": "pnpm·Yarn·Bun lockfile 지원, npm으로 설치."
-  },
-  {
-    "product": "treeport",
-    "version": "0.2.0",
-    "date": "2026-10-26",
-    "en": "New treeport git command and pre-commit hook, warnings for decomposed Korean names, and a likely verdict for unknown results.",
-    "ko": "treeport git 명령과 pre-commit 훅, 분해형 한글 이름 경고, unknown 결과의 예상 판정 추가."
-  },
-  {
-    "product": "matcha",
-    "version": "0.1.2",
-    "date": "2026-10-26",
-    "en": "Command-line builds for macOS, Windows and Linux.",
-    "ko": "macOS·Windows·Linux용 명령줄 도구 배포."
-  },
-  {
-    "product": "annotrail",
-    "version": "0.1.4",
-    "date": "2026-10-26",
-    "prerelease": true,
-    "en": "The review window fits laptop screens, lists destinations, and previews pages at full width with zoom.",
-    "ko": "리뷰 창이 노트북 화면에 맞고, 대상 목록과 폭 맞춤·확대 미리보기 추가."
-  },
-  {
-    "product": "conflictbench",
-    "version": "0.2.0",
-    "date": "2026-10-26",
-    "en": "Changed lines are highlighted, identical copies can be archived together, and the app speaks Korean.",
-    "ko": "바뀐 줄 표시, 같은 충돌본 한꺼번에 정리, 한국어 화면 추가."
-  },
-  {
-    "product": "shopshift",
-    "version": "0.2.0",
-    "date": "2026-10-26",
-    "en": "Readable times and lateness, English or Korean screens, late bars on the timeline, and priority sliders for suggestions.",
-    "ko": "읽기 쉬운 시각·지연 표시, 영어·한국어 화면 선택, 타임라인 지연 표시, 제안 우선순위 슬라이더."
-  },
-  {
-    "product": "firstcall",
     "version": "0.3.1",
     "date": "2026-10-12",
     "en": "Optional query and header inputs left empty are no longer sent. Moved tools reconnect with firstcall-cli connect.",
