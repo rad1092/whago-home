@@ -31,7 +31,6 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   const links = [
     { path: "/software", label: text.nav.software },
     { path: "/support", label: text.nav.support },
-    { path: "/house", label: text.nav.about },
   ];
 
   return (
