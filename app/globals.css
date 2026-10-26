@@ -661,18 +661,6 @@ main {
   font-weight: 600;
 }
 
-/* About */
-
-.prose {
-  max-width: 44rem;
-  margin-inline: max(24px, calc((100% - 1120px) / 2));
-  padding-block: 16px;
-}
-
-.prose h2 {
-  margin-bottom: 12px;
-}
-
 .not-found {
   min-height: 50vh;
 }

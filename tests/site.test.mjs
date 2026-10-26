@@ -7,7 +7,7 @@ import test from "node:test";
 const out = new URL("../out/", import.meta.url).pathname;
 const products = JSON.parse(readFileSync(new URL("../content/products.json", import.meta.url), "utf8"));
 const slugs = products.map((product) => product.slug);
-const pages = ["/", "/software", ...slugs.map((slug) => `/software/${slug}`), "/support", "/house"];
+const pages = ["/", "/software", ...slugs.map((slug) => `/software/${slug}`), "/support"];
 
 const koPath = (page) => (page === "/" ? "/ko" : `/ko${page}`);
 
@@ -110,7 +110,7 @@ test("pages carry no retired products, personal name, place or portfolio link", 
     assert.doesNotMatch(text, /Hongdae|HongDae|김홍대|Ulsan|울산/, `${page} names a person or place`);
     assert.doesNotMatch(source, /rad1092\.github\.io/, `${page} links to the portfolio`);
   }
-  for (const removed of ["software/daymark", "software/siteboard", "archive", "releases"]) {
+  for (const removed of ["software/daymark", "software/siteboard", "archive", "releases", "house"]) {
     assert.equal(resolve(`/${removed}`), null, `${removed} is still exported`);
   }
 });
@@ -137,6 +137,6 @@ test("the sitemap lists every page with both languages", () => {
   for (const page of pages) {
     assert.ok(xml.includes(`<loc>https://whago.net${page}</loc>`), page);
   }
-  assert.match(xml, /hreflang="ko" href="https:\/\/whago.net\/ko\/house"/);
+  assert.match(xml, /hreflang="ko" href="https:\/\/whago.net\/ko\/support"/);
   assert.doesNotMatch(readFileSync(path.join(out, "robots.txt"), "utf8"), /^Host:/m);
 });

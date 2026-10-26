@@ -4,7 +4,7 @@ import { SITE_URL, localePath } from "../lib/site";
 
 export const dynamic = "force-static";
 
-const pages = ["/", "/software", ...products.map((product) => `/software/${product.slug}`), "/support", "/house"];
+const pages = ["/", "/software", ...products.map((product) => `/software/${product.slug}`), "/support"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(`${lastUpdated}T00:00:00Z`);

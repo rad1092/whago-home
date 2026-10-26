@@ -65,7 +65,7 @@ export function pageMetadata({
 
 type Strings = {
   skip: string;
-  nav: { software: string; support: string; about: string };
+  nav: { software: string; support: string };
   navLabel: string;
   languageLabel: string;
   homeLabel: string;
@@ -120,7 +120,7 @@ type Strings = {
 export const strings: Record<Locale, Strings> = {
   en: {
     skip: "Skip to content",
-    nav: { software: "Software", support: "Support", about: "About" },
+    nav: { software: "Software", support: "Support" },
     navLabel: "Main",
     languageLabel: "Language",
     homeLabel: "WHAGO home",
@@ -187,7 +187,7 @@ export const strings: Record<Locale, Strings> = {
   },
   ko: {
     skip: "본문으로 건너뛰기",
-    nav: { software: "소프트웨어", support: "지원", about: "소개" },
+    nav: { software: "소프트웨어", support: "지원" },
     navLabel: "주요 메뉴",
     languageLabel: "언어",
     homeLabel: "WHAGO 홈",

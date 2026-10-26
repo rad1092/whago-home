@@ -38,6 +38,7 @@ test("whago.net serves the static export with one address per page", () => {
   assert.match(block, /try_files \$uri\.html \$uri\/index\.html \$uri =404;/);
   assert.match(block, /location ~ \^\(\.\+\)\\\.html\$ \{\s*return 301 \$1\$is_args\$args;/);
   assert.match(block, /\(software\/daymark\|software\/siteboard\|archive\|releases\)\$ \{\s*return 301 \$1\/software;/);
+  assert.match(block, /location ~ \^\(\/ko\)\?\/house\/\?\$ \{\s*return 301 \$1\/;/);
   assert.doesNotMatch(block, /wasm-unsafe-eval/);
 });
 
