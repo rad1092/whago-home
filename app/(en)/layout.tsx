@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { SiteShell } from "../_components/site-shell";
-import { SITE_URL } from "../../lib/site";
+import { LANGUAGE_SCRIPT, SITE_URL } from "../../lib/site";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -16,6 +16,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: LANGUAGE_SCRIPT }} />
+      </head>
       <SiteShell locale="en">{children}</SiteShell>
     </html>
   );

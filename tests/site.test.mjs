@@ -7,15 +7,7 @@ import test from "node:test";
 const out = new URL("../out/", import.meta.url).pathname;
 const products = JSON.parse(readFileSync(new URL("../content/products.json", import.meta.url), "utf8"));
 const slugs = products.map((product) => product.slug);
-const pages = [
-  "/",
-  "/software",
-  ...slugs.map((slug) => `/software/${slug}`),
-  "/releases",
-  "/support",
-  "/house",
-  "/archive",
-];
+const pages = ["/", "/software", ...slugs.map((slug) => `/software/${slug}`), "/support", "/house"];
 
 const koPath = (page) => (page === "/" ? "/ko" : `/ko${page}`);
 
@@ -110,13 +102,27 @@ test("copy follows the site's rules", () => {
   }
 });
 
-test("retired products appear only on the archive page and in the footer", () => {
-  for (const page of ["/", "/software", "/support"]) {
-    const text = visibleText(html(page));
-    const mentions = text.match(/Daymark/g) ?? [];
-    assert.ok(mentions.length <= 1, `${page} mentions Daymark ${mentions.length} times`);
+test("pages carry no retired products, personal name, place or portfolio link", () => {
+  for (const page of pages.flatMap((page) => [page, koPath(page)])) {
+    const source = html(page);
+    const text = visibleText(source);
+    assert.doesNotMatch(text, /Daymark|Siteboard/, `${page} mentions a retired product`);
+    assert.doesNotMatch(text, /Hongdae|HongDae|김홍대|Ulsan|울산/, `${page} names a person or place`);
+    assert.doesNotMatch(source, /rad1092\.github\.io/, `${page} links to the portfolio`);
   }
-  assert.ok(!existsSync(path.join(out, "software", "daymark.html")));
+  for (const removed of ["software/daymark", "software/siteboard", "archive", "releases"]) {
+    assert.equal(resolve(`/${removed}`), null, `${removed} is still exported`);
+  }
+});
+
+test("every page offers both languages and remembers the choice", () => {
+  for (const page of pages) {
+    for (const source of [html(page), html(koPath(page))]) {
+      assert.ok(source.includes(`href="${page}"`), `${page}: no English link`);
+      assert.ok(source.includes(`href="${koPath(page)}"`), `${page}: no Korean link`);
+      assert.match(source, /whago-language/, `${page} has no language detection`);
+    }
+  }
 });
 
 test("the 404 page has both languages and a skip target", () => {
@@ -131,6 +137,6 @@ test("the sitemap lists every page with both languages", () => {
   for (const page of pages) {
     assert.ok(xml.includes(`<loc>https://whago.net${page}</loc>`), page);
   }
-  assert.match(xml, /hreflang="ko" href="https:\/\/whago.net\/ko\/archive"/);
+  assert.match(xml, /hreflang="ko" href="https:\/\/whago.net\/ko\/house"/);
   assert.doesNotMatch(readFileSync(path.join(out, "robots.txt"), "utf8"), /^Host:/m);
 });
