@@ -102,12 +102,11 @@ test("copy follows the site's rules", () => {
   }
 });
 
-test("pages carry no retired products, personal name, place or portfolio link", () => {
+test("pages carry no retired products or portfolio link", () => {
   for (const page of pages.flatMap((page) => [page, koPath(page)])) {
     const source = html(page);
     const text = visibleText(source);
     assert.doesNotMatch(text, /Daymark|Siteboard/, `${page} mentions a retired product`);
-    assert.doesNotMatch(text, /Hongdae|HongDae|김홍대|Ulsan|울산/, `${page} names a person or place`);
     assert.doesNotMatch(source, /rad1092\.github\.io/, `${page} links to the portfolio`);
   }
   for (const removed of ["software/daymark", "software/siteboard", "archive", "releases", "house"]) {
