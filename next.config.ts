@@ -1,14 +1,10 @@
 import type { NextConfig } from "next";
 
+// whago.net is a static export served by Nginx on Lightsail.
 const nextConfig: NextConfig = {
-  ...(process.env.WHAGO_STATIC_EXPORT === "1"
-    ? {
-        output: "export" as const,
-        images: {
-          unoptimized: true,
-        },
-      }
-    : {}),
+  output: "export",
+  images: { unoptimized: true },
+  experimental: { globalNotFound: true },
 };
 
 export default nextConfig;

@@ -37,7 +37,10 @@ script_dir="$(
   pwd
 )"
 source_nginx_config="$script_dir/nginx-whago.conf"
-nginx_config="/etc/nginx/sites-available/localfit"
+nginx_config="/etc/nginx/sites-available/whago"
+if ! sudo test -f "$nginx_config" && sudo test -f /etc/nginx/sites-available/localfit; then
+  nginx_config="/etc/nginx/sites-available/localfit"
+fi
 certificate_name="whago.net"
 certificate_path="/etc/letsencrypt/live/$certificate_name/fullchain.pem"
 bootstrap_id="$(date -u +%Y%m%dT%H%M%SZ)"
@@ -51,6 +54,7 @@ domains=(
   "daymark.whago.net"
   "repolens.whago.net"
   "siteboard.whago.net"
+  "play.whago.net"
 )
 
 exec 9>"/tmp/whago-deploy.lock"
@@ -84,7 +88,7 @@ for domain in "${domains[@]}"; do
   fi
 done
 
-for product in daymark repolens siteboard; do
+for product in daymark repolens siteboard matcha; do
   case "$product" in
     repolens) artifact_name="docs" ;;
     *) artifact_name="dist" ;;
@@ -119,7 +123,7 @@ done
 deploy_user="$(id -un)"
 deploy_group="$(id -gn)"
 sudo install -d -o "$deploy_user" -g "$deploy_group" "$backup_dir"
-sudo install -m 0644 "$nginx_config" "$backup_dir/localfit.before-bootstrap.conf"
+sudo install -m 0644 "$nginx_config" "$backup_dir/nginx-site.before-bootstrap.conf"
 
 restore_nginx() {
   local restore_failed="false"
@@ -129,7 +133,7 @@ restore_nginx() {
 
   if [[ "$config_changed" == "true" ]]; then
     if ! sudo install -m 0644 \
-      "$backup_dir/localfit.before-bootstrap.conf" \
+      "$backup_dir/nginx-site.before-bootstrap.conf" \
       "$nginx_config" ||
       ! sudo nginx -t; then
       restore_failed="true"
@@ -262,8 +266,9 @@ if [[ "$product_vhost_ready" != "true" ]]; then
   false
 fi
 
-for product in daymark repolens siteboard; do
+for product in daymark repolens siteboard matcha; do
   origin_host="$product.whago.net"
+  [[ "$product" == "matcha" ]] && origin_host="play.whago.net"
   curl_options=(
     --fail
     --silent

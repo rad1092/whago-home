@@ -4,12 +4,12 @@ on:
   push:
     branches: ["main"]
     paths-ignore:
-      - '**/*.md'
-      - 'LICENSE*'
+      - "**/*.md"
+      - "LICENSE*"
   pull_request:
     paths-ignore:
-      - '**/*.md'
-      - 'LICENSE*'
+      - "**/*.md"
+      - "LICENSE*"
   workflow_dispatch:
 
 permissions:
@@ -41,10 +41,10 @@ jobs:
       - name: Audit dependencies
         run: npm audit
 
-      - name: Verify source and Worker build
+      - name: Check formatting and lint
         run: |
+          npm run format:check
           npm run lint
-          npm test
 
-      - name: Verify Lightsail build
-        run: npm run build:server
+      - name: Build the static export and test it
+        run: npm test

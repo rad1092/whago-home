@@ -13,8 +13,11 @@ fi
 home_root="/srv/whago-home"
 home_release="$home_root/releases/$release_id"
 backup_dir="$home_root/backups/$release_id"
-nginx_config="/etc/nginx/sites-available/localfit"
-service_name="whago-home.service"
+# Older servers still use the original site file name; see ops/rename-nginx-site.sh.
+nginx_config="/etc/nginx/sites-available/whago"
+if ! sudo test -f "$nginx_config" && sudo test -f /etc/nginx/sites-available/localfit; then
+  nginx_config="/etc/nginx/sites-available/localfit"
+fi
 build_dir=""
 
 if [[ ! "$release_id" =~ ^[A-Za-z0-9._-]+$ ]]; then
@@ -73,17 +76,6 @@ if [[ -n "$previous_home" &&
 fi
 home_switched="false"
 nginx_replaced="false"
-service_was_active="false"
-service_was_enabled="false"
-service_changed="false"
-
-if sudo systemctl is-active --quiet "$service_name"; then
-  service_was_active="true"
-fi
-
-if sudo systemctl is-enabled --quiet "$service_name"; then
-  service_was_enabled="true"
-fi
 
 restore_current_link() {
   local previous="$1"
@@ -118,32 +110,6 @@ remove_transition_links() {
   done
 }
 
-restore_service_state() {
-  local restore_failed="false"
-
-  if [[ "$service_was_enabled" == "true" ]]; then
-    if ! sudo systemctl enable "$service_name"; then
-      restore_failed="true"
-    fi
-  else
-    if ! sudo systemctl disable "$service_name" 2>/dev/null; then
-      restore_failed="true"
-    fi
-  fi
-
-  if [[ "$service_was_active" == "true" ]]; then
-    if ! sudo systemctl restart "$service_name"; then
-      restore_failed="true"
-    fi
-  else
-    if ! sudo systemctl stop "$service_name" 2>/dev/null; then
-      restore_failed="true"
-    fi
-  fi
-
-  [[ "$restore_failed" == "false" ]]
-}
-
 cleanup_build_dir() {
   if [[ -n "$build_dir" &&
     "$build_dir" == /tmp/whago-home-build.* &&
@@ -168,12 +134,6 @@ rollback() {
     if ! sudo install -m 0644 "$backup_dir/nginx.conf" "$nginx_config" ||
       ! sudo nginx -t ||
       ! sudo systemctl reload nginx.service; then
-      rollback_failed="true"
-    fi
-  fi
-
-  if [[ "$service_changed" == "true" ]]; then
-    if ! restore_service_state; then
       rollback_failed="true"
     fi
   fi
@@ -208,9 +168,9 @@ git -C "$source_dir" fetch --depth 1 origin "$home_ref"
 git -C "$source_dir" checkout --detach FETCH_HEAD
 
 npm --prefix "$source_dir" ci
-npm --prefix "$source_dir" test
 npm --prefix "$source_dir" run lint
-npm --prefix "$source_dir" run build:static
+# The tests build the static export into out/ and check it.
+npm --prefix "$source_dir" test
 
 home_sha="$(git -C "$source_dir" rev-parse HEAD)"
 artifact_hash="$(
@@ -265,22 +225,7 @@ sudo install -m 0644 "$home_release/nginx-whago.conf" "$nginx_config"
 sudo nginx -t
 sudo systemctl reload nginx.service
 
-# Nginx now serves the exported files directly. The previous Next.js unit is
-# retained on disk for rollback, while its process and boot registration stop.
-if sudo systemctl cat "$service_name" >/dev/null 2>&1; then
-  service_changed="true"
-  sudo systemctl disable --now "$service_name"
-  if sudo systemctl is-active --quiet "$service_name"; then
-    echo "The previous application service is still active." >&2
-    false
-  fi
-  if sudo systemctl is-enabled --quiet "$service_name"; then
-    echo "The previous application service is still enabled." >&2
-    false
-  fi
-fi
-
-for path in / /healthz /robots.txt /sitemap.xml /release.json /daymark/ /siteboard/; do
+for path in / /ko /software/firstcall /healthz /robots.txt /sitemap.xml /release.json /daymark/ /siteboard/; do
   curl --fail --silent --show-error \
     --connect-timeout 5 \
     --max-time 20 \

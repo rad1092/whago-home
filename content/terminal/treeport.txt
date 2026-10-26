@@ -1,0 +1,9 @@
+$ treeport scan --profile windows --root 'C:\export' ./release
+treeport 0.1.3: incompatible
+profile=windows@2 unicode=15.0.0 entries=5 nodes=5 complete=true
+destination root: "C:\\export"
+[incompatible] reserved_name "docs/CON.txt": Windows device name is reserved, including extensions and superscript digits
+[incompatible] trailing_dot_space "docs/notes.": Win32 shell component ends in dot or space
+[incompatible] conflict b0e2f6f907e5def5 -> "readme.md" (case_fold)
+  "README.md" kind=file implicit=false count=1
+  "readme.md" kind=file implicit=false count=1

@@ -5,22 +5,12 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: [
-      ".next/**",
-      ".vinext/**",
-      "dist/**",
-      "out/**",
-      "products/**",
-      "node_modules/**",
-      // Upstream distribution; its two-call security patch is covered by tests.
-      "vendor/vite-plugin-dynamic-import/dist/**",
-      "next-env.d.ts",
-    ],
+    ignores: [".next/**", "out/**", "node_modules/**", "public/**", "next-env.d.ts"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["app/**/*.{ts,tsx}"],
+    files: ["app/**/*.{ts,tsx}", "lib/**/*.ts"],
     languageOptions: {
       globals: globals.browser,
     },
@@ -32,12 +22,7 @@ export default tseslint.config(
     },
   },
   {
-    files: [
-      "build/**/*.ts",
-      "worker/**/*.ts",
-      "tests/**/*.mjs",
-      "*.config.{js,mjs,ts}",
-    ],
+    files: ["tests/**/*.mjs", "scripts/**/*.mjs", "*.config.{js,mjs,ts}"],
     languageOptions: {
       globals: globals.node,
     },
